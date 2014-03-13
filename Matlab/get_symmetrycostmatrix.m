@@ -1,9 +1,12 @@
-function [ S ] = find_symmetrycostmatrix( C, W, blank_tiles, T )
+function [ S ] = get_symmetrycostmatrix( C, W, min_trackwidth )
+%%
+
+[T ~] = size(C);
 
 % find symmetry matrix
 S = inf( T, W );
 
-for w = blank_tiles:W 
+for width = min_trackwidth:W 
 
 	for t=1:T-(w+1)
         
@@ -22,9 +25,10 @@ for w = blank_tiles:W
     end
 end
 
-S(:,1:blank_tiles )=inf;
+S(:,1:w )=inf;
 
 ms = max( S( ~isinf( S ) ) );
 S = S./ms;
 
+%%
 end

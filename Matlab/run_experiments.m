@@ -8,8 +8,9 @@ local_testset
 cd ..
 
 which_shows = 1:length(shows);
-
 howmany_shows = length(which_shows);
+
+howmany_shows = 1;
 
 output_width = 100;
    
@@ -74,10 +75,12 @@ for s=1:howmany_shows;
         costmatrix_normalizationtype = 3; % 1, favor short tracks, 2 long tracks, 3 gauss
         eta = 10;
         drawsimmat = 1;
-        draw_confs = 1;
+        draw_confs = 0;
         solution_shift = 0;
         
-        [ matched_tracks_fft, predictions, SC, C ] = ...
+        %SC == song cost matrix, C = 1-cosine matrix, W=max trach width in
+        %tiles w=min track width in tiles
+        [ matched_tracks_fft, predictions, SC, C, W, w ] = ...
             process_wavfile( showname, sampleRate, indexes, audio_low, secondsPerTile, ...
                 minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
                 drawsimmat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
@@ -117,7 +120,7 @@ mean(thresholds)
 %%
 
 
-if( size( predictive_loss,1 )>1 )
+if( draw_confs && size( predictive_loss,1 )>1 )
 
     predictive_loss_normalised = sum(predictive_loss);
     predictive_loss_normalised = predictive_loss_normalised - min(predictive_loss_normalised);
@@ -140,6 +143,7 @@ if( size( predictive_loss,1 )>1 )
         plot( ( track_indexconfidences_map_normalised ),'k' );
         hold off;
         legend('performance','time confidence','index confidence')
+        title('Comparative performance over the whole data set')
     end
 
 end
