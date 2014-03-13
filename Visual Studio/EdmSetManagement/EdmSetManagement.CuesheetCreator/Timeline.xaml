@@ -1,0 +1,208 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MyShit="clr-namespace:CuesheetCreator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Class="CuesheetCreator.Timeline"
+    Height="470.5" Width="996.666" mc:Ignorable="d">
+    
+	<UserControl.Resources>
+	
+		<Style x:Key="ThumbStyle1" TargetType="{x:Type Thumb}">
+			<Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+			<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Thumb}">
+						<ControlTemplate.Resources>
+							
+							<Storyboard x:Key="DraggingIndex">
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="prevTrack" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeyTime="00:00:02" Value="1" KeySpline="0,0,0.875,1"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="nextTrack" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeySpline="0,0,0.875,1" KeyTime="00:00:02" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="scrubText" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeyTime="00:00:02" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+								<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="nextTrack" Storyboard.TargetProperty="(UIElement.Visibility)">
+									<DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+									<DiscreteObjectKeyFrame KeyTime="00:00:02" Value="{x:Static Visibility.Visible}"/>
+								</ObjectAnimationUsingKeyFrames>
+								<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="prevTrack" Storyboard.TargetProperty="(UIElement.Visibility)">
+									<DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+									<DiscreteObjectKeyFrame KeyTime="00:00:02" Value="{x:Static Visibility.Visible}"/>
+								</ObjectAnimationUsingKeyFrames>
+						
+					
+								<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="rectangle" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+									<SplineColorKeyFrame KeyTime="00:00:02" Value="#FFC9EEFF"/>
+								</ColorAnimationUsingKeyFrames>
+					
+							</Storyboard>
+							<Storyboard x:Key="DraggingStopped"/>
+							<Storyboard x:Key="SelectIndexMarker">
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="scrubText" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeyTime="00:00:01" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="nextTrack" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeyTime="00:00:01" Value="0.97"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="prevTrack" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeyTime="00:00:01" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+							<Storyboard x:Key="BackToNormal">
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="prevTrack" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeySpline="0.125,0,1,1" KeyTime="00:00:00.1000000" Value="0"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="nextTrack" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeySpline="0.125,0,1,1" KeyTime="00:00:00.1000000" Value="0"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="scrubText" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0"/>
+								</DoubleAnimationUsingKeyFrames>
+								<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="rectangle" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+									<SplineColorKeyFrame KeyTime="00:00:00.1000000" Value="White"/>
+								</ColorAnimationUsingKeyFrames>
+							</Storyboard>
+							
+						</ControlTemplate.Resources>
+						<Canvas Margin="0,0,0,-123.395" VerticalAlignment="Bottom" Height="148.667" Background="Transparent">
+							<Rectangle x:Name="rectangle" Width="1" Height="277.502" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Stretch" Canvas.Top="-89.81" Canvas.Left="-0.247" RenderTransformOrigin="0.5,0.5" Fill="White">
+								<Rectangle.RenderTransform>
+									<TransformGroup>
+										<ScaleTransform/>
+										<SkewTransform/>
+										<RotateTransform/>
+										<TranslateTransform/>
+									</TransformGroup>
+								</Rectangle.RenderTransform>
+								
+							</Rectangle>
+							<Rectangle x:Name="rectangle2" Fill="White" Width="6" Height="6.25" Canvas.Top="181.244" Canvas.Left="-0.25"/>
+							<TextBlock x:Name="nextTrack"  TextAlignment="Left" Width="2000" Height="16" Canvas.Left="4.753" Canvas.Top="-113.386" Text="NEXT TRACK" TextWrapping="Wrap" Foreground="Black" Opacity="0" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5" Background="White" FontFamily="Consolas" FontSize="13.333" FontWeight="Bold" VerticalAlignment="Center" >
+								<TextBlock.RenderTransform>
+									<TransformGroup>
+										<ScaleTransform/>
+										<SkewTransform/>
+										<RotateTransform/>
+										<TranslateTransform/>
+									</TransformGroup>
+								</TextBlock.RenderTransform>
+							</TextBlock>
+							<TextBlock x:Name="prevTrack" FontFamily="Consolas" FontSize="13.333" FontWeight="Bold" TextAlignment="Right" Width="2001" Height="16" Canvas.Left="-2000.913" Canvas.Top="-113.386" Foreground="Black" Text="PREVIOUS TRACK" Opacity="0" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5" Background="White" VerticalAlignment="Center" >
+								<TextBlock.RenderTransform>
+									<TransformGroup>
+										<ScaleTransform/>
+										<SkewTransform/>
+										<RotateTransform/>
+										<TranslateTransform/>
+									</TransformGroup>
+								</TextBlock.RenderTransform>
+							</TextBlock>
+							<TextBlock x:Name="scrubText" TextAlignment="Center" Width="272.999" Height="17.666" FontSize="13.333" Canvas.Left="-134" Canvas.Top="-27.56" Text="FAST SCRUB: 12:32 +45 FRAMES" Foreground="Black" Background="White" Opacity="0" FontFamily="Consolas" FontWeight="Bold"/>
+						</Canvas>
+						<ControlTemplate.Triggers>
+							<EventTrigger RoutedEvent="Thumb.DragStarted">
+								<BeginStoryboard x:Name="DraggingIndex_BeginStoryboard" Storyboard="{StaticResource DraggingIndex}"/>
+							</EventTrigger>
+						</ControlTemplate.Triggers>
+						
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Storyboard x:Key="OnDragDelta1"/>
+		<Storyboard x:Key="Fade In Track Title"/>
+		<Storyboard x:Key="OnMouseWheel1">
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Duration="00:00:00.0010000" Storyboard.TargetName="allIndex" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+				<SplineDoubleKeyFrame KeyTime="00:00:00" Value="10"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Duration="00:00:00.0010000" Storyboard.TargetName="timeline" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+				<SplineDoubleKeyFrame KeyTime="00:00:00" Value="18"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Duration="00:00:00.0010000" Storyboard.TargetName="main" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+				<SplineDoubleKeyFrame KeyTime="00:00:00" Value="1.46"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Duration="00:00:00.0010000" Storyboard.TargetName="main" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+				<SplineDoubleKeyFrame KeyTime="00:00:00" Value="74"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		
+	</UserControl.Resources>
+	
+	<UserControl.Triggers>
+		<EventTrigger RoutedEvent="Thumb.DragStarted"/>
+		<EventTrigger RoutedEvent="Mouse.MouseWheel">
+			<BeginStoryboard x:Name="OnMouseWheel1_BeginStoryboard" Storyboard="{StaticResource OnMouseWheel1}"/>
+		</EventTrigger>
+	</UserControl.Triggers>
+	
+	<Canvas x:Name="main" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+		<Canvas.RenderTransform>
+			<TransformGroup>
+				<ScaleTransform/>
+				<SkewTransform/>
+				<RotateTransform/>
+				<TranslateTransform/>
+			</TransformGroup>
+		</Canvas.RenderTransform>
+		<Canvas.Background>
+			<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+				<GradientStop Color="White" Offset="0"/>
+				<GradientStop Color="White" Offset="1"/>
+				<GradientStop Color="#FF989898" Offset="0.371"/>
+				<GradientStop Color="#FF9F9F9F" Offset="0.668"/>
+			</LinearGradientBrush>
+		</Canvas.Background>
+	
+		<Canvas x:Name="allIndex" Width="961.5" Height="6.001" Canvas.Left="30.667" Canvas.Top="150.963" Background="Transparent" RenderTransformOrigin="0.5,0.5">
+			<Canvas.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform/>
+					<SkewTransform/>
+					<RotateTransform/>
+					<TranslateTransform/>
+				</TransformGroup>
+			</Canvas.RenderTransform>
+			
+			<Ellipse Fill="#FFD6D6D6" Width="6" Height="6" Canvas.Top="0.001" d:IsHidden="True"/>
+			<Ellipse Fill="#FFD6D6D6" Width="6" Height="6" Canvas.Left="894.375" d:IsHidden="True"/>
+			
+			<Canvas x:Name="indexCanvas" Width="884.5" Height="6" Canvas.Left="10" HorizontalAlignment="Center" Background="Transparent">
+
+				<Rectangle Name="timeline" Fill="#FFD6D6D6" Height="2" Width="890.334" Canvas.Left="-5.834" Canvas.Top="2" RenderTransformOrigin="0.5,0.5">
+					<Rectangle.RenderTransform>
+						<TransformGroup>
+							<ScaleTransform/>
+							<SkewTransform/>
+							<RotateTransform/>
+							<TranslateTransform/>
+						</TransformGroup>
+					</Rectangle.RenderTransform>
+				</Rectangle>
+			
+		
+		<Thumb DragDelta="Thumb_DragDelta" 
+					Background="White" 
+					Foreground="#FFFFFFFF" 
+					Style="{DynamicResource ThumbStyle1}" 
+					Width="10" Height="75"
+					VerticalAlignment="Top" Canvas.Left="874.5" Canvas.Top="14.75"/>
+			
+					
+			</Canvas>
+			
+			
+		
+			
+		</Canvas>
+			
+			
+		
+			
+	</Canvas>
+
+</UserControl>

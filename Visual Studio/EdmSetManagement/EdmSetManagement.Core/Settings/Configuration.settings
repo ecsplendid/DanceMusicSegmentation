@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EdmSetManagement.Core.Settings" GeneratedClassName="Configuration">
+  <Profiles />
+  <Settings>
+    <Setting Name="CuesheetPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F:\MP3\!DJMixes\Ripped\!CueSheetDump</Value>
+    </Setting>
+    <Setting Name="DjSetPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F:\MP3\!DJMixes</Value>
+    </Setting>
+    <Setting Name="Mp3SplitPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\bin\mp3splt-2.1\mp3splt.exe</Value>
+    </Setting>
+    <Setting Name="Id3Path" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\bin\tagv2\id3.exe</Value>
+    </Setting>
+    <Setting Name="StreamRipperPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Program Files (x86)\Streamripper\streamripper.exe</Value>
+    </Setting>
+    <Setting Name="Mp3InfoPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Source\EdmSetManagement\EdmSetManagement.CuesheetCreator\bin\Debug\Binaries\mp3info.exe</Value>
+    </Setting>
+    <Setting Name="StationsList" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Tim Scarfe\source\EdmSetManagement\EdmSetManagement\EdmSetManagement.Core\Stations\station_list.txt</Value>
+    </Setting>
+    <Setting Name="ChopFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F:\MP3\!ChoppingBoard</Value>
+    </Setting>
+    <Setting Name="StationMetaStrip" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">^.+?Air:\s+</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

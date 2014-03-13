@@ -1,0 +1,8 @@
+﻿di_progressive	http://www.di.fm/listen/progressive/premium.pls?ojHbEG01F42834b6E
+di_trance	http://www.di.fm/listen/trance/premium.pls?ojHbEG01F42834b6E
+di_djmixes	http://www.di.fm/listen/djmixes/premium.pls?ojHbEG01F42834b6E
+di_techno	http://www.di.fm/listen/techno/premium.pls?ojHbEG01F42834b6E
+di_minimal	http://www.di.fm/listen/minimal/premium.pls?ojHbEG01F42834b6E
+di_electrohouse	http://www.di.fm/listen/electro/premium.pls?ojHbEG01F42834b6E
+di_techhouse	http://www.di.fm/listen/techhouse/premium.pls?ojHbEG01F42834b6E
+ah	http://localhost:65513/ah.fm.pls

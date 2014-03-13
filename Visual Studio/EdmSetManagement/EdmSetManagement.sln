@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EEB548EF-2204-4EA1-B856-F816CB514FA3}"
+	ProjectSection(SolutionItems) = preProject
+		EdmSetManagement.vsmdi = EdmSetManagement.vsmdi
+		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdmSetManagement.Core", "EdmSetManagement.Core\EdmSetManagement.Core.csproj", "{916213C9-9BF8-4015-891B-739FC43A9A2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdmSetManagement.ConsoleApplication", "EdmSetManagement.Console\EdmSetManagement.ConsoleApplication.csproj", "{FC8DFABE-E895-4730-9A36-C1BE1D38649E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdmSetManagement.CuesheetCreator", "EdmSetManagement.CuesheetCreator\EdmSetManagement.CuesheetCreator.csproj", "{96963B9E-645E-4D5C-A7FE-441F3AF52295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdmSetManagement.Tests", "EdmSetManagement.Tests\EdmSetManagement.Tests.csproj", "{BBBFA368-F707-437D-BAFC-4FD961D2DEC0}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://tfs:8080/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = EdmSetManagement.Console\\EdmSetManagement.ConsoleApplication.csproj
+		SccProjectName1 = EdmSetManagement.Console
+		SccLocalPath1 = EdmSetManagement.Console
+		SccProjectUniqueName2 = EdmSetManagement.Core\\EdmSetManagement.Core.csproj
+		SccProjectName2 = EdmSetManagement.Core
+		SccLocalPath2 = EdmSetManagement.Core
+		SccProjectUniqueName3 = EdmSetManagement.CuesheetCreator\\EdmSetManagement.CuesheetCreator.csproj
+		SccProjectName3 = EdmSetManagement.CuesheetCreator
+		SccLocalPath3 = EdmSetManagement.CuesheetCreator
+		SccProjectUniqueName4 = EdmSetManagement.Tests\\EdmSetManagement.Tests.csproj
+		SccProjectName4 = EdmSetManagement.Tests
+		SccLocalPath4 = EdmSetManagement.Tests
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = EdmSetManagement.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{916213C9-9BF8-4015-891B-739FC43A9A2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{916213C9-9BF8-4015-891B-739FC43A9A2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{916213C9-9BF8-4015-891B-739FC43A9A2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{916213C9-9BF8-4015-891B-739FC43A9A2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC8DFABE-E895-4730-9A36-C1BE1D38649E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC8DFABE-E895-4730-9A36-C1BE1D38649E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC8DFABE-E895-4730-9A36-C1BE1D38649E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC8DFABE-E895-4730-9A36-C1BE1D38649E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96963B9E-645E-4D5C-A7FE-441F3AF52295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96963B9E-645E-4D5C-A7FE-441F3AF52295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96963B9E-645E-4D5C-A7FE-441F3AF52295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96963B9E-645E-4D5C-A7FE-441F3AF52295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBBFA368-F707-437D-BAFC-4FD961D2DEC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBBFA368-F707-437D-BAFC-4FD961D2DEC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBBFA368-F707-437D-BAFC-4FD961D2DEC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBBFA368-F707-437D-BAFC-4FD961D2DEC0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
