@@ -43,3 +43,7 @@ Simply execute run_experiments.m to predict the track indexes for the test datas
 This is free software. Feel free to fork or contribute. It would be particularly useful if somebody 
 is interested in creating an implementation of this in a more serious language like C, Java, C# etc. 
 I would be happy to collaborate. Get in touch.
+
+I would like to personally thank Dennis Goncharov for providing me with a dataset complete with cues
+for my research and also Mikael Lindgren from CueNation. Both provided me with insight on how they
+find the optimal track indices. 
