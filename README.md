@@ -26,7 +26,9 @@ the situation that you have downloaded a radio show like A State of Trance and y
 the track list. Web sites already exist where humans manually create cue sheets i.e. http://cuenation.com/
 The problem is you have to rely on them (you can't automate the process) and as I have seen first 
 hand they make a lot of mistakes on the indexes. They are obsessed with "precision" while often failing
-on basic accuracy. 
+on basic accuracy. Manually finding the indices is (I think) a laborious error-prone task. I can't quite believe 
+that they have the will or the inclination to do it manually, but they do. A potential fork of this
+project would be to use the self-similarity matrix visualization as a helper for them to do it manually faster.
 
 See http://www.developer-x.com/papers/trackindexes for more information and associated papers.
 
