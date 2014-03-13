@@ -40,4 +40,6 @@ A State of Trance (With Armin van Buuren) 453 + 462
 Trance Around World (with Above and Beyond) 364 + 372
 Magic Island (with Roger Shah) 98 + 112
 
-This is free software. Feel free to fork or contribute. 
+This is free software. Feel free to fork or contribute. It would be particularly useful if somebody 
+is interested in creating an implementation of this in a more serious language like C, Java, C# etc. 
+I would be happy to collaborate. Get in touch.
