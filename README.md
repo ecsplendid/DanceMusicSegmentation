@@ -3,9 +3,9 @@ Dance Music Segmentation
 
 Segmenting electronic dance music streams based on self-similarity
 
-Tim Scarfe (http://www.developer-x.com)
-Wouter M.~Koolen (http://wouterkoolen.info/)
-Yuri Kalnishkan (http://www.clrc.rhul.ac.uk/people/yura/)
+- Tim Scarfe (http://www.developer-x.com)
+- Wouter M.~Koolen (http://wouterkoolen.info/)
+- Yuri Kalnishkan (http://www.clrc.rhul.ac.uk/people/yura/)
 
 We present an unsupervised, deterministic algorithm for segmenting DJ-mixed Electronic 
 Dance Music (EDM) streams (for example; pod-casts, radio shows, live events) into their 
@@ -36,9 +36,9 @@ extracting cue sheet times etc are included as part of a Visual Studio project.
 
 Simply execute run_experiments.m to predict the track indexes for the test dataset which is:
 
-A State of Trance (With Armin van Buuren) 453 + 462
-Trance Around World (with Above and Beyond) 364 + 372
-Magic Island (with Roger Shah) 98 + 112
+- A State of Trance (With Armin van Buuren) 453 + 462
+- Trance Around World (with Above and Beyond) 364 + 372
+- Magic Island (with Roger Shah) 98 + 112
 
 This is free software. Feel free to fork or contribute. It would be particularly useful if somebody 
 is interested in creating an implementation of this in a more serious language like C, Java, C# etc. 
