@@ -1,4 +1,4 @@
-function [ S ] = get_symmetrycostmatrix( C, W, min_trackwidth )
+function [ S ] = getcost_symmetry( C, W, min_trackwidth )
 %%
 
 [T ~] = size(C);
@@ -6,7 +6,8 @@ function [ S ] = get_symmetrycostmatrix( C, W, min_trackwidth )
 % find symmetry matrix
 S = inf( T, W );
 
-for width = min_trackwidth:W 
+tic
+for w = min_trackwidth:W 
 
 	for t=1:T-(w+1)
         
@@ -20,15 +21,16 @@ for width = min_trackwidth:W
        
         end
         
-         S( t, w ) = sum(U) * (1/w);
+         S( t, w ) = sum(U);
    
     end
 end
+toc
 
-S(:,1:w )=inf;
+%S(:,1:w )=inf;
 
-ms = max( S( ~isinf( S ) ) );
-S = S./ms;
+%ms = max( S( ~isinf( S ) ) );
+%S = S./ms;
 
 %%
 end
