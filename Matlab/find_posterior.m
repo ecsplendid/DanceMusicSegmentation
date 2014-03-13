@@ -1,8 +1,5 @@
 function [mean_indexplacementconfidence, worst_indexplacementconfidence, track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] =  ...
-    find_posterior( SC, M, eta, draw_figs, output_width )
-
-%load in a test song cost matrix
-%load ws2
+    find_posterior( SC, M, eta, draw_figs, output_width, showname )
 
 %M = 22; % how many tracks to find
 [T,W] = size(SC); % tiles and maximum track width
@@ -11,12 +8,8 @@ function [mean_indexplacementconfidence, worst_indexplacementconfidence, track_i
 
 %% to calculate TL and H we need a slightly different cost matrix
 
-%we don't want infs, rather we want all the non used values to be the min
 
 HT_SC = SC;
-%mc = min(min(HT_SC));
-%HT_SC(HT_SC==inf)=0;   <- this line makes horrendous placements into ideal placements
-%HT_SC(HT_SC==0) = mc;  <- there are no zero-cost placements. !?!?!?
 
 % preprocess SC with the exp 
 % doing this doesnt affect the calculation of optimal placement, only
@@ -47,7 +40,6 @@ end
 %figure(4);
 %imagesc(log(H))
 %title('head');
-
 
 %%
 
@@ -97,7 +89,7 @@ end
 assert(all(abs(sum(PB,2) - 1) < 1e-6));
 
 if( draw_figs == 1) 
-    figure(2);
+    figure(15);
     imagesc(log(PB));
     title('probability distribution');
     colorbar;
@@ -202,9 +194,9 @@ relative_uncertainty = relative_uncertainty .^ uncertainty_factor;
 confidence = 1 - relative_uncertainty;
 
 if( draw_figs == 1) 
-    figure(6)
+    figure(7)
     bar( confidence );
-    title('Track Alignment Confidence Level');
+    title(sprintf('Track Alignment Confidence Level\n%s',showname));
     xlabel('Track Number');
     ylabel('Confidence Level');
 end
@@ -238,9 +230,9 @@ for m=2:M
 end
 
 if( draw_figs == 1) 
-    figure(7)
+    figure(9)
     bar( track_placementconf );
-    title( 'Track Time Placement Confidence' );
+    title(sprintf('Track Time Placement Confidence\n%s',showname));
     ylabel ( 'Confidence Level' );
     xlabel( 'Track Number' );
 end
@@ -252,7 +244,7 @@ track_placementconfidence = resample_vector(track_placementconf, output_width);
 
 if( draw_figs == 1) 
 
-    figure(2);
+    figure(15);
 
     hold on;
     for t=1:length(best_begin)
@@ -261,7 +253,7 @@ if( draw_figs == 1)
     end
     hold off;
 
-    title('Posterior with the "best" tracks overlaid');
+    title(sprintf('Posterior with the "best" tracks overlaid\n%s',showname));
     xlabel('Tiles');
     ylabel('Track Number');
     colorbar;

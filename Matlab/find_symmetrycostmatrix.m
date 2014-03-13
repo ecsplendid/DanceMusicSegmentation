@@ -1,10 +1,9 @@
 function [ S ] = find_symmetrycostmatrix( C, W, blank_tiles, T )
 
 % find symmetry matrix
-%%
 S = inf( T, W );
 
-for w=blank_tiles:W 
+for w = blank_tiles:W 
 
 	for t=1:T-(w+1)
         
