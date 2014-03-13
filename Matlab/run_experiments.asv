@@ -8,7 +8,6 @@ local_testset
 cd ..
 
 which_shows = 1:length(shows);
-
 howmany_shows = length(which_shows);
 
 output_width = 100;
@@ -39,9 +38,11 @@ for s=1:howmany_shows;
 
     audio_low = audioread( show.file );
 
-    showname = strrep(show.file, oldSubstr, newSubstr);
+    showname = strrep(show.file, '_', ' ');
+    showname = strrep(showname, 'examples/', '');
+    showname = strrep(showname, '.wav', '');
     
-    fprintf( 'Current Show: %s', show.file );
+    fprintf( 'Current Show: %s\n', show.file );
     
     chopper =  true( size( audio_low ) ) ;
 
@@ -76,7 +77,7 @@ for s=1:howmany_shows;
         solution_shift = 0;
         
         [ matched_tracks_fft, predictions, SC, C ] = ...
-            process_wavfile( sampleRate, indexes, audio_low, secondsPerTile, ...
+            process_wavfile( showname, sampleRate, indexes, audio_low, secondsPerTile, ...
                 minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
                 drawsimmat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
                 gaussian_filterdegree, cost_transformexponent);
@@ -95,7 +96,7 @@ for s=1:howmany_shows;
         
         [mean_indexplacementconfidence, worst_indexplacementconfidence, ...
             track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] = ...
-            find_posterior( SC, M, eta, draw_confs, output_width );
+            find_posterior( SC, M, eta, draw_confs, output_width, showname );
         
         track_placementconfidences_map( s, : ) = track_placementconfidence;
         track_placementconfidenceavg_map ( s ) = track_placementconfidenceavg;
@@ -106,13 +107,6 @@ for s=1:howmany_shows;
         
         toc;
 
-        if( drawsimmat )
-           
-            figure(1)
-            title(show.file)
-            
-        end
-        
 end
 
 fprintf('mean=%.2f, median=%.2f\n', mean(average_loss), median(average_loss) )
@@ -145,6 +139,7 @@ if( size( predictive_loss,1 )>1 )
         plot( ( track_indexconfidences_map_normalised ),'k' );
         hold off;
         legend('performance','time confidence','index confidence')
+        title('Comparative performance over the whole data set')
     end
 
 end
