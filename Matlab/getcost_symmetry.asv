@@ -22,10 +22,10 @@ for w = min_trackwidth:W
         
         for i=1:min( W, ((T-(w+1))-1) )
             
-            DS = D( w, t:(t+w) );
+            DS = D( i, 1:w );
+            DS = DS( i, t );
             
-            
-            U( i ) = DS*fliplr(DS');
+            U( i ) = v'*fliplr(v);
        
         end
         
