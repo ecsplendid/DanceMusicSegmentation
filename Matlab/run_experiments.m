@@ -71,7 +71,7 @@ for s=1:howmany_shows;
         gaussian_filterdegree = 2;
         
         cost_transformexponent = 4;
-        costmatrix_parameter = 0.5;
+        costmatrix_parameter = 0.7;
         costmatrix_normalizationtype = 2; % 1, favor short tracks, 2 long tracks, 3 gauss
         eta = 10;
         drawsimmat = 1;
