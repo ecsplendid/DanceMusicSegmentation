@@ -24,7 +24,7 @@ for w = min_trackwidth:W
             
             DS = D( w, t:min( (t+w), (T-w+1) ) );
             
-            U( i ) = (DS*fliplr(DS'))/w;
+            U( i ) = (DS*fliplr(DS)');
        
         end
         
@@ -37,8 +37,6 @@ for w = min_trackwidth:W
     end
 end
 toc
-
-S( S==0 ) = inf;
 
 ms = max( S( ~isinf( S ) ) );
 S = S./ms;
