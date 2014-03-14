@@ -1,6 +1,6 @@
-function [predictions_timespace, matched_tracks] = compute_trackplacement( ...
+function [predictions, matched_tracks] = compute_trackplacement( ...
         showname, SC, drawSimMat, space, ...
-        indexes, solution_shift, tileWidthSecs, C, w  ) 
+        indexes, solution_shift, tileWidthSecs, C  ) 
 
     [~, best_begin] = find_tracks( length(indexes)+1, SC );
 
@@ -41,7 +41,7 @@ function [predictions_timespace, matched_tracks] = compute_trackplacement( ...
         xlabel('Tiles');
         ylabel('Tiles');
         colorbar;
-        draw_scindexes(predictions, indexes_tilespace, w, T);
+        draw_scindexes(predictions, indexes_tilespace);
       
 
 

@@ -69,9 +69,11 @@ for s=1:howmany_shows;
         lowPassFilter = 1400;%Hz
         highPassFilter = 200;%Hz
         gaussian_filterdegree = 2;
-        cost_transformexponent = 2;
-        costmatrix_parameter = 0.7;
-        costmatrix_normalizationtype = 2; % 1, favor short tracks, 2 long tracks, 3 gauss
+        cost_transformexponent = 4;
+        costmatrix_parameter = 0.1;
+        % 1, favor short tracks, 2 long tracks, 3 add gauss, 4 multiply gauss
+        costmatrix_normalizationtype = 3; 
+        costmatrix_regularization = 0.4;
         eta = 10;
         drawsimmat = 1;
         draw_confs = 0;
@@ -86,7 +88,7 @@ for s=1:howmany_shows;
             process_wavfile( showname, sampleRate, indexes, audio_low, secondsPerTile, ...
                 minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
                 drawsimmat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
-                gaussian_filterdegree, cost_transformexponent, usesymmetry );
+                gaussian_filterdegree, cost_transformexponent, usesymmetry, costmatrix_regularization );
            
         audio_low = nan;
 

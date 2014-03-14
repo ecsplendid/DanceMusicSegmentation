@@ -20,19 +20,26 @@ for w=3:W
         b = SC( t+1, w-1 );
         c = SC( t+1, w-2 );
         
-        d = C( t, t+w-1 ) * C( t, t ); 
+        a=0;b=0;c=0;
+        
+        d = ( ( C( t, t+w-1 ) * C( t, t ) ) ); 
         
         SC( t, w ) = d + a + b - c;
         
     end
 end
 
-SC = normalize_costmatrix( SC );
-
 basic_sizenormalization = repmat( (1:W), size(SC,1), 1);
 SC = SC ./ basic_sizenormalization;
 
+SC = normalize_costmatrix( SC );
+
+
+
+
 SC(:,1:min_w )=inf;
+
+%imagesc(SC)
 
 %%
 
