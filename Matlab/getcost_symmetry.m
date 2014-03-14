@@ -29,6 +29,9 @@ end
 
 SC = normalize_costmatrix( SC );
 
+basic_sizenormalization = repmat( (1:W), size(SC,1), 1);
+SC = SC ./ basic_sizenormalization;
+
 SC(:,1:min_w )=inf;
 
 %%

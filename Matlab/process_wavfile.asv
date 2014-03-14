@@ -11,20 +11,25 @@ function [ matched_tracks, predictions, SC, C, W, w, tileWidthSecs, space ] = pr
 
 %%
 
-cost_transformexponent = 1;
-
 C_exp = 1 - ((1-C).^cost_transformexponent);
 
 % minimum track length in tiles
 w = floor((minTrackLength)/tileWidthSecs);
 
+solution_shift = 4;
+
 SUMC = getcost_sum( C_exp, W, w );
 SYMC = getcost_symmetry( C_exp, W, w );
 
-SC = SUMC + SYMC;
+%%
+
+SC = 1-(1-SUMC) .* (SUMC .* SYMC);
+
+
+costmatrix_normalizationtype = 2
 
 SC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
-    costmatrix_parameter, SC, W );
+   costmatrix_parameter, SC, W );
 
 % normalize it so we dont break wouters assertion in posterior
 [predictions, matched_tracks] = compute_trackplacement( ...

@@ -19,7 +19,7 @@ w = floor((minTrackLength)/tileWidthSecs);
 SUMC = getcost_sum( C_exp, W, w );
 SYMC = getcost_symmetry( C_exp, W, w );
 
-SC = SUMC + SYMC;
+SC = (SUMC + SYMC).*0.2 + (SUMC .* SYMC);
 
 SC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
     costmatrix_parameter, SC, W );
