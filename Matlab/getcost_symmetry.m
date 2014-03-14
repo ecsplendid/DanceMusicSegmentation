@@ -18,15 +18,18 @@ for w = min_trackwidth:W
 
 	for t=1:((T-(w+1))-1)
         
-        U = zeros( 1, w );
+        U = zeros( 1, min( W, T-t ) );
         
-        for i=1:min( W, ((T-(w+1))-1) )
+        for i=1:min( W, T-t )
             
-            DS = D( w, t:(t+w) );
+            DS = D( w, t:min( (t+w), (T-w+1) ) );
             
-            
-            U( i ) = DS*fliplr(DS');
+            U( i ) = (DS*fliplr(DS'))/w;
        
+        end
+        
+        if( sum(isnan(U))>0 )
+           a=1; 
         end
         
          S( t, w ) = sum(U);
@@ -35,9 +38,12 @@ for w = min_trackwidth:W
 end
 toc
 
-%S(:,1:w )=inf;
-%ms = max( S( ~isinf( S ) ) );
-%S = S./ms;
+S( S==0 ) = inf;
+
+ms = max( S( ~isinf( S ) ) );
+S = S./ms;
+
+SUMC=S;
 
 %%
 %end
