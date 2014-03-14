@@ -1,47 +1,36 @@
-%function [ S ] = getcost_symmetry( C, W, min_trackwidth )
+function [ SC ] = getcost_symmetry( C, W, min_w  )
 %%
 
-[T ~] = size(C);
+T = size(C,1);
 
-% matrix of diagonals 
-D = nan( W, T );
+assert(size(C,1)==size(C,2));
 
-for i=1:W
-   D( i, 1:T-(i-1) ) = diag( C, i-1 ); 
+SC = inf(T,W);
+
+SC( :, 1 ) = diag(C);
+
+for t=1:T-1
+    SC( t, 2 ) =  C( t,t )+C(t+1,t+1)+ 2*C(t,t+1);
 end
 
-% find symmetry matrix
-S = inf( T, W );
-
-tic
-for w = min_trackwidth:W 
-
-	for t=1:((T-(w+1))-1)
+for w=3:W
+    for t=1:T-w+1
+    
+        a = SC( t, w-1 );
+        b = SC( t+1, w-1 );
+        c = SC( t+1, w-2 );
         
-        U = zeros( 1, min( W, T-t ) );
+        d = C( t, t+w-1 ) * C( t, t ); 
         
-        for i=1:min( W, T-t )
-            
-            DS = D( w, t:min( (t+w), (T-w+1) ) );
-            
-            U( i ) = (DS*fliplr(DS)');
-       
-        end
+        SC( t, w ) = d + a + b - c;
         
-        if( sum(isnan(U))>0 )
-           a=1; 
-        end
-        
-         S( t, w ) = sum(U);
-   
     end
 end
-toc
 
-ms = max( S( ~isinf( S ) ) );
-S = S./ms;
+SC = normalize_costmatrix( SC );
 
-SUMC=S;
+SC(:,1:min_w )=inf;
 
 %%
-%end
+
+end

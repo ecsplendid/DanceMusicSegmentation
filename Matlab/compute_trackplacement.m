@@ -36,6 +36,8 @@ function [predictions, matched_tracks] = compute_trackplacement( ...
 
         figure(2)
          
+       mean(abs(indexes' - predictions))
+        
         imagesc(SC);
         title(sprintf('Cost Matrix\n%s',showname));
          xlabel('Tiles');

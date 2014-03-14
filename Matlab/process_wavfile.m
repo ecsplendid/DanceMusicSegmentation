@@ -9,22 +9,26 @@ function [ matched_tracks, predictions, SC, C, W, w, tileWidthSecs, space ] = pr
     lowPassFilter, highPassFilter, bandwidth, maxExpectedTrackWidth, ...
     gaussian_filterdegree );
 
-%C_exp = 1 - ((1-C).^cost_transformexponent);
+%%
+
+C_exp = 1 - ((1-C).^cost_transformexponent);
 
 % minimum track length in tiles
 w = floor((minTrackLength)/tileWidthSecs);
 
-SUMC = getcost_sum( C, W, w );
-%SYMC = find_symmetrycostmatrix( C_exp, W, w, T );
+SUMC = getcost_sum( C_exp, W, w );
+SYMC = getcost_symmetry( C_exp, W, w );
 
-SUMC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
-    costmatrix_parameter, SUMC, W );
+SC = SUMC + SYMC;
+
+SC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
+    costmatrix_parameter, SC, W );
 
 % normalize it so we dont break wouters assertion in posterior
 [predictions, matched_tracks] = compute_trackplacement( ...
-        showname, SUMC, drawsimmat, space, indexes, solution_shift, tileWidthSecs, C );
+        showname, SC, drawsimmat, space, indexes, solution_shift, tileWidthSecs, C );
 
-SC = SUMC;
+
     
 %%
 end
