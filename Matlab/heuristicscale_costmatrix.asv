@@ -20,20 +20,16 @@ function [SC] = heuristicscale_costmatrix ( ...
     if( costmatrix_normalizationtype == 3) 
 
         window_matrix_gauss = ...
-            repmat( (( 1- (gausswin(W).* costmatrix_parameter) ))',...
+            repmat( (( gausswin(W).* costmatrix_parameter ))',...
             size(SC,1), 1  );
 
-        %%
         
-     
-        
-        %%1- (gausswin(W).* costmatrix_parameter)
         
         %SC = (SC + 1) - window_matrix_gauss;
         % rather than adding, which is independent of our costs
         % lets try multiplying again
         
-        SC = SC.* window_matrix_gauss;
+        SC = SC.* ((1-window_matrix_gauss));
         
     end
     

@@ -19,10 +19,11 @@ w = floor((minTrackLength)/tileWidthSecs);
 SUMC = getcost_sum( C_exp, W, w );
 SYMC = getcost_symmetry( C_exp, W, w );
 
-SC = (SUMC + SYMC).*0.2 + (SUMC .* SYMC);
+
+SC = (SYMC .* SUMC) + (SYMC+SUMC);
 
 SC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
-    costmatrix_parameter, SC, W );
+   costmatrix_parameter, SC, W );
 
 % normalize it so we dont break wouters assertion in posterior
 [predictions, matched_tracks] = compute_trackplacement( ...
