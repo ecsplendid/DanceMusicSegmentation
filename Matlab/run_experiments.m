@@ -66,8 +66,8 @@ for s=1:howmany_shows;
         minTrackLength = 180;
         maxExpectedTrackWidth = 370*2;  %% magicisland=380*2 others 350*2
         bandwidth = 5;%Hz
-        lowPassFilter = 1000;%Hz
-        highPassFilter = 300;%Hz
+        lowPassFilter = 1400;%Hz
+        highPassFilter = 200;%Hz
         gaussian_filterdegree = 2;
         cost_transformexponent = 2;
         costmatrix_parameter = 0.7;
