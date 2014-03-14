@@ -20,29 +20,20 @@ SUMC = getcost_sum( C_exp, W, w );
 CONC = getcost_contig( C_exp, W, w );
 SYMC = getcost_symmetry( C_exp, W, w );
 
-SC = (CONC);
 
-%SC = ( (CONC) + (SUMC) );
-
-costmatrix_regularization = 1;
-
-SC = SC.^costmatrix_regularization;
-
-
-costmatrix_normalizationtype=2;
-costmatrix_parameter = 0.2;
-
- % SC = 1-( (1-SYMC) + (1-SUMC) );
- 
 if ( usesymmetry )
     
-     
+    SC = SYMC + SUMC;
 else
-   % SC = SUMC;
+    SC = SUMC;
 end
+ SC = SUMC;
 
-%SC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
- %  costmatrix_parameter, SC, W );
+SC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
+   costmatrix_parameter, SC, W );
+
+SC(SC>0.6) = inf;
+SC(isnan(SC)) = inf;
 
 % normalize it so we dont break wouters assertion in posterior
 [predictions, matched_tracks] = compute_trackplacement( ...

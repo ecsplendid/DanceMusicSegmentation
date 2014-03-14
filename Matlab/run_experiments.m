@@ -72,8 +72,8 @@ for s=1:howmany_shows;
         cost_transformexponent = 4;
         costmatrix_parameter = 0.1;
         % 1, favor short tracks, 2 long tracks, 3 add gauss, 4 multiply gauss
-        costmatrix_normalizationtype = 3; 
-        costmatrix_regularization = 0.4;
+        costmatrix_normalizationtype = 2; 
+        costmatrix_regularization = 0.7;
         eta = 10;
         drawsimmat = 1;
         draw_confs = 0;
@@ -102,16 +102,16 @@ for s=1:howmany_shows;
         
         predictive_loss_noabs( s, : ) = resample_vector( (indexes' - predictions), output_width );
         
-        [mean_indexplacementconfidence, worst_indexplacementconfidence, ...
-            track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] = ...
-            find_posterior( SC, M, eta, draw_confs, output_width, showname );
-        
-        track_placementconfidences_map( s, : ) = track_placementconfidence;
-        track_placementconfidenceavg_map ( s ) = track_placementconfidenceavg;
-        track_indexconfidences_map( s, : ) = track_indexconfidences;
-        worst_indexplacementconfidence_map( s ) = worst_indexplacementconfidence;
-        mean_indexplacementconfidence_map( s ) = mean_indexplacementconfidence;
-        predictive_loss( s,: ) = predictive_quality;
+%         [mean_indexplacementconfidence, worst_indexplacementconfidence, ...
+%             track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] = ...
+%             find_posterior( SC, M, eta, draw_confs, output_width, showname );
+%         
+%         track_placementconfidences_map( s, : ) = track_placementconfidence;
+%         track_placementconfidenceavg_map ( s ) = track_placementconfidenceavg;
+%         track_indexconfidences_map( s, : ) = track_indexconfidences;
+%         worst_indexplacementconfidence_map( s ) = worst_indexplacementconfidence;
+%         mean_indexplacementconfidence_map( s ) = mean_indexplacementconfidence;
+%         predictive_loss( s,: ) = predictive_quality;
         
         toc;
 

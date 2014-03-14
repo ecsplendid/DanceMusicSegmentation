@@ -19,26 +19,22 @@ for t=1:T
       
         dg = D( t, 1:w );
        
-        d=abs( diff( dg(1:w ) ) );
-       
-        hi = sum(dg( dg>0.4 ));
+        cs = cumsum( dg );
         
-        SC( t,w ) = ( sum( d(d<0.4) ) / max( 1, hi ) ) ;
+        SC( t,w ) =  sum( cs( cs<(0.3*w) ) );
         
-        if( hi>2 ) 
-            SC( t,w )  = 0;
-        end
-        
-
    end
 end
 
-SC = normalize_costmatrix(SC);
+SC = normalize_costmatrix( SC );
 
-SC = 1-SC;
+SC = SC .* 10000000;
+
+SC = SC .^ 0.95;
+
+%SC = 1-SC;
 
 
-SC = normalize_costmatrix(SC);
 
 % D = cumsum( 1-D )';
 
@@ -47,11 +43,10 @@ SC = normalize_costmatrix(SC);
 
 
 %SC = [ nan(T,1) SC ];
-SC(SC==1)=inf;
+
 SC(:,1:min_w )=inf;
 
 
-imagesc(SC)
 
 %%
 end
