@@ -30,7 +30,7 @@ SC = normalize_costmatrix( SC );
 
 SC = SC .* 10000000;
 
-SC = SC .^ 0.95;
+SC = SC .^ 0.4;
 
 %SC = 1-SC;
 
