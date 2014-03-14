@@ -69,14 +69,16 @@ for s=1:howmany_shows;
         lowPassFilter = 1000;%Hz
         highPassFilter = 300;%Hz
         gaussian_filterdegree = 2;
-        
         cost_transformexponent = 4;
         costmatrix_parameter = 0.7;
         costmatrix_normalizationtype = 2; % 1, favor short tracks, 2 long tracks, 3 gauss
         eta = 10;
         drawsimmat = 1;
         draw_confs = 0;
-        solution_shift = 4;
+        solution_shift = 0;
+        
+        usesymmetry = 1;
+        
         
         %SC == song cost matrix, C = 1-cosine matrix, W=max trach width in
         %tiles w=min track width in tiles
@@ -84,7 +86,7 @@ for s=1:howmany_shows;
             process_wavfile( showname, sampleRate, indexes, audio_low, secondsPerTile, ...
                 minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
                 drawsimmat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
-                gaussian_filterdegree, cost_transformexponent);
+                gaussian_filterdegree, cost_transformexponent, usesymmetry );
            
         audio_low = nan;
 

@@ -2,7 +2,7 @@ function [ matched_tracks, predictions, SC, C, W, w, tileWidthSecs, space ] = pr
     showname, sampleRate, indexes, audio_low, secondsPerTile, ...
     minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
     drawsimmat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
-    gaussian_filterdegree,cost_transformexponent)
+    gaussian_filterdegree,cost_transformexponent, usesymmetry)
 
 [C, W, tileWidthSecs, space] = get_cosinematrix(...
     audio_low, secondsPerTile, sampleRate,...
@@ -19,8 +19,11 @@ w = floor((minTrackLength)/tileWidthSecs);
 SUMC = getcost_sum( C_exp, W, w );
 SYMC = getcost_symmetry( C_exp, W, w );
 
-
-SC = (SYMC .* SUMC) + (SYMC+SUMC);
+if ( usesymmetry )
+    SC = (SYMC .* SUMC) + (SYMC+SUMC);
+else
+    SC = SUMC;
+end
 
 SC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
    costmatrix_parameter, SC, W );
