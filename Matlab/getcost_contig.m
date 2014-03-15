@@ -19,8 +19,10 @@ for w=3:W
         
         %plot(ls)
         
-        SC( t, w ) = mean( ln );
-         
+        SC( t, w ) = sum( ln )/w;
+       
+
+        
     end
     
     imagesc((SC));
