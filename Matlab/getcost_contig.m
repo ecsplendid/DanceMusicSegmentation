@@ -1,52 +1,46 @@
-function [SC] = getcost_contig(C, W, min_w) 
+%function [SC] = getcost_contig(C, W, min_w) 
 %%
 T = size(C,1);
 
 SC = nan( T, W );
 
-% matrix of diagonals 
-D = nan( W, T );
-assert(size(C,1)==size(C,2));
-  
- for i=1:W
-    D( i, 1:T-(i-1) ) = diag( C, i-1 ); 
- end
- 
-D = (D)';
- 
-for t=1:T
-   for w=2:W
-      
-        dg = D( t, 1:w );
-       
-        cs = cumsum( dg );
+
+for w=3:W
+    for t=1:T-w+1
+
+        % we have the triangle
+        sq = C( t:t+w-1, t:t+w-1 );
         
-        SC( t,w ) =  sum( cs( cs<(0.3*w) ) );
+        ln = sq( 1:size(sq,1)^2 );
         
-   end
+        s = sum(ln);
+        
+        ln = diff( ln );
+        
+        ln = (sum( ln(ln>0) )*s)  /w;
+        
+        
+        SC( t, w ) = ln;
+        
+    end
+    
+    imagesc((SC));
+    colorbar;
+    drawnow;
 end
-
-SC = normalize_costmatrix( SC );
-
-SC = SC .* 10000000;
-
-SC = SC .^ 0.4;
-
-%SC = 1-SC;
-
-
-
-% D = cumsum( 1-D )';
-
-% SC = D;
-% SC(SC<0)=0;
-
-
-%SC = [ nan(T,1) SC ];
 
 SC(:,1:min_w )=inf;
 
 
+SC = normalize_costmatrix(SC);
+
+[predictions, matched_tracks] = compute_trackplacement( ...
+        showname, SC, drawsimmat, space, indexes, solution_shift, tileWidthSecs, C, w );
 
 %%
-end
+
+imagesc(SC)
+
+
+%%
+%end
