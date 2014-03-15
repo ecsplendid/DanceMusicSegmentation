@@ -2,26 +2,28 @@
 %%
 T = size(C,1);
 
-SC = nan( T, W );
+SC = inf( T, W );
 
 
-for w=3:W
+for w=min_w:W
     for t=1:T-w+1
-
 
 
         % we have the triangle
         sq = C( t:t+w-1, t:t+w-1 );
         
-       ln = sq( 1:size(sq,1)^2 )';
-        
-       % [ls] = sort( ln );
+        ln = sq( 1:size(sq,1)^2 )';
+
+        [ls] = sort( ln );
         
         %plot(ls)
         
-        SC( t, w ) = sum( ln )/w;
+       % SC( t, w ) = ls( floor(w^2/2) ) / (w);
        
-
+       d = diff( ls );
+       
+       SC( t, w ) = mean( d(d>0) );
+       
         
     end
     
@@ -29,6 +31,7 @@ for w=3:W
     colorbar;
     drawnow;
 end
+
 
 SC(:,1:min_w )=inf;
 

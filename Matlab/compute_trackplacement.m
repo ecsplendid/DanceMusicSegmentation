@@ -34,10 +34,14 @@ function [predictions_timespace, matched_tracks] = compute_trackplacement( ...
 
         figure(2)
          
-        mean(abs(indexes' - predictions_timespace))
+        pmean = mean(abs(indexes' - predictions_timespace));
+        pmedian = median(abs(indexes' - predictions_timespace));
+        
+        fprintf( 'mean=%.2f median=%.2f', pmean, pmedian  );
         
         imagesc(SC);
-        title(sprintf('Cost Matrix\n%s\nWhite=ACTUAL Black=PREDICTED',showname));
+        title(sprintf('Cost Matrix\n%s\nWhite=ACTUAL Black=PREDICTED\nmean=%.2f median=%.2f',...
+            showname, pmean, pmedian ));
         xlabel('Tiles');
         ylabel('Tiles');
         colorbar;
