@@ -8,6 +8,8 @@ SC = nan( T, W );
 for w=3:W
     for t=1:T-w+1
 
+
+
         % we have the triangle
         sq = C( t:t+w-1, t:t+w-1 );
         
@@ -15,8 +17,12 @@ for w=3:W
         
         [ls] = sort( ln );
         
-        SC( t, w ) = sum( diff ( ls ) );
+        %plot(ls)
+        
+        SC( t, w ) = ls( floor(W/2) );
        
+
+        
     end
     
     imagesc((SC));
