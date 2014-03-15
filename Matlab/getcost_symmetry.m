@@ -16,7 +16,7 @@ CT = C';
  end
 
  for t=1:T
-   % IN( t, 1:W ) = cumsum( IN( t, 1:W ) );
+    IN( t, 1:W ) = cumsum( IN( t, 1:W ) );
  end
  
 
@@ -28,7 +28,7 @@ for t=1:T-1
     SC( t, 2 ) =  C( t,t )+C(t+1,t+1)+ 2*C(t,t+1);
 end
 
-gw = (1-gausswin(W,1));
+gw = (gausswin(W,1));
 
 for w=3:W
     for t=1:T-w+1
@@ -37,7 +37,7 @@ for w=3:W
         b = SC( t+1, w-1 );
         c = SC( t+1, w-2 );
         
-        d = C( t, t+w-1 ) *  (IN(t,w)); 
+        d = C( t, t+w-1 ) *  (IN(t,w)/(w))*gw(w); 
         
         SC( t, w ) = d + a + b - c;
     end
