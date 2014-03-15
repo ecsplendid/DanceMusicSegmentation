@@ -13,16 +13,14 @@ for w=3:W
         % we have the triangle
         sq = C( t:t+w-1, t:t+w-1 );
         
-        ln = sq( 1:size(sq,1)^2 )';
+       ln = sq( 1:size(sq,1)^2 )';
         
-        [ls] = sort( ln );
+       % [ls] = sort( ln );
         
         %plot(ls)
         
-        SC( t, w ) = ls( floor(W/2) );
-       
-
-        
+        SC( t, w ) = mean( ln );
+         
     end
     
     imagesc((SC));
