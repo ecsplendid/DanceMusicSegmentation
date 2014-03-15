@@ -11,17 +11,12 @@ for w=3:W
         % we have the triangle
         sq = C( t:t+w-1, t:t+w-1 );
         
-        ln = sq( 1:size(sq,1)^2 );
+        ln = sq( 1:size(sq,1)^2 )';
         
-        s = sum(ln);
+        [ls] = sort( ln );
         
-        ln = diff( ln );
-        
-        ln = (sum( ln(ln>0) )*s)  /w;
-        
-        
-        SC( t, w ) = ln;
-        
+        SC( t, w ) = sum( diff ( ls ) );
+       
     end
     
     imagesc((SC));
