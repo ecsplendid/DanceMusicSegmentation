@@ -1,4 +1,4 @@
-function [ matched_tracks, predictions, SC, C, W, w, tileWidthSecs, space ] = process_wavfile( ...
+function [ avg_shift, matched_tracks, predictions, SC, C, W, w, tileWidthSecs, space ] = process_wavfile( ...
     showname, sampleRate, indexes, audio_low, secondsPerTile, ...
     minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
     drawsimmat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
@@ -11,21 +11,13 @@ function [ matched_tracks, predictions, SC, C, W, w, tileWidthSecs, space ] = pr
 
 %%
 
-
 % minimum track length in tiles
-w = floor((minTrackLength)/tileWidthSecs);
+w = floor((minTrackLength) / tileWidthSecs);
 
-%SUMC = getcost_sum( C_exp, W, w );
-%CONC = getcost_contig( C_exp, W, w );
-SYMC = getcost_symmetry( C, W, w );
-  
-SC = SYMC;
-
-if ( SYMC )
-    
-   % SC = SUMC .* (SYMC);
+if( usesymmetry )
+    SC = getcost_contig( C, W, w );
 else
- 
+    SC = getcost_sum( C, W, w );
 end
 
 SC = SC .^ costmatrix_regularization;
@@ -33,14 +25,9 @@ SC = SC .^ costmatrix_regularization;
 SC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
    costmatrix_parameter, SC, W );
 
-%SC(SC>0.6) = inf;
-%SC(isnan(SC)) = inf;
-
 % normalize it so we dont break wouters assertion in posterior
-[predictions, matched_tracks] = compute_trackplacement( ...
+[predictions, matched_tracks, avg_shift] = compute_trackplacement( ...
         showname, SC, drawsimmat, space, indexes, solution_shift, tileWidthSecs, C, w );
-
-
-    
+ 
 %%
 end

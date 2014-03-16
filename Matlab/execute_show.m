@@ -7,6 +7,8 @@ tic;
 
 audio_low = audioread( show.file );
 
+global showname;
+
 showname = strrep(show.file, '_', ' ');
 showname = strrep(showname, 'examples/', '');
 showname = strrep(showname, '.wav', '');
@@ -31,7 +33,7 @@ chopper =  true( size( audio_low ) ) ;
 
     %SC == song cost matrix, C = 1-cosine matrix, W=max trach width in
     %tiles w=min track width in tiles
-    [ matched_tracks_fft, predictions, SC, C, W, w, tileWidthSecs, space ] = ...
+    [ avg_shift, matched_tracks_fft, predictions, SC, C, W, w, tileWidthSecs, space ] = ...
         process_wavfile( showname, sampleRate, indexes, audio_low, secondsPerTile, ...
             minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
             drawsimmat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
@@ -42,9 +44,13 @@ chopper =  true( size( audio_low ) ) ;
     thresholds(s,:) = (sum(matched_tracks_fft)./length(indexes)) .* 100;
     avg_trackerror = mean(abs(indexes' - predictions))
 
+    heuristicaccuracy = get_heuristicaccuracy( indexes, predictions );
+    
+    heuristic_loss(s) = heuristicaccuracy;
     average_loss( s ) = avg_trackerror;
     median_loss( s ) = median(abs(indexes' - predictions));
-
+    average_shifts(s) = avg_shift;
+    
     predictive_quality = resample_vector( abs(indexes' - predictions), output_width );
 
     predictive_loss_noabs( s, : ) = resample_vector( (indexes' - predictions), output_width );

@@ -1,4 +1,4 @@
-function [predictions_timespace, matched_tracks] = compute_trackplacement( ...
+function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplacement( ...
         showname, SC, drawSimMat, space, ...
         indexes, solution_shift, tileWidthSecs, C, w  ) 
 
@@ -6,12 +6,16 @@ function [predictions_timespace, matched_tracks] = compute_trackplacement( ...
 
     [T, ~] = size(C);
     
-    predictions = best_begin(2:end);
-    predictions = predictions + solution_shift;
+    predictions = best_begin( 2:end );
     
     indexes_tilespace = indexes ./ tileWidthSecs;
 
     predictions_timespace = space( predictions );
+    
+    % we shift the solutions in TIME space
+    predictions_timespace = predictions_timespace + solution_shift;
+    predictions = predictions + (solution_shift/tileWidthSecs);
+    
     
     [matched_tracks] = evaluate_performance(indexes, predictions_timespace);
 
@@ -32,16 +36,21 @@ function [predictions_timespace, matched_tracks] = compute_trackplacement( ...
         xlabel('Tiles');
         ylabel('Tiles');
 
-        figure(2)
+        figure( 2 );
          
         pmean = mean(abs(indexes' - predictions_timespace));
-        pmedian = median(abs(indexes' - predictions_timespace));
+
+        % indexes are in time space
+        pheuristicaccuracy = get_heuristicaccuracy( indexes, predictions_timespace );
+        avg_shift = mean((predictions_timespace-indexes'));
         
-        fprintf( 'mean=%.2f median=%.2f', pmean, pmedian  );
+        fprintf( 'mean=%.2f heuristic=%.2f shift=%.2f\n\n', ...
+            pmean, pheuristicaccuracy, avg_shift  );
+        mean(matched_tracks)
         
         imagesc(SC);
-        title(sprintf('Cost Matrix\n%s\nWhite=ACTUAL Black=PREDICTED\nmean=%.2f median=%.2f',...
-            showname, pmean, pmedian ));
+        title(sprintf('Cost Matrix\n%s\nWhite=ACTUAL Black=PREDICTED\nmean=%.2f heuristic=%.2f meandiff=%.2f shift=%.2f',...
+            showname, pmean, pheuristicaccuracy, avg_shift, solution_shift ));
         xlabel('Tiles');
         ylabel('Tiles');
         colorbar;

@@ -8,9 +8,11 @@ local_testset
 cd ..
 
 which_shows = 1:length(shows);
+
+which_shows = 1;
+
 howmany_shows = length(which_shows);
 
-%howmany_shows = 1;
 
 output_width = 100;
    
@@ -23,9 +25,14 @@ worst_indexplacementconfidence_map = zeros( howmany_shows, 1 );
 mean_indexplacementconfidence_map = zeros( howmany_shows, 1 );
 predictive_loss = nan( howmany_shows, output_width );
 predictive_loss_noabs = nan( howmany_shows, output_width );
+
+heuristic_loss = nan(howmany_shows,1);
 average_loss = nan( howmany_shows, 1 );
 median_loss = nan( howmany_shows, 1 );
 thresholds = nan( howmany_shows,7 );
+average_shifts = nan(howmany_shows, 1);
+
+global drawsimmat;
 
 %% set parameters
 
@@ -36,32 +43,34 @@ thresholds = nan( howmany_shows,7 );
     lowPassFilter = 1400;%Hz
     highPassFilter = 200;%Hz
     gaussian_filterdegree = 2;
-    cosine_transformexponent = 0.8;
+    cosine_transformexponent = 1;
     costmatrix_parameter = 1;
     % 1, favor short tracks, 2 long tracks, 3 add gauss, 4 multiply gauss
-    costmatrix_normalizationtype = 2; 
+    costmatrix_normalizationtype = 0; 
     costmatrix_regularization = 1;
     eta = 10;
     drawsimmat = 1;
     draw_confs = 0;
-    solution_shift = 0;
+    solution_shift = -2;
     usesymmetry = 1;
 
 
 %%
 
 for s=1:howmany_shows; 
-
  
     execute_show;
-  
-    
+
 end
 
-fprintf('mean=%.2f, median=%.2f\n', mean(average_loss), median(average_loss) )
+fprintf('mean=%.2f, heuristic=%.2f shiftavg=%.2f', ...
+    mean(average_loss), mean(heuristic_loss), mean(average_shifts) )
 
-mean(thresholds)
-
+if( howmany_shows > 1 )
+    mean(thresholds)
+else
+    thresholds
+end
 %%
 
 
