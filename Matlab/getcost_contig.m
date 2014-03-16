@@ -25,14 +25,15 @@ for w=min_w:W
             le = C_line(i-1);
             ri = C_line(i);
             
+            avg = (le+ri)/2;
+            
             if( le < blue_threshold && ri < blue_threshold)
-               score =  score + w * (blue_threshold/1); 
+               score =  score + w * (avg/1); 
             end
             
             if( le > red_threshold && ri > red_threshold)
-               score =  score - w * (red_threshold/1);
+               score =  score - w * (avg/1);
             end
-            
         end
         
         score = - (score/w^2);
