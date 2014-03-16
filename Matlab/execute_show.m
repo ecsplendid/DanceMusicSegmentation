@@ -1,4 +1,6 @@
 
+config_settings;
+
 show = shows{which_shows(s)};
 
 indexes = show.indexes; 

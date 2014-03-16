@@ -9,8 +9,6 @@ cd ..
 
 which_shows = 1:length(shows);
 
-which_shows = 1;
-
 howmany_shows = length(which_shows);
 
 output_width = 100;
@@ -35,25 +33,7 @@ global drawsimmat;
 
 %% set parameters
 
-    secondsPerTile = 10;
-    minTrackLength = 180;
-    maxExpectedTrackWidth = 580;%370*2;  %% magicisland=380*2 others 350*2
-    bandwidth = 5;%Hz
-    lowPassFilter = 1400;%Hz
-    highPassFilter = 200;%Hz
-    gaussian_filterdegree = 2;
-    cosine_transformexponent = 1;
-    
-    % 1, favor short tracks, 2 long tracks, 3 add gauss, 4 multiply gauss
-    
-    costmatrix_parameter = 0.2;
-    costmatrix_normalizationtype = 0; 
-    costmatrix_regularization = 1;
-    eta = 10;
-    drawsimmat = 1;
-    draw_confs = 0;
-    solution_shift = 0;
-    usesymmetry = 1;
+
 
 
 %%
@@ -91,7 +71,7 @@ if( draw_confs && size( predictive_loss,1 )>1 )
     track_indexconfidences_map_normalised = track_indexconfidences_map_normalised ./ max(track_indexconfidences_map_normalised);
 
     if( draw_confs )
-        figure(12)
+        figure(12);
         plot( ( predictive_performance_normalised ),'b' );
         hold on;
         plot( ( track_placementconfidences_map_normalised ),'r' );

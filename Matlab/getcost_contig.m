@@ -4,6 +4,9 @@ T = size(C,1);
 
 SC = inf( T, W );
 
+blue_threshold = 0.35;
+red_threshold = 0.35;
+
 for w=min_w:W
     for t=1:T-w+1
 
@@ -22,12 +25,12 @@ for w=min_w:W
             le = C_line(i-1);
             ri = C_line(i);
             
-            if( le < 0.3 && ri < 0.3)
-               score =  score + w; 
+            if( le < blue_threshold && ri < blue_threshold)
+               score =  score + w * (blue_threshold/1); 
             end
             
-            if( le > 0.7 && ri > 0.7)
-               score =  score - w;
+            if( le > red_threshold && ri > red_threshold)
+               score =  score - w * (red_threshold/1);
             end
             
         end
