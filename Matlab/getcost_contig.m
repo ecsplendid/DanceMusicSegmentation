@@ -1,7 +1,6 @@
-function [SC] = getcost_contig(C, W, min_w, threshold, contig_normalization) 
+function [SC] = getcost_contig(C, W, min_w, threshold, contig_regularization) 
 %%
 T = size(C,1);
-
 SC = inf( T, W );
 
 tic;
@@ -33,7 +32,7 @@ for w=min_w:W
             end
         end
         
-        score = -(score/ w^0.9 );
+        score = -(score/ w^contig_regularization );
         SC( t, w ) = score;
 
     end

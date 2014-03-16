@@ -19,6 +19,8 @@ function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplace
     
     [matched_tracks] = evaluate_performance(indexes, predictions_timespace);
 
+    avg_shift = mean((predictions_timespace-indexes'));
+    
     % draw figures
     if drawSimMat == 1
         figure(1)
@@ -42,7 +44,6 @@ function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplace
 
         % indexes are in time space
         pheuristicaccuracy = get_heuristicaccuracy( indexes, predictions_timespace );
-        avg_shift = mean((predictions_timespace-indexes'));
         
         fprintf( 'mean=%.2f heuristic=%.2f shift=%.2f\n\n', ...
             pmean, pheuristicaccuracy, avg_shift  );

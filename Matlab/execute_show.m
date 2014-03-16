@@ -1,6 +1,4 @@
 
-config_settings;
-
 show = shows{which_shows(s)};
 
 indexes = show.indexes; 
@@ -38,12 +36,12 @@ chopper =  true( size( audio_low ) ) ;
     [ avg_shift, matched_tracks_fft, predictions, SC, C, W, w, tileWidthSecs, space ] = ...
         process_wavfile( showname, sampleRate, indexes, audio_low, secondsPerTile, ...
             minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
-            drawsimmat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
+            drawsimmat, solution_shift, ...
             gaussian_filterdegree, cosine_transformexponent, costmatrix_regularization, ...
             use_costsymmetry, use_costcontig, use_costsum, use_costgaussian, use_costgaussianwidth, contig_symmetrythreshold, ...
             contig_regularization, symmetry_regularization, sum_regularization );
 
-    audio_low = nan;
+    clear audio_low;
 
     thresholds(s,:) = (sum(matched_tracks_fft)./length(indexes)) .* 100;
     avg_trackerror = mean(abs(indexes' - predictions))
@@ -56,19 +54,23 @@ chopper =  true( size( audio_low ) ) ;
     average_shifts(s) = avg_shift;
     
     predictive_quality = resample_vector( abs(indexes' - predictions), output_width );
-
     predictive_loss_noabs( s, : ) = resample_vector( (indexes' - predictions), output_width );
 
-%         [mean_indexplacementconfidence, worst_indexplacementconfidence, ...
-%             track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] = ...
-%             find_posterior( SC, M, eta, draw_confs, output_width, showname );
-%         
-%         track_placementconfidences_map( s, : ) = track_placementconfidence;
-%         track_placementconfidenceavg_map ( s ) = track_placementconfidenceavg;
-%         track_indexconfidences_map( s, : ) = track_indexconfidences;
-%         worst_indexplacementconfidence_map( s ) = worst_indexplacementconfidence;
-%         mean_indexplacementconfidence_map( s ) = mean_indexplacementconfidence;
-%         predictive_loss( s,: ) = predictive_quality;
+    if( draw_confs )
+    
+        [mean_indexplacementconfidence, worst_indexplacementconfidence, ...
+        track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] = ...
+     find_posterior( SC, M, eta, draw_confs, output_width, showname );
 
+
+     
+     track_placementconfidences_map( s, : ) = track_placementconfidence;
+     track_placementconfidenceavg_map ( s ) = track_placementconfidenceavg;
+     track_indexconfidences_map( s, : ) = track_indexconfidences;
+     worst_indexplacementconfidence_map( s ) = worst_indexplacementconfidence;
+     mean_indexplacementconfidence_map( s ) = mean_indexplacementconfidence;
+     predictive_loss( s,: ) = predictive_quality;
+    end
+    
     toc;
 

@@ -1,20 +1,13 @@
-clear all;
-%tatw_script_extended;
-%magic_script_extended;
-%asot_script_extended;
 
-cd dataset 
-local_testset
-cd ..
 
 which_shows = 1:length(shows);
 
 howmany_shows = length(which_shows);
 
+howmany_shows = 1;
+
 output_width = 100;
    
-sampleRate = 4000;
-    
 track_indexconfidences_map = zeros( howmany_shows, output_width );
 track_placementconfidences_map = zeros( howmany_shows, output_width );
 track_placementconfidenceavg_map = zeros( howmany_shows, 1 );
@@ -28,7 +21,6 @@ average_loss = nan( howmany_shows, 1 );
 median_loss = nan( howmany_shows, 1 );
 thresholds = nan( howmany_shows,7 );
 average_shifts = nan(howmany_shows, 1);
-
 
 %%
 
