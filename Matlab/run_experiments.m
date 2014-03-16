@@ -29,12 +29,6 @@ median_loss = nan( howmany_shows, 1 );
 thresholds = nan( howmany_shows,7 );
 average_shifts = nan(howmany_shows, 1);
 
-global drawsimmat;
-
-%% set parameters
-
-
-
 
 %%
 
