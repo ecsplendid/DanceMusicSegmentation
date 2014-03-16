@@ -4,7 +4,8 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, w, tileWidthSecs, s
     drawsimmat, solution_shift, ...
     gaussian_filterdegree,cosine_transformexponent, costmatrix_regularization, ...
     use_costsymmetry, use_costcontig, use_costsum, use_costgaussian, use_costgaussianwidth, contig_symmetrythreshold, ...
-    contig_regularization, symmetry_regularization, sum_regularization )
+    contig_regularization, symmetry_regularization, sum_regularization, ...
+    costcontig_incentivebalance, costsum_incentivebalance, costsymmetry_incentivebalance )
 
 
 [C, W, tileWidthSecs, space] = get_cosinematrix(...
@@ -18,7 +19,10 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, w, tileWidthSecs, s
 w = floor((minTrackLength) / tileWidthSecs);
 
 if( use_costcontig > 0 )
-    SC_CONTIG = getcost_contig( C, W, w, contig_symmetrythreshold, contig_regularization ) .* use_costcontig;
+    SC_CONTIG = getcost_contig( ...
+        C, W, w, contig_symmetrythreshold, ...
+        contig_regularization, costcontig_incentivebalance ...
+        ) .* use_costcontig;
     SC = SC_CONTIG;
 end
 
@@ -26,22 +30,28 @@ if( use_costsum > 0 )
     
     if( use_costcontig > 0 )
         
-     SC_SUM = ((getcost_sum( C, W, w, sum_regularization ) .* use_costsum))-(use_costsum/2);
+     SC_SUM = ((getcost_sum( C, W, w, sum_regularization, ...
+         costsum_incentivebalance ) .* use_costsum))-(use_costsum/2);
         
      SC = SC + SC_SUM;
      SC = normalize_costmatrix( SC );
     else
-      SC = getcost_sum( C, W, w, sum_regularization ) .* use_costsum;
+      SC = getcost_sum( C, W, w, sum_regularization, ...
+          costsum_incentivebalance ) .* use_costsum;
     end
 end
 
 if( use_costsymmetry > 0 )
     if( use_costcontig > 0 || use_costsum > 0 )
-        SC_SYM = ((getcost_symmetry( C, W, w, contig_symmetrythreshold, symmetry_regularization ) .* use_costsymmetry))-(use_costsymmetry/2);
+        SC_SYM = ((getcost_symmetry( C, W, w, contig_symmetrythreshold, ...
+            symmetry_regularization, costsymmetry_incentivebalance ) ...
+            .* use_costsymmetry))-(use_costsymmetry/2);
         SC = SC + SC_SYM;
         SC = normalize_costmatrix( SC );
     else
-        SC = getcost_symmetry( C, W, w, contig_symmetrythreshold, symmetry_regularization) .* use_costsymmetry;  
+        SC = getcost_symmetry( C, W, w, contig_symmetrythreshold, ...
+            symmetry_regularization, costsymmetry_incentivebalance) ...
+            .* use_costsymmetry;  
     end
 end
 

@@ -1,5 +1,6 @@
 function [ SC ] = getcost_symmetry( C, W, min_w, ...
-    contig_symmetrythreshold, symmetry_regularization )
+    contig_symmetrythreshold, symmetry_regularization, ...
+    costsymmetry_incentivebalance )
 %%
 T = size(C,1);
 
@@ -27,12 +28,12 @@ for w=min_w:W
                 
                 if( d1(p) < contig_symmetrythreshold && d2(p) < contig_symmetrythreshold )
                    
-                    score = score + w * (1-avg);
+                    score = score +  (w * (1-avg) * costsymmetry_incentivebalance);
                 end 
             
                 if( d1(p) > contig_symmetrythreshold && d2(p) > contig_symmetrythreshold )
                    
-                    score = score - w * avg;
+                    score = score - ( w * avg * (1-costsymmetry_incentivebalance) );
                 end 
             end
             

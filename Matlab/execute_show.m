@@ -39,7 +39,8 @@ chopper =  true( size( audio_low ) ) ;
             drawsimmat, solution_shift, ...
             gaussian_filterdegree, cosine_transformexponent, costmatrix_regularization, ...
             use_costsymmetry, use_costcontig, use_costsum, use_costgaussian, use_costgaussianwidth, contig_symmetrythreshold, ...
-            contig_regularization, symmetry_regularization, sum_regularization );
+            contig_regularization, symmetry_regularization, sum_regularization, ...
+            costcontig_incentivebalance, costsum_incentivebalance, costsymmetry_incentivebalance  );
 
     clear audio_low;
 
@@ -62,8 +63,6 @@ chopper =  true( size( audio_low ) ) ;
         track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] = ...
      find_posterior( SC, M, eta, draw_confs, output_width, showname );
 
-
-     
      track_placementconfidences_map( s, : ) = track_placementconfidence;
      track_placementconfidenceavg_map ( s ) = track_placementconfidenceavg;
      track_indexconfidences_map( s, : ) = track_indexconfidences;

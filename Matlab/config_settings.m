@@ -14,10 +14,14 @@ gaussian_filterdegree = 2;
 cosine_transformexponent = 1;
 costmatrix_regularization = 1;
 eta = 10;
-drawsimmat = 0;
+drawsimmat = 1;
 compute_confs=1;
 draw_confs = 0;
 solution_shift = 0;
+
+costcontig_incentivebalance = 0.7;
+costsum_incentivebalance = 0.4;
+costsymmetry_incentivebalance = 0.7;
 
 contig_regularization = 0.9;
 symmetry_regularization = 2;
@@ -30,4 +34,4 @@ contig_symmetrythreshold = 0.35;
 use_costsymmetry = 1;
 use_costcontig = 1;
 use_costsum = 1;
-use_costgaussian = 1;
+use_costgaussian = 0.5;

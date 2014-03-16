@@ -1,4 +1,6 @@
-function [SC] = getcost_contig(C, W, min_w, threshold, contig_regularization) 
+function [SC] = getcost_contig(...
+    C, W, min_w, threshold, ...
+    contig_regularization, costcontig_incentivebalance) 
 %%
 T = size(C,1);
 SC = inf( T, W );
@@ -24,11 +26,11 @@ for w=min_w:W
             avg = (le+ri)/2;
             
             if( le < threshold && ri < threshold)
-               score =  score + (1-avg); 
+               score =  score + ( (1-avg) * costcontig_incentivebalance); 
             end
             
             if( le > threshold && ri > threshold)
-               score =  score - avg;
+               score =  score - ( avg * (1-costcontig_incentivebalance));
             end
         end
         

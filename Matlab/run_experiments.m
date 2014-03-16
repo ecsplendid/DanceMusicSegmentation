@@ -1,7 +1,8 @@
-
+% this is called after loading in the relevant config and shows
+% see ./execute_gittest.m if you have downloaded this project from
+% github, otherwise ./experiments/run_resultsforpaper.m
 
 which_shows = 1:length(shows);
-
 howmany_shows = length(which_shows);
 
 output_width = 100;

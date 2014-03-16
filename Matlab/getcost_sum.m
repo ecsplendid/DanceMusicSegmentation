@@ -1,4 +1,5 @@
-function [ SC ] = getcost_sum( C, W, min_w, sum_regularization )
+function [ SC ] = getcost_sum( C, W, min_w, ...
+    sum_regularization, costsum_incentivebalance )
 %   BUILD_SONGCOSTMATRIX Summary of this function goes here
 %   type is default 'area', or 'symetry'
 %   C is cost matrix
@@ -8,10 +9,12 @@ function [ SC ] = getcost_sum( C, W, min_w, sum_regularization )
 
 %% build SC song cost cache matrix (l in paper)
 
-% we need it on the [-1 1] interval
-% otherwise we are basically adding up the red cells and ignoring the blue
-% ones!
-CI = (C.*2)-1;
+% costsum_incentivebalance == 0 produces the old cost matrix
+% i.e. only "disincentives" [0,1] with low values being ignored
+% 0.5 produces a [-0.5, 0.5 ] of equal disincentive and incentive
+% 1 produces only incentives i.e. only low values count
+CI = C - (costsum_incentivebalance);
+
 
 T = size(CI,1);
 
