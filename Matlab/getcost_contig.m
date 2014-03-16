@@ -1,18 +1,15 @@
-function [SC] = getcost_contig(C, W, min_w) 
+function [SC] = getcost_contig(C, W, min_w, threshold, contig_normalization) 
 %%
 T = size(C,1);
 
 SC = inf( T, W );
 
-blue_threshold = 0.35;
-red_threshold = 0.35;
-
+tic;
 for w=min_w:W
     for t=1:T-w+1
 
         % we have the triangle
         C_square = C( t:t+w-1, t:t+w-1 );
-       
         C_line = getmatrix_indiagonals(C_square);
         
         % we are looking for adjacent blues and reds
@@ -27,27 +24,29 @@ for w=min_w:W
             
             avg = (le+ri)/2;
             
-            if( le < blue_threshold && ri < blue_threshold)
-               score =  score + w * (avg/1); 
+            if( le < threshold && ri < threshold)
+               score =  score + (1-avg); 
             end
             
-            if( le > red_threshold && ri > red_threshold)
-               score =  score - w * (avg/1);
+            if( le > threshold && ri > threshold)
+               score =  score - avg;
             end
         end
         
-        score = - (score/w^2);
-        
+        score = -(score/ w^0.9 );
         SC( t, w ) = score;
 
     end
     
-    imagesc(SC);
-    colorbar;
-    drawnow;
+    %imagesc(SC);
+   % colorbar;
+   % drawnow;
 end
+toc;
 
 SC(:,1:min_w )=inf;
 SC = normalize_costmatrix(SC);
+
+
 
 end

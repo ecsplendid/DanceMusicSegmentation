@@ -39,5 +39,7 @@ function [C, W, tileWidthSecs, space] = get_cosinematrix(...
 
     %thrown an abs in there in case of any numerical error on the low costs
     C = (abs((1-(fdata * fdata')))).^cosine_transformexponent;
+    
+    C = C ./ max(max(C));
 
 end

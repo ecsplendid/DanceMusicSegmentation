@@ -1,4 +1,5 @@
-function [ SC ] = getcost_symmetry( C, W, min_w, contig_symmetrythreshold )
+function [ SC ] = getcost_symmetry( C, W, min_w, ...
+    contig_symmetrythreshold, symmetry_regularization )
 %%
 T = size(C,1);
 
@@ -38,7 +39,7 @@ for w=min_w:W
         end
         
         
-        SC( t, w ) = -score/ w^2;
+        SC( t, w ) = -score/ w^symmetry_regularization;
 
     end
     
