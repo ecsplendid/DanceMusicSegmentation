@@ -15,6 +15,7 @@ cosine_transformexponent = 1;
 costmatrix_regularization = 1;
 eta = 10;
 drawsimmat = 0;
+compute_confs=1;
 draw_confs = 0;
 solution_shift = 0;
 

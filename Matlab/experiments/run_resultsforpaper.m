@@ -16,36 +16,35 @@ for i=1:length(tile_sizes)
     A;
     cd ..
     run_experiments;
+    name = sprintf('A_T%d',secondsPerTile);
     cd experiments
-    save_result( sprintf('A_T%d',secondsPerTile), average_loss, ...
-        heuristic_loss, average_shifts );
-
+    save_result;
+    
     B;
     cd ..
     run_experiments;
+    name = sprintf('B_T%d',secondsPerTile);
     cd experiments
-    save_result( sprintf('B_T%d',secondsPerTile), average_loss, ...
-        heuristic_loss, average_shifts );
-    
+    save_result;
+
     C;
     cd ..
     run_experiments;
+    name = sprintf('C_T%d',secondsPerTile);
     cd experiments
-    save_result( sprintf('C_T%d',secondsPerTile), average_loss, ...
-        heuristic_loss, average_shifts );
+    save_result;
     
     D;
     cd ..
     run_experiments;
+    name = sprintf('D_T%d',secondsPerTile);
     cd experiments
-    save_result( sprintf('D_T%d',secondsPerTile), average_loss, ...
-        heuristic_loss, average_shifts );
-    
+    save_result;
+
     E;
     cd ..
     run_experiments;
+    name = sprintf('E_T%d',secondsPerTile);
     cd experiments
-    save_result( sprintf('E_T%d',secondsPerTile), average_loss, ...
-        heuristic_loss, average_shifts );
-
+    save_result;
 end

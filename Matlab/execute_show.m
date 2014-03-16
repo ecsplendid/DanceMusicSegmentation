@@ -56,7 +56,7 @@ chopper =  true( size( audio_low ) ) ;
     predictive_quality = resample_vector( abs(indexes' - predictions), output_width );
     predictive_loss_noabs( s, : ) = resample_vector( (indexes' - predictions), output_width );
 
-    if( draw_confs )
+    if( compute_confs )
     
         [mean_indexplacementconfidence, worst_indexplacementconfidence, ...
         track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] = ...

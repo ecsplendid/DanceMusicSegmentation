@@ -39,7 +39,7 @@ end
 %%
 
 
-if( draw_confs && size( predictive_loss,1 )>1 )
+if( compute_confs && size( predictive_loss,1 )>1 )
 
     predictive_loss_normalised = sum(predictive_loss);
     predictive_loss_normalised = predictive_loss_normalised - min(predictive_loss_normalised);
