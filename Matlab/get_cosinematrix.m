@@ -1,7 +1,9 @@
 function [C, W, tileWidthSecs, space] = get_cosinematrix(...
     audio_low, secondsPerTile, ...
     sampleRate, ...
-    lowPassFilter, highPassFilter, bandwidth, maxExpectedTrackWidth, gaussian_filterdegree )
+    lowPassFilter, highPassFilter, bandwidth, ...
+    maxExpectedTrackWidth, gaussian_filterdegree, ...
+    cosine_transformexponent )
 
     no_tiles = ceil((length(audio_low)/sampleRate)/secondsPerTile);
     tileWidth = floor(length(audio_low)/no_tiles); % we discard the last partial tile
@@ -35,7 +37,9 @@ function [C, W, tileWidthSecs, space] = get_cosinematrix(...
 
     space = (0:no_tiles-1) .* tileWidthSecs;
 
-    C = 1-(fdata * fdata');
-   
+    %thrown an abs in there in case of any numerical error on the low costs
+    C = (abs((1-(fdata * fdata')))).^cosine_transformexponent;
+    
+    C = C ./ max(max(C));
 
 end

@@ -1,30 +1,73 @@
-function [ matched_tracks, predictions, SC, C ] = process_wavfile( ...
+function [ avg_shift, matched_tracks, predictions, SC, C, W, w, tileWidthSecs, space ] = process_wavfile( ...
     showname, sampleRate, indexes, audio_low, secondsPerTile, ...
     minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
-    drawSimMat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
-    gaussian_filterdegree,cost_transformexponent)
+    drawsimmat, solution_shift, costmatrix_parameter, costmatrix_normalizationtype, ...
+    gaussian_filterdegree,cosine_transformexponent, costmatrix_regularization, ...
+    use_costsymmetry, use_costcontig, use_costsum, use_costgaussian, use_costgaussianwidth, contig_symmetrythreshold, ...
+    contig_regularization, symmetry_regularization, sum_regularization )
+
 
 [C, W, tileWidthSecs, space] = get_cosinematrix(...
     audio_low, secondsPerTile, sampleRate,...
     lowPassFilter, highPassFilter, bandwidth, maxExpectedTrackWidth, ...
-    gaussian_filterdegree );
+    gaussian_filterdegree, cosine_transformexponent );
 
-%C_exp = 1 - ((1-C).^cost_transformexponent);
+%%
 
 % minimum track length in tiles
-w = floor((minTrackLength)/tileWidthSecs);
+w = floor((minTrackLength) / tileWidthSecs);
 
-SUMC = getcost_sum( C, W, w );
-%SYMC = find_symmetrycostmatrix( C_exp, W, w, T );
+if( use_costcontig > 0 )
+    SC_CONTIG = getcost_contig( C, W, w, contig_symmetrythreshold, contig_regularization ) .* use_costcontig;
+    SC = SC_CONTIG;
+end
 
-SUMC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
-    costmatrix_parameter, SUMC, W );
+if( use_costsum > 0 )
+    
+    if( use_costcontig > 0 )
+        
+     SC_SUM = ((getcost_sum( C, W, w, sum_regularization ) .* use_costsum))-(use_costsum/2);
+        
+     SC = SC + SC_SUM;
+     SC = normalize_costmatrix( SC );
+    else
+      SC = getcost_sum( C, W, w, sum_regularization ) .* use_costsum;
+    end
+end
+
+if( use_costsymmetry > 0 )
+    if( use_costcontig > 0 || use_costsum > 0 )
+        SC_SYM = ((getcost_symmetry( C, W, w, contig_symmetrythreshold, symmetry_regularization ) .* use_costsymmetry))-(use_costsymmetry/2);
+        SC = SC + SC_SYM;
+        SC = normalize_costmatrix( SC );
+    else
+        SC = getcost_symmetry( C, W, w, contig_symmetrythreshold, symmetry_regularization) .* use_costsymmetry;  
+    end
+end
+
+if( use_costgaussian > 0 )
+    if( use_costcontig > 0 || use_costsum > 0 || use_costsymmetry > 0 )
+        
+         SC_GAUSS = ...
+            repmat( (( ( (1-gausswin(W, use_costgaussianwidth)).* use_costgaussian) ) -use_costgaussian )',...
+            size(SC,1), 1  );
+        
+        SC = SC + SC_GAUSS;
+        SC = normalize_costmatrix( SC );
+    else
+        SC = getcost_symmetry( C, W, w, contig_symmetrythreshold, symmetry_regularization) .* use_costsymmetry;  
+    end
+end
+
+SC = SC .^ costmatrix_regularization;
+
+% NOW DEPRECIATED
+SC = heuristicscale_costmatrix ( costmatrix_normalizationtype, ...
+   costmatrix_parameter, SC, W );
 
 % normalize it so we dont break wouters assertion in posterior
-[predictions, matched_tracks] = compute_trackplacement( ...
-        showname, SUMC, drawSimMat, space, indexes, solution_shift, tileWidthSecs, C );
-
-SC = SUMC;
-    
+[predictions, matched_tracks, avg_shift] = compute_trackplacement( ...
+        showname, SC, drawsimmat, space, indexes, solution_shift, tileWidthSecs, C, w );
+ 
 %%
 end

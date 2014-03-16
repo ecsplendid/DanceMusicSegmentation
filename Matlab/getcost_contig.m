@@ -1,25 +1,52 @@
-function [SD] = getcost_contig(T,W,S) 
+function [SC] = getcost_contig(C, W, min_w, threshold, contig_normalization) 
+%%
+T = size(C,1);
 
-    contig_map = zeros( T, W );
-    
-    for t=1:T
-       
-        contig_map( t,: ) = conv( selfsim_map_close( t,: ), gausswin(5) , 'same' );
+SC = inf( T, W );
+
+tic;
+for w=min_w:W
+    for t=1:T-w+1
+
+        % we have the triangle
+        C_square = C( t:t+w-1, t:t+w-1 );
+        C_line = getmatrix_indiagonals(C_square);
         
-        cs = zeros( 1,W );
-        last_high = 0;
-        for i=2:W %% do the cum sum thing
-            if contig_map( t,i ) == 0
-                cs(i) = 0;
-                last_high = max(cs);
-            else
-                cs(i) = min(inf, cs(i-1)+contig_map(t,i) );
+        % we are looking for adjacent blues and reds
+        % on the diags away from center
+        
+        score = 0;
+        
+        for i=2:length( C_line )
+           
+            le = C_line(i-1);
+            ri = C_line(i);
+            
+            avg = (le+ri)/2;
+            
+            if( le < threshold && ri < threshold)
+               score =  score + (1-avg); 
+            end
+            
+            if( le > threshold && ri > threshold)
+               score =  score - avg;
             end
         end
         
-        contig_map( t,: ) = cs;
-       
-        contig_map( t,: ) = contig_map( t,: ) .* gausswin(W,contiguity_gaussscale)';
+        score = -(score/ w^0.9 );
+        SC( t, w ) = score;
+
     end
     
+    %imagesc(SC);
+   % colorbar;
+   % drawnow;
+end
+toc;
+
+SC(:,1:min_w )=inf;
+SC = normalize_costmatrix(SC);
+
+
+
 end

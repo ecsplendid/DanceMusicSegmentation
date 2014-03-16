@@ -1,21 +1,23 @@
-function [predictions, matched_tracks] = compute_trackplacement( ...
+function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplacement( ...
         showname, SC, drawSimMat, space, ...
-        indexes, solution_shift, tileWidthSecs, C  ) 
+        indexes, solution_shift, tileWidthSecs, C, w  ) 
 
     [~, best_begin] = find_tracks( length(indexes)+1, SC );
 
     [T, ~] = size(C);
     
-    best_begin_tilespace = best_begin;
+    predictions = best_begin( 2:end );
+    
     indexes_tilespace = indexes ./ tileWidthSecs;
 
-    best_begintiles = best_begin';
-    best_begin = space( best_begin );
-    predictions = best_begin(2:end);
-
-    predictions = predictions + solution_shift;
-
-    [matched_tracks] = evaluate_performance(indexes, best_begin(2:end));
+    predictions_timespace = space( predictions );
+    
+    % we shift the solutions in TIME space
+    predictions_timespace = predictions_timespace + solution_shift;
+    predictions = predictions + (solution_shift/tileWidthSecs);
+    
+    
+    [matched_tracks] = evaluate_performance(indexes, predictions_timespace);
 
     % draw figures
     if drawSimMat == 1
@@ -27,20 +29,33 @@ function [predictions, matched_tracks] = compute_trackplacement( ...
 
        % in tile space
          imagesc(C);daspect([1 1 1]);colorbar;colorbar;axis xy;
-        draw_rectangles( [best_begin_tilespace T .* tileWidthSecs], 'k' );
+        draw_rectangles( [predictions T .* tileWidthSecs], 'k' );
       
         draw_indexes(space(end)./indexes_tilespace, indexes_tilespace);
         title(sprintf('1-Cosine Matrix\n%s',showname));
         xlabel('Tiles');
         ylabel('Tiles');
 
-        figure(2)
+        figure( 2 );
          
+        pmean = mean(abs(indexes' - predictions_timespace));
+
+        % indexes are in time space
+        pheuristicaccuracy = get_heuristicaccuracy( indexes, predictions_timespace );
+        avg_shift = mean((predictions_timespace-indexes'));
+        
+        fprintf( 'mean=%.2f heuristic=%.2f shift=%.2f\n\n', ...
+            pmean, pheuristicaccuracy, avg_shift  );
+        mean(matched_tracks)
+        
         imagesc(SC);
-        title(sprintf('Cost Matrix\n%s',showname));
-         xlabel('Tiles');
+        title(sprintf('Cost Matrix\n%s\nWhite=ACTUAL Black=PREDICTED\nmean=%.2f heuristic=%.2f meandiff=%.2f shift=%.2f',...
+            showname, pmean, pheuristicaccuracy, avg_shift, solution_shift ));
+        xlabel('Tiles');
         ylabel('Tiles');
-        draw_scindexes(best_begintiles);
+        colorbar;
+        draw_scindexes(predictions, indexes_tilespace, w, T);
+      
 
 
     end
