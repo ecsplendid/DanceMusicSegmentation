@@ -4,8 +4,6 @@ which_shows = 1:length(shows);
 
 howmany_shows = length(which_shows);
 
-howmany_shows = 1;
-
 output_width = 100;
    
 track_indexconfidences_map = zeros( howmany_shows, output_width );
