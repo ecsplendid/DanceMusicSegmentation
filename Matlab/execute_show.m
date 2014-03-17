@@ -1,4 +1,6 @@
 
+if( exist('execute_config') && execute_config ), config_settings, end;
+
 show = shows{which_shows(s)};
 
 indexes = show.indexes; 
@@ -40,7 +42,8 @@ chopper =  true( size( audio_low ) ) ;
             gaussian_filterdegree, cosine_transformexponent, costmatrix_regularization, ...
             use_costsymmetry, use_costcontig, use_costsum, use_costgaussian, use_costgaussianwidth, contig_symmetrythreshold, ...
             contig_regularization, symmetry_regularization, sum_regularization, ...
-            costcontig_incentivebalance, costsum_incentivebalance, costsymmetry_incentivebalance  );
+            costcontig_incentivebalance, costsum_incentivebalance, costsymmetry_incentivebalance,...
+            costgauss_incentivebalance );
 
     clear audio_low;
 

@@ -48,6 +48,8 @@ toc;
 SC(:,1:min_w )=inf;
 SC = normalize_costmatrix(SC);
 
+SC = SC-costcontig_incentivebalance;
+
 
 
 end

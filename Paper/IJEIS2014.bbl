@@ -62,6 +62,11 @@ E.~Peiszer, T.~Lidy, and A.~Rauber, ``Automatic audio segmentation: Segment
   boundary and structure detection in popular music,'' {\em Proc. of LSAS},
   2008.
 
+\bibitem{scarfe2013long}
+T.~Scarfe, W.~M. Koolen, and Y.~Kalnishkan, ``A long-range self-similarity
+  approach to segmenting dj mixed music streams,'' in {\em Artificial
+  Intelligence Applications and Innovations}, pp.~235--244, Springer, 2013.
+
 \bibitem{nyquist1928certain}
 H.~Nyquist, ``Certain topics in telegraph transmission theory,'' {\em American
   Institute of Electrical Engineers, Transactions of the}, vol.~47, no.~2,

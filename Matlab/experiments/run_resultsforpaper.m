@@ -80,7 +80,7 @@ end
 
 % run a D (only SUM/gauss) which is fast, at 5 secs for comparison
 
-secondsPerTile = 5;
+secondsPerTile = 2;
 
 D;
 cd ..

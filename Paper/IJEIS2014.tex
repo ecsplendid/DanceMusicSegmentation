@@ -137,18 +137,20 @@ The most obvious and pervasive element in dance music is the percussion (the bea
 
 \section{Evaluation Criteria}\label{eval_crit}
 
-It is challenging to quantify the performance of our method because if we misplace any tracks, it may have a cascade effect. For example if we place one track too many early on in a show, many of the subsequent tracks may be potentially correctly placed but out of alignment. 
+It is challenging to quantify the performance of our method because if we misplace any tracks, it may have a cascade effect. For example if we place one track too many early on in a show, many of the subsequent tracks may be correctly placed but out of alignment. 
 
-We perform three types of evaluation: `\textit{average}', `\textit{heuristic}' and `\textit{precisions}'.
+We perform three types of evaluation: `\textit{average}', \textit{precision}', and `\textit{thresholds}'.
 
 
 The \textit{average} (in seconds) given as $$\frac{1}{|P|}\sum_{i=1}^{|P|}{|P_i-A_i|}$$ is quite simply the mean absolute difference between constructed and actual indices ($P$ is constructed indices, and $A$ is the human indices). Naturally this metric will have a reduced meaning because although it depends on the real accuracy it also depends on the amount of misplacements and where in the track those misplacements were. The uncertainty variable attached to the misplacements is wide (in relation to the size of the shows and the number of tracks) but does regularise over the course of a large dataset.
 
-The \textit{precisions} metric is the percentage of matched tracks within different intervals of time (thresholds) $\{60, 30, 20, 10, 5, 3, 1\}$, in \emph{seconds} as a margin around any of the track indices we have been given. The precisions metric is invariant to alignment of the constructed indexes.
 
-\section{Data Set}\label{data_set}
-
-
+The \textit{precision} metric denoted by 
+\[
+\hat H(P,A) \leftarrow \frac{1}{|P|} \sum_{i=1}^{|P|}{    \mathrm{Sort}\left( |P-A_i|\right)_1   } \] for all
+ takes the mean of the absolute difference between each prediction and the nearest index.
+ 
+ The thresholds metric is the percentage of matched tracks within different intervals of time $\{60, 30, 20, 10, 5, 3, 1\}$, in \emph{seconds} as a margin around any of the track indices we have been given. This metric is also invariant to alignment and is provided for comparison with our other paper \cite{scarfe2013long}.
 
 \section{Preprocessing}\label{proprocessing} % Fourier/xcorr
 
@@ -172,12 +174,7 @@ To focus on the instruments and improve performance we perform convolution filte
 The Gaussian first derivative filter is defined as 
 $$- \frac{2 G}{B^2}  e^{-\frac{G^2}{B^2}} $$ where 
 
-$$G=\{-\lfloor 2B\rfloor,\lfloor-2B+1\rfloor,\ldots, \lfloor 2 B \rfloor\}, \ \  B = b \left( \frac{N}{R} \right)$$. $b$ is the bandwidth of the filter in Hz and this is a parameter of the algorithm. After the convolution filter is applied to each feature vector in $D$, we take the absolute values and normalize each one 
-
-\[
-D_i = |D_i|, \forall i \in D, \hspace{2em}
-D_i = \frac{D_i}{\|D_i\|}, \forall i \in D.
-\]
+$$G=\left\{-\lfloor 2B\rfloor,\lfloor-2B+1\rfloor,\ldots, \lfloor 2 B \rfloor\right\},$$ and $$B = b \left( \frac{N}{R} \right).$$ $b$ is the bandwidth of the filter in Hz and this is a parameter of the algorithm. After the convolution filter is applied to each feature vector in $D$, we take the absolute values and normalize each one 
 
 Because the application domain is well defined in this setting, we can design features that look specifically for what we are interested in (musical instruments). Typically in the literature; algorithms use an amalgam of general purpose feature extractors. For example; spectral centroid, spectral moments, pitch, harmonicity \cite{tzanetakis1999framework}. We construct a disimilarity matrix of cosines $S$ from $D \times D^\top$ (dot products).
 
@@ -205,10 +202,10 @@ We require a cost matrix $C(f,t)$ that describes the cost of placing a track of 
 
 \subsection{Summation}
 
-The most obvious strategy of all is to sum up the relevant elements in $S$ for each candidate track from tile $f$ through tile $t$. We define $C(f,t)$, the cost of a candidate track from tile $f$ through tile $t$, to be the sum of the dissimilarities between all pairs of tiles inside it, normalized on track length:
+The most obvious strategy of all is to sum up the relevant elements in $S$ for each candidate track from tile $f$ through tile $t$. We define $C(f,t)$, the cost of a candidate track from tile $f$ through tile $t$, to be the sum of the dissimilarities between all pairs of tiles inside it, normalized on track length with a regularization exponent $\omega$
 
 \begin{dmath*}
-C(f,t) ~=~ \frac{ \sum_{i=f}^{t} \sum_{j=f}^{t} S(i,j) }{ t-f+1 }
+C(f,t) ~=~ \frac{ \sum_{i=f}^{t} \sum_{j=f}^{t} S(i,j) }{ (t-f+1)^\omega }.
 \end{dmath*}
 
 As a first step, we pre-compute $C$ for each $1 \le f \le t \le T$. Direct calculation using the definition takes $O(T W^3)$ time. However, we can compute the full cost matrix in $O(W T)$ time using the following recursion for the unnormalized quantity $\tilde
@@ -251,20 +248,60 @@ One caveat is that this method only looks for disincentives for track placement.
 \subsection{Contiguity}
 
 Let \begin{dmath*}
-	\Omega( f,t ) \leftarrow \left\{ \\
+	\Omega( f,t ) \mapsto \left\{ \\
 		S(f,f), S(f+1,f+1), S(f+2,f+2) \ldots \\
 		S(f+1,f), S(f+2,f+1), S(f+3,f+2) \ldots \\
 		\ldots \\
 		S(t,t) 
 		 ~ \right\}  
-\end{dmath*} return a vector corresponding to concatenated diagonals in $S( f \ldots t, f \ldots t )$. We are interested in rewarding adjacent pairs that have both have low value (less than \textit{contiguity threshold} $\psi$) and punishing pairs that both have a high value (more than $1-\psi$).
+\end{dmath*} return a vector corresponding to concatenated diagonals in one half of the symmetric matrix $S( f \ldots t, f \ldots t )$. We are interested in rewarding adjacent pairs that have both have low value (less than \textit{contiguity threshold} $\psi$) and punishing pairs that both have a high value (more than $1-\psi$). Scores are weighted by the contiguity incentive bias $\varrho$.
 
-Therefore, the contiguity cost matrix 
-\begin{dmath*}
-\Upsilon(f, t) = 1
-\end{dmath*}
+Therefore, let
+\begin{dmath*}\hat\Upsilon(f, t) \mapsto  \sum_{i=2}^{|\Omega( f,t )|}{ \left\{
+\begin{array}{lr}
+\theta_{i-1} < \psi \land \theta_i < \psi & :  \xi\varrho  \\
+\theta_{i-1} > 1-\psi \land \theta_i > 1-\psi & : \xi(1-\varrho)  \\
+\end{array}
+\right.}
+\end{dmath*} denote the contiguity cost matrix ($\theta=\Omega( f,t )$ ) where $\xi=\frac{1}{2}\left(\theta_{i-1}+\theta_{i}\right)$.
+
+$\Upsilon(f, t)$ is normalized by the track length regularized by exponent $\lambda$.
+
+\begin{multline*}
+\hat\Upsilon(f, t) = \frac{\hat\Upsilon(f, t)}{(t-f+1)^\lambda} \\
+\Upsilon(f, t) = \frac{ \left( \Upsilon(f, t) - \min \Upsilon \right) }{ \max \Upsilon -\min \Upsilon  }
+\end{multline*} 
 
 \subsection{Symmetry}
+
+Let \begin{dmath*}
+	\Lambda( f,t,d ) \leftarrow \left\{ 
+	S(f+d-1,f), S(f+d, f+1), S(f+d+1, f+2),\ldots, S(t, t-d-1)
+	~ \right\} 
+\end{dmath*}take the diagonal $d$ from $S( f \ldots t, f \ldots t )$. For each diagonal in $S( f \ldots t, f \ldots t )$ we want to compare each element against its mirror counterpart. `symmetric' pairs that are both lower than \textit{symmetry threshold} $\nu$ confer an advantage (average value of both elements normalized by the track length and weighted by the \textit{symmetry incentive balance} $\varsigma$), and vice versa.
+
+Let symmetry cost matrix
+\begin{dmath*}\hat\Gamma(f, t) \mapsto  \sum_{i=1}^{|\Lambda( f,t,d )|}{ \left\{
+		\begin{array}{lr}
+			\kappa_{i} < \nu \land \rho_i < \nu & : \alpha\varsigma   \\
+			\kappa_{i} > 1-\nu \land \rho_i > 1-\nu & : \alpha(1-\varsigma)   \\
+		\end{array}
+		\right.}
+\end{dmath*} for all $d=1,2,\ldots,t-f+1$ where $\alpha=(t-f+1)\frac{1}{2}\left(\kappa_{i}+\rho_{i}\right)$, $\kappa=\Lambda( f,t,i )$ and $\rho_i = \Lambda( f,t,i )_x$ for $x=|\Lambda( f,t,i )|, |\Lambda( f,t,i )|-1,\ldots,1$.
+
+$\Gamma(f, t)$ is normalized by the track length regularized by exponent $\zeta$ and scaled onto the $[0,1]$ interval.
+\begin{multline*}
+\hat\Gamma(f, t) = \frac{\hat\Gamma(f, t)}{(t-f+1)^\zeta}  \\
+\Gamma(f, t) = \frac{ \left( \Gamma(f, t) - \min \Gamma \right) }{ \max \Gamma -\min \Gamma  }
+\end{multline*} 
+
+\subsection{Gaussian}
+Let \[
+G( \varpi, N )_{tw} = e^{ - \frac{1}{2} \frac{\varpi n}{ \frac{1}{2} W}^2  }
+\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularising the other three and for use on its own for comparison against a `naive' approach to the problem. Increasing values of $\varpi$ will tighten up the Gaussian although for simplicity we will just assume it has a value of $1$.
+
+\section{Mixing Cost Functions}
+
 
 
 \section{Computing Best Segmentation}\label{best_cost}
@@ -342,12 +379,13 @@ In this formula $t_i$ ranges from $t-W$ to $t-w$. We have $T \times m$ values of
 
 
  
+
 \section{Posterior Marginal of Song Boundary}
 Fix a learning rate $\eta$, and fix $T$ and $M$. Let
 \[
 P(j,s) ~=~ 
 \frac{\displaystyle
-\sum_{\t \in \segs^T_m : t_j = s} e^{- \eta \loss(\t)}
+	\sum_{\t \in \segs^T_m : t_j = s} e^{- \eta \loss(\t)}
 }{\displaystyle
 \sum_{\t \in \segs^T_m} e^{- \eta \loss(\t)}
 }
@@ -361,14 +399,16 @@ F = t_1 < \ldots < t_m < t_{m+1} = T+1.
 Let $\segs^{F : T}_m$ be the set of all $m/F-T$-segmentations. 
 %
 We have
-\[
+\begin{multline*}
 \sum_{\t \in \segs^T_m : t_j = s} e^{- \eta \loss(\t)}
 ~=~
-\sum_{\t \in \segs^{s-1}_{j-1}, \t' \in \segs^{s : T}_{m-j+1}} e^{- \eta (\loss(\t) +\loss(\t'))}
-~=~
+\sum_{\substack{\t \in \segs^{s-1}_{j-1},\\ 
+		\t'\in \segs^{s : T}_{m-j+1}}} 
+e^{- \eta (\loss(\t) +\loss(\t'))}
+~=~ \\
 \left(\sum_{\t \in \segs^{s-1}_{j-1}} e^{- \eta \loss(\t)}\right)
 \left(\sum_{\t \in \segs^{s : T}_{m-j+1}} e^{- \eta \loss(\t)}\right)
-\]
+\end{multline*}
 %
 which upon abbreviating
 \begin{align*}
@@ -384,26 +424,27 @@ So it suffices to compute $\head^{t}_{m}$ and $\tail^{t}_{m}$ for all relevant $
 \begin{align*}
 \head^t_1 &~=~ e^{-\eta C(1,t)} &
 \tail^f_1 &~=~ e^{- \eta C(f, T-f+1)}
-\intertext{and for $m\ge2$}
+\end{align*}
+and for $m\ge2$
+\begin{align*}
 \head^t_m 
 &~=~ 
 \sum_{t_m} \sum_{\t \in \segs^{t_m-1}_{m-1}} e^{- \eta (\loss(\t) + C(t_m, t-t_m+1))} 
-&
-\tail^f_m 
-&~=~ 
-\sum_{t_2} \sum_{\t \in \segs^{t_2 : T}_{m-1}} e^{- \eta (C(f, t_2-f) + \loss(\t))}
 \\
 &~=~ 
 \sum_{t_m} e^{-\eta C(t_m, t-t_m+1)} \sum_{\t \in \segs^{t_m-1}_{m-1}} e^{- \eta \loss(\t)}
-&
-&~=~
-\sum_{t_2} e^{- \eta C(f, t_2-f)} \sum_{\t \in \segs^{t_2 : T}_{m-1}} e^{- \eta \loss(\t)}
 \\
 &~=~ 
 \sum_{t_m} e^{-\eta C(t_m, t-t_m+1)} \head^{t_m-1}_{m-1}
-&
+\\
+\tail^f_m 
+&~=~ 
+\sum_{t_2} \sum_{\t \in \segs^{t_2 : T}_{m-1}} e^{- \eta (C(f, t_2-f)
+	+ \loss(\t))}\\
 &~=~
-\sum_{t_2} e^{- \eta C(f, t_2-f)} \tail^{t_2}_{m-1}
+\sum_{t_2} e^{- \eta C(f, t_2-f)} \sum_{\t \in \segs^{t_2 : T}_{m-1}} e^{- \eta \loss(\t)}\\
+&~=~
+\sum_{t_2} e^{- \eta C(f, t_2-f)} \tail^{t_2}_{m-1}\\
 \end{align*}
 
 
@@ -413,7 +454,7 @@ Fix a learning rate $\eta$, and fix $T$ and $M$. Let
 \[
 P(j,s,f) ~=~ 
 \frac{\displaystyle
-\sum_{\t \in \segs^T_m : t_j = s \land t_{j+1}-1 = f} e^{- \eta \loss(\t)}
+	\sum_{\t \in \segs^T_m : t_j = s \land t_{j+1}-1 = f} e^{- \eta \loss(\t)}
 }{\displaystyle
 \sum_{\t \in \segs^T_m} e^{- \eta \loss(\t)}
 }
@@ -425,10 +466,69 @@ In the same vein as the last section, we now get
 P(j,s,f) ~=~ \frac{\head^{s-1}_{j-1} \cdot e^{-\eta C(s, f-s+1)} \cdot \tail^{f+1}_{m-j}}{\head^T_m}.
 \]
 
-
 \section{Materials}
 
-All of the code presented in this paper with a small working test set is available on GitHub \footnote{\url{https://github.com/ecsplendid/DanceMusicSegmentation}}. The large data set ($\approx100$GB) we received from Dennis can be made available on request.
+All of the code presented in this paper with a small working test set is available on GitHub \footnote{\url{github.com/ecsplendid/DanceMusicSegmentation}}. The large data set ($\approx100$GB) we received from Dennis can be made available on request.
+
+
+\section{Methodology}
+
+TODO: parameters, 
+
+
+\section{Results}
+
+
+\begin{table*}[t]
+\centering
+	\begin{tabular}{lllllllllllll}
+		\hline 
+	
+			Sym & Cont  & Sum  &  Gauss   & Mean & Heuristic & Shift & 60s(\%) & 30s(\%) & 20s(\%) & 10s(\%) & 5s(\%) & 1s(\%)    \\ \hline 
+			
+	
+\multicolumn{13}{c}{\textbf{}} \\
+
+\multicolumn{13}{c}{{Tile Size 20s}, $\mu=0.5$}  \vspace{0.3cm}      
+\\
+
+1 & 1 & 1 & $\frac{1}{2}$ &  21.51    & 15.12          &  0.32      & 97.70    &  89.22   &  77.41   & 47.48    & 25.71   & 15.74   \\ [1ex]
+1 & 0 & 0 & $\frac{1}{2}$ &  22.25    & 15.91          &  1.07      & 97.78    &  88.46   &  73.58   & 43.72    & 23.54   & 14.54   \\ [1ex]
+0 & 1 & 0 & $\frac{1}{2}$ &  21.82    & 16.58          &  -0.73     & 96.71    &  85.59   &  74.29   & 46.94    & 25.72   & 15.47   \\ [1ex]
+0 & 0 & 1 & $\frac{1}{2}$ &  22.21    & 15.43          &  0.75      & 97.35    &  87.73   &  77.19   & 48.84    & 26.33   & 16.14   \\ [1ex]
+0 & 0 & 0 & 1             &  104.8    & 76.18          &  -38.4     & 43.57    &  22.58   &  15.39   & 8.19     & 4.55    & 2.75 \vspace{0.3cm}  \\ 
+
+1 & 1 & 1 & \textbf{0} &  40.94    &    17.90       &   -1.20   &   96.45  &   87.62  &   76.12  &  46.75   &  25.19  &  15.44  \\ [1ex]
+1 & 0 & 0 & \textbf{0} &  40.16    &    18.39       &   -2.32    &  96.69   &  86.96   &  72.19   & 42.72    & 23.30   & 14.34   \\ [1ex]
+0 & 1 & 0 & \textbf{0} &  44.62    &    19.72       &   0.91     &  95.31   &  83.79   &  72.70   & 45.69    & 24.76   & 14.99   \\ [1ex]
+0 & 0 & 1 & \textbf{0} &  42.66    &    18.78       &   -0.08    &  95.84   &  86.04   &  75.22   & 47.16    & 25.43   & 15.47   \\ [1ex]
+
+
+\multicolumn{13}{c}{{Tile Size 10s}, $\mu=0.5$}  \vspace{0.3cm}         
+\\
+
+1 & 1 & 1 & $\frac{1}{2}$ &  22.03    &   14.79        &   2.18     &  97.28   &  88.19   & 78.10    & 54.24    & 29.99   & 18.72   \\ [1ex]
+1 & 0 & 0 & $\frac{1}{2}$ &  21.32    &   15.16        &   1.67     &  97.45   &  88.12   & 77.21    & 51.10    & 27.33   & 16.86   \\ [1ex]
+0 & 1 & 0 & $\frac{1}{2}$ &  22.29    &   15.81        &   1.38     &  96.74   &  86.06   & 75.00    & 52.73    & 29.20   & 18.06   \\ [1ex]
+0 & 0 & 1 & $\frac{1}{2}$ &  21.97    &   14.94        &   0.32     &  97.09   &  87.55   & 77.31    & 55.08    & 30.02   & 18.57   \\ [1ex]
+0 & 0 & 0 & 1             &  99.35    &   75.54        &   -20.4    &  43.65   &  22.90   & 15.81    & 7.90     & 4.12    & 2.55  \vspace{0.3cm} \\ 
+	
+
+\multicolumn{13}{c}{{Tile Size 5}, $\mu=0.4$}    \vspace{0.3cm}      
+\\
+
+0& 0 & 1 & $\frac{1}{2}$ &   20.12   &    14.59       &   0.34    &  97.22   &  87.48   &  77.43   &  57.52   & 30.57  &  18.84  \\ [1ex]
+
+\multicolumn{13}{c}{{Tile Size 2}, $\mu=0.4$}    \vspace{0.3cm}      
+\\
+
+0& 0 & 1 & $\frac{1}{2}$ &   19.27   &    14.53       &   -1.01    &  97.18   &  87.67   &  76.75   &  58.04   & 30.63  &  18.87  \\ [1ex]
+
+	\hline 
+	\end{tabular}
+\caption{Main results.}
+\end{table*}
+
 
 \section{Summary}\label{conclusions}
 

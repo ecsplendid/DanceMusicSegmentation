@@ -21,7 +21,7 @@ for w=min_w:W
             d1 = C_dags( i, 1:size( C_dags, 1 )-i+1 );
             d2 = fliplr( d1 );
             
-            % compare every symetric pair
+            % compare every symmetric pair
             for p=1:size( C_dags, 1 )-i
                 
                 avg = (d1(p)+d2(p))/2;
@@ -51,6 +51,8 @@ end
 
 SC(:,1:min_w )=inf;
 SC = normalize_costmatrix(SC);
+
+SC = SC-costsymmetry_incentivebalance;
 
 
 %%
