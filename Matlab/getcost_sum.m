@@ -41,7 +41,7 @@ for w=3:W
 end
     
 % basic track size normalization % on all, we normalize on W
-basic_sizenormalization = repmat( (1:W).^sum_regularization, size(SC,1), 1);
+basic_sizenormalization = repmat( (1:W), size(SC,1), 1);
 SC = SC ./ basic_sizenormalization;
 
 
