@@ -1,5 +1,5 @@
 function [ SC ] = getcost_sum( C, W, min_w, ...
-    sum_regularization, costsum_incentivebalance )
+    costsum_incentivebalance )
 %   BUILD_SONGCOSTMATRIX Summary of this function goes here
 %   type is default 'area', or 'symetry'
 %   C is cost matrix
@@ -43,7 +43,6 @@ end
 % basic track size normalization % on all, we normalize on W
 basic_sizenormalization = repmat( (1:W).^sum_regularization, size(SC,1), 1);
 SC = SC ./ basic_sizenormalization;
-SC = normalize_costmatrix( SC );
 
 
 SC(:,1:min_w )=inf;

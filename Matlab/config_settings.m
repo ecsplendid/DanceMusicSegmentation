@@ -24,14 +24,11 @@ costsum_incentivebalance = 0.5;
 costsymmetry_incentivebalance = 0.5;
 costgauss_incentivebalance = 0.5;
 
-
-sum_regularization = 1;
-
 use_costgaussianwidth = 2;
 
 contig_symmetrythreshold = 0.4;
 
-use_costsymmetry = 1;
-use_costcontig = 1;
-use_costsum = 2;
-use_costgaussian = 2;
+use_costsymmetry = 0;
+use_costcontig = 0;
+use_costsum = 1;
+use_costgaussian = 0.5;
