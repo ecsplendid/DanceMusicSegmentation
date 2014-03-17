@@ -26,7 +26,7 @@ costgauss_incentivebalance = 0.5;
 
 use_costgaussianwidth = 2;
 
-contig_symmetrythreshold = 0.4;
+contig_symmetrythreshold = 0.25;
 
 use_costsymmetry = 1;
 use_costcontig = 1;
