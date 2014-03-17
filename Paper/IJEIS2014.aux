@@ -17,60 +17,62 @@
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
+\citation{Matejka:2013:SIO:2470654.2466149}
 \citation{tzanetakis1999framework}
 \citation{foote1999visualizing,foote1997similarity,foote2000automatic,foote2003media,foote2001visualizing}
 \citation{goodwin2003audio,goodwin2004dynamic}
 \citation{peeters2002toward,peeters2004deriving}
 \citation{peiszer2008automatic}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Data Set}{2}{section.2}}
-\newlabel{dataset}{{2}{2}{Data Set}{section.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces An example of the similarity matrix S. The second song in this image has an interesting region structure $\{ABCDA\}$. Songs that have so many independent sub regions can be a problem for the cost matrix heuristic which simply sums the cells.}}{3}{figure.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces A complex example of the similarity matrix S. This is an example of a very difficult segmentation task. This similarity matrix represents the domain of instrument features. In this example the boundaries between the tracks are hard to distinguish because adjacent tracks share the same instruments. This might imply that they are by the same artist (lazy artists) or a DJ trying to impress by mixing harmonically and creating shared instrumental features across groups of tracks.}}{3}{figure.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Evaluation Criteria}{3}{section.3}}
-\newlabel{eval_crit}{{3}{3}{Evaluation Criteria}{section.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Corpus}{2}{section.2}}
+\newlabel{dataset}{{2}{2}{Corpus}{section.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The track length distribution for all three radio shows. The \textit  {bump} of short tracks (less than $3$ minutes) are often introductions or otherwise extraneous.}}{3}{figure.1}}
+\newlabel{fig:tracklengths}{{1}{3}{The track length distribution for all three radio shows. The \textit {bump} of short tracks (less than $3$ minutes) are often introductions or otherwise extraneous}{figure.1}{}}
 \citation{nyquist1928certain}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces The track length distribution for all three radio shows. The \textit  {bump} of short tracks (less than $3$ minutes) are often introductions and are manifestly not normal. We removed all tracks smaller than $3$ minutes to avoid muddying the results.}}{4}{figure.3}}
-\newlabel{fig:tracklengths}{{3}{4}{The track length distribution for all three radio shows. The \textit {bump} of short tracks (less than $3$ minutes) are often introductions and are manifestly not normal. We removed all tracks smaller than $3$ minutes to avoid muddying the results}{figure.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Test Set}{4}{section.4}}
-\newlabel{test_set}{{4}{4}{Test Set}{section.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Data Preprocessing}{4}{section.5}}
-\newlabel{proprocessing}{{5}{4}{Data Preprocessing}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Evaluation Criteria}{4}{section.3}}
+\newlabel{eval_crit}{{3}{4}{Evaluation Criteria}{section.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Data Set}{4}{section.4}}
+\newlabel{data_set}{{4}{4}{Data Set}{section.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Preprocessing}{4}{section.5}}
+\newlabel{proprocessing}{{5}{4}{Preprocessing}{section.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Feature Extraction}{4}{section.6}}
 \newlabel{feat_ex}{{6}{4}{Feature Extraction}{section.6}{}}
 \citation{frigo2004fftw}
 \citation{tzanetakis1999multifeature}
 \citation{tzanetakis1999framework}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Cost Matrix}{5}{section.7}}
-\newlabel{costmatrix_sec}{{7}{5}{Cost Matrix}{section.7}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Computing Best Segmentation}{6}{section.8}}
-\newlabel{best_cost}{{8}{6}{Computing Best Segmentation}{section.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Improved Cost Function Ideas}{7}{section.9}}
-\newlabel{sec:improved-cost-function-ideas}{{9}{7}{Improved Cost Function Ideas}{section.9}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Results for the pruned set of shows (that do not contain tracks smaller than $180$ seconds). The percentage figure given on the number of shows indicates how many were discarded from the prune. Performance on TATW and Magic Island are robustly improved. Magic Island achieved the improvement with a comparatively small prune of 7.4\%.}}{7}{table.2}}
-\newlabel{tab:prunedresults}{{2}{7}{Results for the pruned set of shows (that do not contain tracks smaller than $180$ seconds). The percentage figure given on the number of shows indicates how many were discarded from the prune. Performance on TATW and Magic Island are robustly improved. Magic Island achieved the improvement with a comparatively small prune of 7.4\%}{table.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {10}Posterior Marginal of Song Boundary}{7}{section.10}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Cost Matrices}{5}{section.7}}
+\newlabel{costmatrix_sec}{{7}{5}{Cost Matrices}{section.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces An illustration of what the dissimilarity matrix $S(i,j)$ looks like}}{6}{figure.2}}
+\newlabel{fig:simmatrix}{{2}{6}{An illustration of what the dissimilarity matrix $S(i,j)$ looks like}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Summation}{6}{subsection.7.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Contiguity}{6}{subsection.7.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Symmetry}{7}{subsection.7.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Computing Best Segmentation}{7}{section.8}}
+\newlabel{best_cost}{{8}{7}{Computing Best Segmentation}{section.8}{}}
 \citation{theiler1997contiguity}
-\@writefile{toc}{\contentsline {section}{\numberline {11}Posterior Marginal of Song Position}{8}{section.11}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Posterior Marginal of Song Boundary}{8}{section.9}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Posterior Marginal of Song Position}{8}{section.10}}
+\@writefile{toc}{\contentsline {section}{\numberline {11}Materials}{8}{section.11}}
 \@writefile{toc}{\contentsline {section}{\numberline {12}Summary}{8}{section.12}}
 \newlabel{conclusions}{{12}{8}{Summary}{section.12}{}}
 \bibstyle{ieeetr}
 \bibdata{bib/references,bib/refs}
-\bibcite{foote1997similarity}{{1}{1997}{{Foote}}{{}}}
-\bibcite{foote1999visualizing}{{2}{1999}{{Foote}}{{}}}
-\bibcite{foote2000automatic}{{3}{2000}{{Foote}}{{}}}
-\bibcite{foote2001visualizing}{{4}{2001}{{Foote and Cooper}}{{}}}
-\bibcite{foote2003media}{{5}{2003}{{Foote and Cooper}}{{}}}
-\bibcite{frigo2004fftw}{{6}{2004}{{Frigo and Johnson}}{{}}}
-\bibcite{goodwin2003audio}{{7}{2003}{{Goodwin and Laroche}}{{}}}
-\bibcite{goodwin2004dynamic}{{8}{2004}{{Goodwin and Laroche}}{{}}}
-\bibcite{nyquist1928certain}{{9}{1928}{{Nyquist}}{{}}}
-\bibcite{peeters2004deriving}{{10}{2004}{{Peeters}}{{}}}
-\bibcite{peeters2002toward}{{11}{2002}{{Peeters et~al.}}{{Peeters, La~Burthe, and Rodet}}}
-\bibcite{peiszer2008automatic}{{12}{2008}{{Peiszer et~al.}}{{Peiszer, Lidy, and Rauber}}}
-\bibcite{theiler1997contiguity}{{13}{1997}{{Theiler and Gisler}}{{}}}
-\bibcite{tzanetakis1999framework}{{14}{1999{a}}{{Tzanetakis and Cook}}{{}}}
-\bibcite{tzanetakis1999multifeature}{{15}{1999{b}}{{Tzanetakis and Cook}}{{}}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces An illustration of what the dissimilarity matrix $S(i,j)$ looks like with the reconstructed indexes superimposed. White crosses indicate the human captured indices, and black dotted lines are the reconstructed indices. Note the error where one track has an end segment which is unlike the rest. }}{11}{figure.4}}
-\newlabel{fig:predictions}{{4}{11}{An illustration of what the dissimilarity matrix $S(i,j)$ looks like with the reconstructed indexes superimposed. White crosses indicate the human captured indices, and black dotted lines are the reconstructed indices. Note the error where one track has an end segment which is unlike the rest}{figure.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Main results. The accuracy rows show the mean of the absolute differences between the reconstructed tracks and the human indices (our test set). The thresholds indicate the percentage of reconstructed indices that fall within given time horizons centred around the actual indices. This is described in Section\nobreakspace  {}\ref  {eval_crit}.}}{12}{table.1}}
-\newlabel{tab:mainresults}{{1}{12}{Main results. The accuracy rows show the mean of the absolute differences between the reconstructed tracks and the human indices (our test set). The thresholds indicate the percentage of reconstructed indices that fall within given time horizons centred around the actual indices. This is described in Section~\ref {eval_crit}}{table.1}{}}
+\bibcite{Matejka:2013:SIO:2470654.2466149}{{1}{}{{}}{{}}}
+\bibcite{tzanetakis1999framework}{{2}{}{{}}{{}}}
+\bibcite{foote1999visualizing}{{3}{}{{}}{{}}}
+\bibcite{foote1997similarity}{{4}{}{{}}{{}}}
+\bibcite{foote2000automatic}{{5}{}{{}}{{}}}
+\bibcite{foote2003media}{{6}{}{{}}{{}}}
+\bibcite{foote2001visualizing}{{7}{}{{}}{{}}}
+\bibcite{goodwin2003audio}{{8}{}{{}}{{}}}
+\bibcite{goodwin2004dynamic}{{9}{}{{}}{{}}}
+\bibcite{peeters2002toward}{{10}{}{{}}{{}}}
+\bibcite{peeters2004deriving}{{11}{}{{}}{{}}}
+\bibcite{peiszer2008automatic}{{12}{}{{}}{{}}}
+\bibcite{nyquist1928certain}{{13}{}{{}}{{}}}
+\bibcite{frigo2004fftw}{{14}{}{{}}{{}}}
+\bibcite{tzanetakis1999multifeature}{{15}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {13}Acknowledgements}{9}{section.13}}
+\bibcite{theiler1997contiguity}{{16}{}{{}}{{}}}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces An illustration of what the dissimilarity matrix $S(i,j)$ looks like with the reconstructed indexes superimposed. White crosses indicate the human captured indices, and black dotted lines are the reconstructed indices. Note the error where one track has an end segment which is unlike the rest. }}{11}{figure.3}}
+\newlabel{fig:predictions}{{3}{11}{An illustration of what the dissimilarity matrix $S(i,j)$ looks like with the reconstructed indexes superimposed. White crosses indicate the human captured indices, and black dotted lines are the reconstructed indices. Note the error where one track has an end segment which is unlike the rest}{figure.3}{}}

@@ -1,100 +1,84 @@
-\begin{thebibliography}{15}
-\providecommand{\natexlab}[1]{#1}
-\providecommand{\url}[1]{\texttt{#1}}
-\expandafter\ifx\csname urlstyle\endcsname\relax
-  \providecommand{\doi}[1]{doi: #1}\else
-  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+\begin{thebibliography}{10}
 
-\bibitem[Foote(1997)]{foote1997similarity}
-Jonathan Foote.
-\newblock A similarity measure for automatic audio classification.
-\newblock In \emph{Proc. AAAI 1997 Spring Symposium on Intelligent Integration
-  and Use of Text, Image, Video, and Audio Corpora}, 1997.
+\bibitem{Matejka:2013:SIO:2470654.2466149}
+J.~Matejka, T.~Grossman, and G.~Fitzmaurice, ``Swifter: Improved online video
+  scrubbing,'' in {\em Proceedings of the SIGCHI Conference on Human Factors in
+  Computing Systems}, CHI '13, (New York, NY, USA), pp.~1159--1168, ACM, 2013.
 
-\bibitem[Foote(1999)]{foote1999visualizing}
-Jonathan Foote.
-\newblock Visualizing music and audio using self-similarity.
-\newblock In \emph{Proceedings of the seventh ACM international conference on
-  Multimedia (Part 1)}, pages 77--80. ACM, 1999.
+\bibitem{tzanetakis1999framework}
+G.~Tzanetakis and F.~Cook, ``A framework for audio analysis based on
+  classification and temporal segmentation,'' in {\em EUROMICRO Conference,
+  1999. Proceedings. 25th}, vol.~2, pp.~61--67, IEEE, 1999.
 
-\bibitem[Foote(2000)]{foote2000automatic}
-Jonathan Foote.
-\newblock Automatic audio segmentation using a measure of audio novelty.
-\newblock In \emph{Multimedia and Expo, 2000. ICME 2000. 2000 IEEE
-  International Conference on}, volume~1, pages 452--455. IEEE, 2000.
+\bibitem{foote1999visualizing}
+J.~Foote, ``Visualizing music and audio using self-similarity,'' in {\em
+  Proceedings of the seventh ACM international conference on Multimedia (Part
+  1)}, pp.~77--80, ACM, 1999.
 
-\bibitem[Foote and Cooper(2001)]{foote2001visualizing}
-Jonathan Foote and Matthew Cooper.
-\newblock Visualizing musical structure and rhythm via self-similarity.
-\newblock In \emph{Proceedings of the 2001 International Computer Music
-  Conference}, pages 419--422, 2001.
+\bibitem{foote1997similarity}
+J.~Foote, ``A similarity measure for automatic audio classification,'' in {\em
+  Proc. AAAI 1997 Spring Symposium on Intelligent Integration and Use of Text,
+  Image, Video, and Audio Corpora}, 1997.
 
-\bibitem[Foote and Cooper(2003)]{foote2003media}
-Jonathan~T Foote and Matthew~L Cooper.
-\newblock Media segmentation using self-similarity decomposition.
-\newblock In \emph{Electronic Imaging 2003}, pages 167--175. International
-  Society for Optics and Photonics, 2003.
+\bibitem{foote2000automatic}
+J.~Foote, ``Automatic audio segmentation using a measure of audio novelty,'' in
+  {\em Multimedia and Expo, 2000. ICME 2000. 2000 IEEE International Conference
+  on}, vol.~1, pp.~452--455, IEEE, 2000.
 
-\bibitem[Frigo and Johnson(2004)]{frigo2004fftw}
-Matteo Frigo and Steven~G Johnson.
-\newblock The fftw web page, 2004.
+\bibitem{foote2003media}
+J.~T. Foote and M.~L. Cooper, ``Media segmentation using self-similarity
+  decomposition,'' in {\em Electronic Imaging 2003}, pp.~167--175,
+  International Society for Optics and Photonics, 2003.
 
-\bibitem[Goodwin and Laroche(2003)]{goodwin2003audio}
-Michael~M Goodwin and Jean Laroche.
-\newblock Audio segmentation by feature-space clustering using linear
-  discriminant analysis and dynamic programming.
-\newblock In \emph{Applications of Signal Processing to Audio and Acoustics,
-  2003 IEEE Workshop on.}, pages 131--134. IEEE, 2003.
+\bibitem{foote2001visualizing}
+J.~Foote and M.~Cooper, ``Visualizing musical structure and rhythm via
+  self-similarity,'' in {\em Proceedings of the 2001 International Computer
+  Music Conference}, pp.~419--422, 2001.
 
-\bibitem[Goodwin and Laroche(2004)]{goodwin2004dynamic}
-Michael~M Goodwin and Jean Laroche.
-\newblock A dynamic programming approach to audio segmentation and speech/music
-  discrimination.
-\newblock In \emph{Acoustics, Speech, and Signal Processing, 2004.
-  Proceedings.(ICASSP'04). IEEE International Conference on}, volume~4, pages
-  iv--309. IEEE, 2004.
+\bibitem{goodwin2003audio}
+M.~M. Goodwin and J.~Laroche, ``Audio segmentation by feature-space clustering
+  using linear discriminant analysis and dynamic programming,'' in {\em
+  Applications of Signal Processing to Audio and Acoustics, 2003 IEEE Workshop
+  on.}, pp.~131--134, IEEE, 2003.
 
-\bibitem[Nyquist(1928)]{nyquist1928certain}
-Harry Nyquist.
-\newblock Certain topics in telegraph transmission theory.
-\newblock \emph{American Institute of Electrical Engineers, Transactions of
-  the}, 47\penalty0 (2):\penalty0 617--644, 1928.
+\bibitem{goodwin2004dynamic}
+M.~M. Goodwin and J.~Laroche, ``A dynamic programming approach to audio
+  segmentation and speech/music discrimination,'' in {\em Acoustics, Speech,
+  and Signal Processing, 2004. Proceedings.(ICASSP'04). IEEE International
+  Conference on}, vol.~4, pp.~iv--309, IEEE, 2004.
 
-\bibitem[Peeters(2004)]{peeters2004deriving}
-Geoffroy Peeters.
-\newblock Deriving musical structures from signal analysis for music audio
-  summary generation:“sequence” and “state” approach.
-\newblock \emph{Computer Music Modeling and Retrieval}, pages 169--185, 2004.
+\bibitem{peeters2002toward}
+G.~Peeters, A.~La~Burthe, and X.~Rodet, ``Toward automatic music audio summary
+  generation from signal analysis,'' in {\em Proc. of ISMIR}, pp.~94--100,
+  2002.
 
-\bibitem[Peeters et~al.(2002)Peeters, La~Burthe, and Rodet]{peeters2002toward}
-Geoffroy Peeters, Amaury La~Burthe, and Xavier Rodet.
-\newblock Toward automatic music audio summary generation from signal analysis.
-\newblock In \emph{Proc. of ISMIR}, pages 94--100, 2002.
+\bibitem{peeters2004deriving}
+G.~Peeters, ``Deriving musical structures from signal analysis for music audio
+  summary generation:“sequence” and “state” approach,'' {\em Computer
+  Music Modeling and Retrieval}, pp.~169--185, 2004.
 
-\bibitem[Peiszer et~al.(2008)Peiszer, Lidy, and Rauber]{peiszer2008automatic}
-Ewald Peiszer, Thomas Lidy, and Andreas Rauber.
-\newblock Automatic audio segmentation: Segment boundary and structure
-  detection in popular music.
-\newblock \emph{Proc. of LSAS}, 2008.
+\bibitem{peiszer2008automatic}
+E.~Peiszer, T.~Lidy, and A.~Rauber, ``Automatic audio segmentation: Segment
+  boundary and structure detection in popular music,'' {\em Proc. of LSAS},
+  2008.
 
-\bibitem[Theiler and Gisler(1997)]{theiler1997contiguity}
-James~P Theiler and Galen Gisler.
-\newblock Contiguity-enhanced k-means clustering algorithm for unsupervised
-  multispectral image segmentation.
-\newblock In \emph{Optical Science, Engineering and Instrumentation'97}, pages
-  108--118. International Society for Optics and Photonics, 1997.
+\bibitem{nyquist1928certain}
+H.~Nyquist, ``Certain topics in telegraph transmission theory,'' {\em American
+  Institute of Electrical Engineers, Transactions of the}, vol.~47, no.~2,
+  pp.~617--644, 1928.
 
-\bibitem[Tzanetakis and Cook(1999{\natexlab{a}})]{tzanetakis1999framework}
-George Tzanetakis and F~Cook.
-\newblock A framework for audio analysis based on classification and temporal
-  segmentation.
-\newblock In \emph{EUROMICRO Conference, 1999. Proceedings. 25th}, volume~2,
-  pages 61--67. IEEE, 1999{\natexlab{a}}.
+\bibitem{frigo2004fftw}
+M.~Frigo and S.~G. Johnson, ``The fftw web page,'' 2004.
 
-\bibitem[Tzanetakis and Cook(1999{\natexlab{b}})]{tzanetakis1999multifeature}
-George Tzanetakis and Perry Cook.
-\newblock Multifeature audio segmentation for browsing and annotation.
-\newblock In \emph{Applications of Signal Processing to Audio and Acoustics,
-  1999 IEEE Workshop on}, pages 103--106. IEEE, 1999{\natexlab{b}}.
+\bibitem{tzanetakis1999multifeature}
+G.~Tzanetakis and P.~Cook, ``Multifeature audio segmentation for browsing and
+  annotation,'' in {\em Applications of Signal Processing to Audio and
+  Acoustics, 1999 IEEE Workshop on}, pp.~103--106, IEEE, 1999.
+
+\bibitem{theiler1997contiguity}
+J.~P. Theiler and G.~Gisler, ``Contiguity-enhanced k-means clustering algorithm
+  for unsupervised multispectral image segmentation,'' in {\em Optical Science,
+  Engineering and Instrumentation'97}, pp.~108--118, International Society for
+  Optics and Photonics, 1997.
 
 \end{thebibliography}

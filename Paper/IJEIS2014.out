@@ -1,12 +1,16 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Data Set}{}% 2
+\BOOKMARK [1][-]{section.2}{Corpus}{}% 2
 \BOOKMARK [1][-]{section.3}{Evaluation Criteria}{}% 3
-\BOOKMARK [1][-]{section.4}{Test Set}{}% 4
-\BOOKMARK [1][-]{section.5}{Data Preprocessing}{}% 5
+\BOOKMARK [1][-]{section.4}{Data Set}{}% 4
+\BOOKMARK [1][-]{section.5}{Preprocessing}{}% 5
 \BOOKMARK [1][-]{section.6}{Feature Extraction}{}% 6
-\BOOKMARK [1][-]{section.7}{Cost Matrix}{}% 7
-\BOOKMARK [1][-]{section.8}{Computing Best Segmentation}{}% 8
-\BOOKMARK [1][-]{section.9}{Improved Cost Function Ideas}{}% 9
-\BOOKMARK [1][-]{section.10}{Posterior Marginal of Song Boundary}{}% 10
-\BOOKMARK [1][-]{section.11}{Posterior Marginal of Song Position}{}% 11
-\BOOKMARK [1][-]{section.12}{Summary}{}% 12
+\BOOKMARK [1][-]{section.7}{Cost Matrices}{}% 7
+\BOOKMARK [2][-]{subsection.7.1}{Summation}{section.7}% 8
+\BOOKMARK [2][-]{subsection.7.2}{Contiguity}{section.7}% 9
+\BOOKMARK [2][-]{subsection.7.3}{Symmetry}{section.7}% 10
+\BOOKMARK [1][-]{section.8}{Computing Best Segmentation}{}% 11
+\BOOKMARK [1][-]{section.9}{Posterior Marginal of Song Boundary}{}% 12
+\BOOKMARK [1][-]{section.10}{Posterior Marginal of Song Position}{}% 13
+\BOOKMARK [1][-]{section.11}{Materials}{}% 14
+\BOOKMARK [1][-]{section.12}{Summary}{}% 15
+\BOOKMARK [1][-]{section.13}{Acknowledgements}{}% 16

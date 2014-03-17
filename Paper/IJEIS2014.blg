@@ -1,11 +1,7 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: IJEIS2014.aux
-The style file: plainnat.bst
-Illegal, another \bibstyle command---line 68 of file IJEIS2014.aux
- : \bibstyle
- :          {ieeetr}
-I'm skipping whatever remains of this command
+The style file: ieeetr.bst
 Database file #1: bib/references.bib
-I was expecting a `,' or a `}'---line 19 of file bib/references.bib
+I was expecting a `,' or a `}'---line 37 of file bib/references.bib
  :      
  :      % NOTE = ""
 (Error may have been on previous line)
@@ -71,4 +67,4 @@ Repeated entry---line 384 of file bib/refs.bib
  : @inproceedings{peeters2002toward
  :                                 ,
 I'm skipping whatever remains of this entry
-(There were 17 error messages)
+(There were 16 error messages)
