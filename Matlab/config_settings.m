@@ -22,17 +22,16 @@ solution_shift = 0;
 costcontig_incentivebalance = 0.5;
 costsum_incentivebalance = 0.5;
 costsymmetry_incentivebalance = 0.5;
-costgauss_incentivebalance = 0;
+costgauss_incentivebalance = 0.5;
 
 
-symmetry_regularization = 2;
 sum_regularization = 1;
 
-use_costgaussianwidth = 3;
+use_costgaussianwidth = 2;
 
-contig_symmetrythreshold = 0.20;
+contig_symmetrythreshold = 0.4;
 
-use_costsymmetry = 0;
+use_costsymmetry = 1;
 use_costcontig = 1;
-use_costsum = 1;
-use_costgaussian = 0;
+use_costsum = 2;
+use_costgaussian = 2;

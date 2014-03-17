@@ -33,7 +33,7 @@ for w=min_w:W
                incentive_score =  incentive_score + (1-avg) ;
             end
             
-            if( le > threshold && ri > threshold)
+            if( le > (1-threshold) && ri > (1-threshold))
                disincentive_score =  disincentive_score + avg ;
             end
         end
