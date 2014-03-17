@@ -1,10 +1,9 @@
 function [ SC ] = getcost_gaussian( T, W, min_w, ...
-    costgauss_incentivebalance, use_costgaussian, use_costgaussianwidth )
+    use_costgaussian, use_costgaussianwidth )
 %%
 
     % get a gaussian window
-    gwin = gausswin( W, use_costgaussianwidth );
-    gwin = gwin - (1-(costgauss_incentivebalance));
+    gwin = 1-gausswin( W, use_costgaussianwidth );
     gwin = gwin.*use_costgaussian;
     gwin = -gwin;
 

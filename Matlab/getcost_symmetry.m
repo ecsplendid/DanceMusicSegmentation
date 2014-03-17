@@ -8,6 +8,8 @@ SC = inf( T, W );
 SC_incentive = inf( T, W );
 SC_disincentive = inf( T, W );
 
+gwin = gausswin( W );
+
 for w=min_w:W
     for t=1:T-w+1
 
@@ -31,14 +33,12 @@ for w=min_w:W
                 
                 if( d1(p) < contig_symmetrythreshold && d2(p) < contig_symmetrythreshold )
                    
-                    incentive_score = incentive_score +  ...
-                        ( (1-avg) );
+                    incentive_score = incentive_score + (( (1-avg) ) * gwin(w) );
                 end 
             
                 if( d1(p) > (contig_symmetrythreshold) && d2(p) > (contig_symmetrythreshold) )
                    
-                    disincentive_score = disincentive_score + ...
-                        ( avg );
+                    disincentive_score = disincentive_score + ( avg * (gwin(w)));
                 end 
             end
             

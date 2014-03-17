@@ -8,6 +8,8 @@ SC = inf( T, W );
 SC_incentive = inf( T, W );
 SC_disincentive = inf( T, W );
 
+gwin = gausswin( W );
+
 tic;
 for w=min_w:W
     for t=1:T-w+1
@@ -30,11 +32,11 @@ for w=min_w:W
             avg = (le+ri)/2;
             
             if( le < threshold && ri < threshold)
-               incentive_score =  incentive_score + (1-avg) ;
+               incentive_score =  incentive_score + (1-avg) * gwin(w);
             end
             
             if( le > (1-threshold) && ri > (1-threshold))
-               disincentive_score =  disincentive_score + avg ;
+               disincentive_score =  disincentive_score + avg * (gwin(w));
             end
         end
         

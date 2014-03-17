@@ -58,7 +58,7 @@ end
 
 if( use_costgaussian > 0 )
     
-    SC_GAUSS = getcost_gaussian( T, W, min_w, costgauss_incentivebalance, ...
+    SC_GAUSS = getcost_gaussian( T, W, min_w, ...
         use_costgaussian, use_costgaussianwidth );
     
     if( use_costcontig > 0 || use_costsum > 0 || use_costsymmetry > 0 )
@@ -69,10 +69,9 @@ if( use_costgaussian > 0 )
     end
 end
 
-SC = SC .^ costmatrix_regularization;
-
 SC = normalize_costmatrix(SC);
-
+SC = SC .^ costmatrix_regularization;
+SC = normalize_costmatrix(SC);
 
 
 % normalize it so we dont break wouters assertion in posterior

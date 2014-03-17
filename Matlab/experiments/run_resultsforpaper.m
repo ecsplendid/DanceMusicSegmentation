@@ -7,84 +7,103 @@ cd ..
 config_settings;
 cd experiments
 
-tile_sizes = [20 10];
-
-for i=1:length(tile_sizes)
-
-    secondsPerTile = tile_sizes(i);
-
-    A;
-    cd ..
-    run_experiments;
-    name = sprintf('A_T%d',secondsPerTile);
-    cd experiments
-    save_result;
-    
-    B;
-    cd ..
-    run_experiments;
-    name = sprintf('B_T%d',secondsPerTile);
-    cd experiments
-    save_result;
-
-    C;
-    cd ..
-    run_experiments;
-    name = sprintf('C_T%d',secondsPerTile);
-    cd experiments
-    save_result;
-    
-    D;
-    cd ..
-    run_experiments;
-    name = sprintf('D_T%d',secondsPerTile);
-    cd experiments
-    save_result;
-    
-    E;
-    cd ..
-    run_experiments;
-    name = sprintf('E_T%d',secondsPerTile);
-    cd experiments
-    save_result;
-    
-    A_nogauss;
-    cd ..
-    run_experiments;
-    name = sprintf('A_nogauss_T%d',secondsPerTile);
-    cd experiments
-    save_result;
-    
-    B_nogauss;
-    cd ..
-    run_experiments;
-    name = sprintf('B_nogauss_T%d',secondsPerTile);
-    cd experiments
-    save_result;
-
-    C_nogauss;
-    cd ..
-    run_experiments;
-    name = sprintf('C_nogauss_T%d',secondsPerTile);
-    cd experiments
-    save_result;
-    
-    D_nogauss;
-    cd ..
-    run_experiments;
-    name = sprintf('D_nogauss_T%d',secondsPerTile);
-    cd experiments
-    save_result;
-
-end
-
-% run a D (only SUM/gauss) which is fast, at 5 secs for comparison
-
-secondsPerTile = 2;
-
-D;
+% EXPERIMENT 1: 1110
+use_costsymmetry = 1;
+use_costcontig = 1;
+use_costsum = 1;
+use_costgaussian = 0;
 cd ..
 run_experiments;
-name = sprintf('D__T%d',secondsPerTile);
+name = '1110_t10';
+cd experiments
+save_result;
+
+% EXPERIMENT 2: 1100
+use_costsymmetry = 1;
+use_costcontig = 1;
+use_costsum = 0;
+use_costgaussian = 0;
+cd ..
+run_experiments;
+name = '1100_t10';
+cd experiments
+save_result;
+
+% EXPERIMENT 3: 1010
+use_costsymmetry = 1;
+use_costcontig = 0;
+use_costsum = 1;
+use_costgaussian = 0;
+cd ..
+run_experiments;
+name = '1010_t10';
+cd experiments
+save_result;
+
+% EXPERIMENT 4: 0110
+use_costsymmetry = 0;
+use_costcontig = 1;
+use_costsum = 1;
+use_costgaussian = 0;
+cd ..
+run_experiments;
+name = '0110_t10';
+cd experiments
+save_result;
+
+% EXPERIMENT 5: 001[0.5]
+use_costsymmetry = 0;
+use_costcontig = 0;
+use_costsum = 1;
+use_costgaussian = 0.5;
+cd ..
+run_experiments;
+name = '001-05_t10';
+cd experiments
+save_result;
+
+
+% EXPERIMENT 6: 0100
+use_costsymmetry = 0;
+use_costcontig = 1;
+use_costsum = 0;
+use_costgaussian = 0;
+cd ..
+run_experiments;
+name = '0100_t10';
+cd experiments
+save_result;
+
+% EXPERIMENT 7: 1000
+use_costsymmetry = 1;
+use_costcontig = 0;
+use_costsum = 0;
+use_costgaussian = 0;
+cd ..
+run_experiments;
+name = '1000_t10';
+cd experiments
+save_result;
+
+% EXPERIMENT 8: 0001
+use_costsymmetry = 0;
+use_costcontig = 0;
+use_costsum = 0;
+use_costgaussian = 1;
+cd ..
+run_experiments;
+name = '0001_t10';
+cd experiments
+save_result;
+
+
+use_costsymmetry = 0;
+use_costcontig = 0;
+use_costsum = 1;
+use_costgaussian = 0.5;
+secondsPerTile = 2;
+cd ..
+run_experiments;
+name = '00105_t2';
 cd experiments
 save_result;
