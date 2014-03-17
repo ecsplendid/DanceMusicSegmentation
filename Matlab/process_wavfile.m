@@ -4,7 +4,7 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, min_w, tileWidthSec
     drawsimmat, solution_shift, ...
     gaussian_filterdegree,cosine_transformexponent, costmatrix_regularization, ...
     use_costsymmetry, use_costcontig, use_costsum, use_costgaussian, use_costgaussianwidth, contig_symmetrythreshold, ...
-    contig_regularization, symmetry_regularization, sum_regularization, ...
+     symmetry_regularization, sum_regularization, ...
     costcontig_incentivebalance, costsum_incentivebalance, costsymmetry_incentivebalance, ...
     costgauss_incentivebalance )
 
@@ -23,7 +23,7 @@ T = size(C,1);
 if( use_costcontig > 0 )
     SC_CONTIG = getcost_contig( ...
         C, W, min_w, contig_symmetrythreshold, ...
-        contig_regularization, costcontig_incentivebalance ...
+         costcontig_incentivebalance ...
         ) .* use_costcontig;
     SC = SC_CONTIG;
 end
@@ -37,7 +37,7 @@ if( use_costsum > 0 )
         
      SC = SC + SC_SUM;
     else
-      SC = SC_SUM
+      SC = SC_SUM;
       
     end
 end
@@ -69,9 +69,10 @@ if( use_costgaussian > 0 )
     end
 end
 
+SC = SC .^ costmatrix_regularization;
+
 SC = normalize_costmatrix(SC);
 
-SC = SC .^ costmatrix_regularization;
 
 
 % normalize it so we dont break wouters assertion in posterior

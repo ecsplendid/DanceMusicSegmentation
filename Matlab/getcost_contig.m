@@ -1,9 +1,12 @@
 function [SC] = getcost_contig(...
     C, W, min_w, threshold, ...
-    contig_regularization, costcontig_incentivebalance) 
+    costcontig_incentivebalance) 
 %%
 T = size(C,1);
+
 SC = inf( T, W );
+SC_incentive = inf( T, W );
+SC_disincentive = inf( T, W );
 
 tic;
 for w=min_w:W
@@ -16,7 +19,8 @@ for w=min_w:W
         % we are looking for adjacent blues and reds
         % on the diags away from center
         
-        score = 0;
+        incentive_score = 0;
+        disincentive_score = 0;
         
         for i=2:length( C_line )
            
@@ -26,17 +30,16 @@ for w=min_w:W
             avg = (le+ri)/2;
             
             if( le < threshold && ri < threshold)
-               score =  score + ( (1-avg) * costcontig_incentivebalance); 
+               incentive_score =  incentive_score + (1-avg) ;
             end
             
             if( le > threshold && ri > threshold)
-               score =  score - ( avg * (1-costcontig_incentivebalance));
+               disincentive_score =  disincentive_score + avg ;
             end
         end
         
-        score = -(score/ w^contig_regularization );
-        SC( t, w ) = score;
-
+        SC_incentive(t, w) = incentive_score;
+        SC_disincentive(t, w) = disincentive_score;
     end
     
     %imagesc(SC);
@@ -45,10 +48,16 @@ for w=min_w:W
 end
 toc;
 
-SC(:,1:min_w )=inf;
+
+SC = -(SC_incentive.*costcontig_incentivebalance + ...
+    -SC_disincentive.*(1-costcontig_incentivebalance));
+
 SC = normalize_costmatrix(SC);
 
 SC = SC-costcontig_incentivebalance;
+
+SC(:,1:min_w )=inf;
+
 
 
 
