@@ -20,13 +20,13 @@ draw_confs = 1;
 solution_shift = 0;
 
 costcontig_incentivebalance = 0.5;
-costsum_incentivebalance = 0;
+costsum_incentivebalance = 0.5;
 costsymmetry_incentivebalance = 0.5;
 costgauss_incentivebalance = 0;
 
 
 symmetry_regularization = 2;
-sum_regularization = 1.7;
+sum_regularization = 1;
 
 use_costgaussianwidth = 3;
 
@@ -34,5 +34,5 @@ contig_symmetrythreshold = 0.20;
 
 use_costsymmetry = 0;
 use_costcontig = 1;
-use_costsum = 0;
+use_costsum = 1;
 use_costgaussian = 0;
