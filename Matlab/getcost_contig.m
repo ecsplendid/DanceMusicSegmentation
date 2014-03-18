@@ -6,17 +6,22 @@ T = size(C,1);
 SC = inf( T, W );
 gwin = gausswin( W ) ;
 
-high_thresh = 0.1;
-low_thresh = -0.4;
-
+%%
 tic;
 for w=min_w:W
     for t=1:T-w+1
+%%
 
         % we have the triangle
         C_square = C( t:t+w-1, t:t+w-1 );
         C_line = getmatrix_indiagonals(C_square);
+
+        red = C_line(C_line>0.5);
+        blue = C_line(C_line<=0.5);
         
+        high_thresh = mean( red )+0.5;
+        low_thresh = -(mean( blue )+0.5);
+            
         % we are looking for adjacent blues and reds
         % on the diags away from center
         
@@ -30,17 +35,23 @@ for w=min_w:W
             mx = max(le, ri);
             
             if( le < low_thresh && ri < low_thresh)
-               newscore = ((1-mx)/i) * costcontig_incentivebalance;
+               newscore = ((1-mx)/w) * costcontig_incentivebalance;
                score = score - (gwin(w) * newscore);
             end
             
             if(  le > high_thresh && ri > high_thresh )
-               score =  score + (mx/i) * (1-costcontig_incentivebalance);
+               
+                newscore = (mx/w);
+                newscore = newscore * (1-gwin(w));
+                newscore = newscore * (1-costcontig_incentivebalance);
+
+                score =  score + newscore;
+
             end
         end
         
         SC(t, w) = score;
- 
+ %%
     end
     
     %imagesc(SC);

@@ -1,7 +1,7 @@
 %%
 % config settings
 sampleRate = 4000;
-secondsPerTile = 10;
+secondsPerTile = 5;
 minTrackLength = 180;
 
 % magicisland=380*2 others 350*2
@@ -24,6 +24,6 @@ costsum_incentivebalance = 0.5;
 use_costgaussianwidth = 1;
 
 use_costsymmetry = 0;
-use_costcontig = 0;
-use_costsum = 1;
+use_costcontig = 1;
+use_costsum = 0;
 use_costgaussian = 0;

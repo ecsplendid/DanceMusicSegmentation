@@ -1,6 +1,7 @@
 function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplacement( ...
         showname, SC, drawSimMat, space, ...
-        indexes, solution_shift, tileWidthSecs, C, w  ) 
+        indexes, solution_shift, tileWidthSecs, C, w, secondsPerTile, ...
+        use_costsymmetry, use_costcontig, use_costsum, use_costgaussian ) 
 
     [~, best_begin] = find_tracks( length(indexes)+1, SC );
 
@@ -48,10 +49,11 @@ function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplace
         fprintf( 'mean=%.2f heuristic=%.2f medshift=%.2f\n\n', ...
             pmean, pheuristicaccuracy, avg_shift  );
         mean(matched_tracks)
-        
+
         imagesc(SC);
-        title(sprintf('Cost Matrix\n%s\nWhite=ACTUAL Black=PREDICTED\nmean=%.2f heuristic=%.2f meandiff=%.2f shift=%.2f',...
-            showname, pmean, pheuristicaccuracy, avg_shift, solution_shift ));
+        title(sprintf('Cost Matrix @ T=%.2fs [SY:%d CO:%d SU:%d GA:%d]\n%s\nmean=%.2f heuristic=%.2f meandiff=%.2f shift=%.2f\nWhite=ACTUAL Black=PREDICTED',...
+           secondsPerTile, use_costsymmetry, use_costcontig, use_costsum, use_costgaussian,...
+           showname, pmean, pheuristicaccuracy, avg_shift, solution_shift ));
         xlabel('Tiles');
         ylabel('Tiles');
         colorbar;
