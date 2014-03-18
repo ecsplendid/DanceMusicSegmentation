@@ -21,6 +21,8 @@ median_loss = nan( howmany_shows, 1 );
 thresholds = nan( howmany_shows,7 );
 average_shifts = nan(howmany_shows, 1);
 
+shifts = [];
+
 %%
 
 for s=1:howmany_shows; 
@@ -29,15 +31,22 @@ for s=1:howmany_shows;
 
 end
 
-fprintf('mean=%.2f, heuristic=%.2f shiftavg=%.2f', ...
-    mean(average_loss), mean(heuristic_loss), mean(average_shifts) )
+fprintf('mean=%.2f, heuristic=%.2f shiftmedian=%.2f', ...
+    mean(average_loss), mean(heuristic_loss), median(average_shifts) )
 
 if( howmany_shows > 1 )
     mean(thresholds)
 else
     thresholds
 end
+
 %%
+
+if( drawsimmat )
+    figure(3)
+    hist(shifts,50);
+    title('shift histogram') 
+end
 
 
 if( compute_confs && size( predictive_loss,1 )>1 )

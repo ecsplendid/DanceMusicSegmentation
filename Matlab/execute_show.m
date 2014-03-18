@@ -39,8 +39,8 @@ chopper =  true( size( audio_low ) ) ;
         process_wavfile( showname, sampleRate, indexes, audio_low, secondsPerTile, ...
             minTrackLength, maxExpectedTrackWidth, bandwidth, lowPassFilter, highPassFilter, ...
             drawsimmat, solution_shift, ...
-            gaussian_filterdegree, cosine_transformexponent, costmatrix_regularization, ...
-            use_costsymmetry, use_costcontig, use_costsum, use_costgaussian, use_costgaussianwidth, contig_symmetrythreshold, ...
+            gaussian_filterdegree, cosine_transformexponent, ...
+            use_costsymmetry, use_costcontig, use_costsum, use_costgaussian, use_costgaussianwidth, ...
                ...
             costcontig_incentivebalance, costsum_incentivebalance, costsymmetry_incentivebalance );
 
@@ -55,6 +55,8 @@ chopper =  true( size( audio_low ) ) ;
     average_loss( s ) = avg_trackerror;
     median_loss( s ) = median(abs(indexes' - predictions));
     average_shifts(s) = avg_shift;
+    
+    shifts = [ shifts; (predictions - indexes')' ];
     
     predictive_quality = resample_vector( abs(indexes' - predictions), output_width );
     predictive_loss_noabs( s, : ) = resample_vector( (indexes' - predictions), output_width );
@@ -72,6 +74,8 @@ chopper =  true( size( audio_low ) ) ;
      mean_indexplacementconfidence_map( s ) = mean_indexplacementconfidence;
      predictive_loss( s,: ) = predictive_quality;
     end
+    
+    
     
     toc;
 

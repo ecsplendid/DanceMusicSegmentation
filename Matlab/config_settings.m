@@ -11,8 +11,9 @@ highPassFilter = 200;%Hz
 gaussian_filterdegree = 2;
 
 % cost matrix transformation
-cosine_transformexponent = 1;
+cosine_transformexponent = 1.5;
 costmatrix_regularization = 1;
+
 eta = 10;
 drawsimmat = 1;
 compute_confs=0;
@@ -24,7 +25,6 @@ costcontig_incentivebalance = 0.5;
 costsum_incentivebalance = 0.5;
 
 use_costgaussianwidth = 1;
-contig_symmetrythreshold = 0.5;
 
 use_costsymmetry = 1;
 use_costcontig = 1;

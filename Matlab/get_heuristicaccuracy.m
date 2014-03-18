@@ -15,6 +15,6 @@ function [pheuristicaccuracy] = get_heuristicaccuracy(indexes_timespace, predict
       pheuristicaccuracy(i) = id(1);
     end
 
-    pheuristicaccuracy = mean(pheuristicaccuracy);
+    pheuristicaccuracy = median(pheuristicaccuracy);
 
 end

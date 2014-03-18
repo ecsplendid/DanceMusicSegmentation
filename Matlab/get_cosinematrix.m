@@ -40,6 +40,18 @@ function [C, W, tileWidthSecs, space] = get_cosinematrix(...
     %thrown an abs in there in case of any numerical error on the low costs
     C = (abs((1-(fdata * fdata')))).^cosine_transformexponent;
     
-    C = C ./ max(max(C));
+    %%
+    
+    % new! 
+    % C is normally distributed but scewed in one direction 
+    % depending on some unknown, perhaps our side, perhaps the underlying
+    % music. We can normalize it around 0.5 which means we can expect more
+    % consistent behaviour with our methods!
+    mean_c = mean(C(1:size(C,1)^2));
+    C=C.^(2*mean_c);
+     
+   
+    % scale C onto [-1,1]
+    C = normalize_costmatrix(C);
 
 end
