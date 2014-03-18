@@ -9,9 +9,9 @@ function [ SC ] = getcost_sum( C, W, min_w, ...
 
 
 T = size(C,1);
-
 SC = inf( T, W );
 gwin = gausswin( W );
+
 
 for w=min_w:W
     for t=1:T-w+1
@@ -43,7 +43,6 @@ for w=min_w:W
               
                 score = score + new_score * (1-costsum_incentivebalance);
             end
-
         end
         
         SC(t, w) = score;
@@ -55,11 +54,8 @@ for w=min_w:W
    % drawnow;
 end
 
-
 SC = normalize_costmatrix(SC);
-
 SC(:,1:min_w )=inf;
-
     
 end
 
