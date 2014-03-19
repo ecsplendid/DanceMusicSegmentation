@@ -7,17 +7,19 @@ SC = inf( T, W );
 
 gwin_large = gausswin(W);
 
+C_BIGdags = getmatrix_indiagonals(C, 1);
+
 %%
 tic;
 for w=min_w:W
     for t=1:T-w+1
 %%
         % we have the triangle
-        C_square = C( t:t+w-1, t:t+w-1 );
-        C_dags = getmatrix_indiagonals(C_square, 1);
+     
+        C_dags = C_BIGdags(1:w, t:t+w-1);
 
-        red = abs(C_square(C_square>0));
-        blue = abs(C_square(C_square<=0));
+        red = 0;
+        blue = 0;
         
         high_thresh = mean( red );
         low_thresh = -(mean( blue ));
@@ -42,7 +44,7 @@ for w=min_w:W
                 le = C_line(i-1);
                 ri = C_line(i);
 
-                mix = mean(abs(le)+abs(ri));
+                mix = (abs(le)+abs(ri))/2;
 
                 newscore = (mix);
                 % contiguity more important in the center 
@@ -51,12 +53,13 @@ for w=min_w:W
                 % contiguity more important the further away it is
                 newscore = newscore / d;
 
-                if( le < low_thresh && ri < low_thresh)
+                
+                if( max(le, ri) < low_thresh)
                    newscore = newscore * costcontig_incentivebalance;
                    score = score - newscore;
                 end
 
-                if(  le > high_thresh && ri > high_thresh )
+                if(  min(le,ri) > high_thresh )
                     newscore = newscore * (1-costcontig_incentivebalance);
                     score =  score + newscore;
 

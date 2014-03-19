@@ -14,6 +14,8 @@ C_dags = getmatrix_indiagonals(C,1);
 
 score = 0;
 
+score_cache = zeros(T,W);
+
 for w=2:W
    for i=2:W-w
       p1=C_dags( w, i-1 );
@@ -28,6 +30,10 @@ for w=2:W
       if( p1 > 0 && p2 > 0 )
           score = score + mix;
       end
+   end
+   
+   if( w==2 )
+       score_cache( 1, w ) = score;
    end
 end
 
@@ -46,16 +52,19 @@ for t=2:T-W+1
         p2=C_dags( W-i+2, t );
 
         if( p1 < 0 && p2 < 0 )
-            new_score = score - mix;
+            new_score = new_score - mix;
         end
 
         if( p1 > 0 && p2 > 0 )
-            new_score = score + mix;
-        end
-        
+            new_score = new_score + mix;
+        end  
     end
     
-    SC( t, W ) = SC( t-1, W ) + new_score;
+    score_cache( t, W ) = new_score;
+    
+    SC( t, W ) = SC( t-1, W ) + new_score - score_cache( t-1, W );
+    
+    
     
 end
 

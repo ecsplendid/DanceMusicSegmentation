@@ -6,17 +6,18 @@ T = size(C,1);
 SC = inf( T, W );
 gwin = gausswin( W );
 
+C_BIGdags = getmatrix_indiagonals(C, 1);
+
 for w=min_w:W
     for t=1:T-w+1
 
         %%
       
         % we have the triangle
-        C_square = C( t:t+w-1, t:t+w-1 );
-        C_dags = getmatrix_indiagonals(C_square, 1);
+        C_dags = C_BIGdags(1:w, t:t+w-1);
         
-        high_thresh = mean(mean( C_square(C_square>0.5) ));
-        low_thresh = -(mean(mean( C_square(C_square<0.5) )));
+        high_thresh = 0;
+        low_thresh = 0;
         
        % figure(10)
        % imagesc(C_square)
@@ -27,15 +28,19 @@ for w=min_w:W
         % for every dag (no point looking at first one though)
         for i=2:size( C_dags, 1 )
             
-            d1 = C_dags( i, 1:size( C_dags, 1 )-i+1 );
-            d2 = fliplr( d1 );
+            line = C_dags( i, 1:size( C_dags, 1 )-i+1 );
+           
+            sz = size( C_dags, 1 );
             
             % compare every symmetric pair
-            for p=1:size( C_dags, 1 )-i
+            for p=1:sz-i
               
-                mix = (abs(d1(p)) + abs(d2(p)))/2;
+                p1 = line(p);
+                p2 = line( sz-i-p+1 );
                 
-                if( d1(p) < low_thresh && d2(p) < low_thresh )
+                mix = (abs(p1) + abs(p2))/2;
+                
+                if( p1 < low_thresh && p2 < low_thresh )
                    
                     new_incentive = (mix / w);
                     new_incentive = new_incentive * costsymmetry_incentivebalance;
@@ -43,7 +48,7 @@ for w=min_w:W
                     score = score - new_incentive;
                 end 
             
-                if( p > min_w && d1(p) > (high_thresh) && d2(p) > (high_thresh) )
+                if( p > min_w && p1 > (high_thresh) && p2 > (high_thresh) )
                    
                     new_disincentive = (mix / w);
                

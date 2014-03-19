@@ -2,7 +2,7 @@
 
 % Feature Extraction Parameters
 sampleRate = 4000;
-secondsPerTile = 20;
+secondsPerTile = 30;
 minTrackLength = 180;
 maxExpectedTrackWidth = 370*2;   % (magicisland=380*2 others 350*2)
 bandwidth = 5; % bandwith for the width of the convolution filter
@@ -25,7 +25,7 @@ use_costgaussianwidth = 1;
 
 % which cost functions to use and how much weight do they have (>0)
 use_costsymmetry = 1;
-use_costcontig = 0;
+use_costcontig = 1;
 use_costsum = 1;
 use_costgaussian = 1;
 

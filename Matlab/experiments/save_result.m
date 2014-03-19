@@ -1,10 +1,10 @@
-
-fn = sprintf('../results/%s', name);
-save(fn);
-
 clear C;
 clear SC;
 clear audio_low;
+%fn = sprintf('../results/%s', name);
+%save(fn);
+
+
 
 st = mean(thresholds);
 
