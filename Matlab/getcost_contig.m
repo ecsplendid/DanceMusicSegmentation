@@ -16,10 +16,10 @@ for w=min_w:W
         C_square = C( t:t+w-1, t:t+w-1 );
         C_line = getmatrix_indiagonals(C_square);
 
-        red = C_line(C_line>0.5);
-        blue = C_line(C_line<=0.5);
+        red = C_line(C_line>0);
+        blue = C_line(C_line<=0);
         
-        high_thresh = mean( red )+0.5;
+        high_thresh = mean( red );
         low_thresh = -(mean( blue )+0.5);
             
         % we are looking for adjacent blues and reds
@@ -32,17 +32,20 @@ for w=min_w:W
             le = C_line(i-1);
             ri = C_line(i);
             
-            mx = max(le, ri);
+            mix = abs(le)+abs(ri);
             
             if( le < low_thresh && ri < low_thresh)
-               newscore = ((1-mx)/w) * costcontig_incentivebalance;
-               score = score - (gwin(w) * newscore);
+               newscore = (mix/w);
+               newscore = newscore * gwin(w);
+               newscore = newscore * costcontig_incentivebalance;
+               
+               score = score - newscore;
             end
             
             if(  le > high_thresh && ri > high_thresh )
                
-                newscore = (mx/w);
-                newscore = newscore * (1-gwin(w));
+                newscore = (mix/w);
+                newscore = newscore * gwin(w);
                 newscore = newscore * (1-costcontig_incentivebalance);
 
                 score =  score + newscore;
@@ -60,7 +63,7 @@ for w=min_w:W
 end
 toc;
 
-SC = normalize_costmatrix(SC);
+SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
 
 SC(:,1:min_w )=inf;
 

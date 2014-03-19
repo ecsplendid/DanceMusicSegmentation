@@ -54,7 +54,9 @@ for w=min_w:W
    % drawnow;
 end
 
-SC = normalize_costmatrix(SC);
+
+SC = normalize_byincentivebias(SC, costsum_incentivebalance);
+
 SC(:,1:min_w )=inf;
     
 end

@@ -19,6 +19,11 @@ for w=min_w:W
         C_square = C( t:t+w-1, t:t+w-1 );
         C_dags = getmatrix_indiagonals(C_square, 1);
         
+        mn = mean(mean( C_square ));
+        
+        high_thresh = mn;
+        low_thresh = -(mn+0.5);
+        
        % figure(10)
        % imagesc(C_square)
        % colorbar;
@@ -34,28 +39,28 @@ for w=min_w:W
             % compare every symmetric pair
             for p=1:size( C_dags, 1 )-i
               
+                mix = abs(min(d1(p)) + abs(d2(p)));
+                
                 if( d1(p) < low_thresh && d2(p) < low_thresh )
                    
-                    mi = abs(min(d1(p),d2(p)));
-                    new_incentive = ((1-mi) / p) * costsymmetry_incentivebalance;
+                    new_incentive = (mix / w);
                     new_incentive = new_incentive * gwin(w);
+                    new_incentive = new_incentive * costsymmetry_incentivebalance;
                     
                     score = score - new_incentive;
                 end 
             
                 if( p > min_w && d1(p) > (high_thresh) && d2(p) > (high_thresh) )
                    
-                    ma = abs(max(d1(p),d2(p)));
-                    disincentive = (ma) /w;
-                    disincentive = disincentive * (1-costsymmetry_incentivebalance);
+                    new_disincentive = (mix / w);
+                    new_disincentive = new_disincentive * gwin(w);
+                    new_disincentive = new_disincentive * (1-costsymmetry_incentivebalance);
                     
-                    score = score + disincentive;
+                    score = score + new_disincentive;
                     
                 end 
             end
         end
-        
-        
         
         
         %%
@@ -69,7 +74,7 @@ for w=min_w:W
 end
 
 
-SC = normalize_costmatrix(SC);
+SC = normalize_byincentivebias(SC, costsymmetry_incentivebalance);
 
 
 
