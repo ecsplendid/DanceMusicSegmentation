@@ -36,7 +36,7 @@ for w=min_w:W
             
             if( le < low_thresh && ri < low_thresh)
                newscore = (mix/w);
-               newscore = newscore * gwin(w);
+             %  newscore = newscore * gwin(w);
                newscore = newscore * costcontig_incentivebalance;
                
                score = score - newscore;
@@ -45,7 +45,7 @@ for w=min_w:W
             if(  le > high_thresh && ri > high_thresh )
                
                 newscore = (mix/w);
-                newscore = newscore * gwin(w);
+              %  newscore = newscore * gwin(w);
                 newscore = newscore * (1-costcontig_incentivebalance);
 
                 score =  score + newscore;

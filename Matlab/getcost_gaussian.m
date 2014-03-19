@@ -3,7 +3,7 @@ function [ SC ] = getcost_gaussian( T, W, min_w, ...
 %%
 
     % get a gaussian window
-    gwin = 1-gausswin( W, use_costgaussianwidth );
+    gwin = gausswin( W, use_costgaussianwidth );
     gwin = gwin.*use_costgaussian;
     gwin = -gwin;
 

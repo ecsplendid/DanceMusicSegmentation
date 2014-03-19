@@ -7,11 +7,8 @@ function [ SC ] = getcost_sum( C, W, min_w, ...
 %   W is the largest song width
 %   uses dynamic programming to get it fast
 
-
 T = size(C,1);
 SC = inf( T, W );
-gwin = gausswin( W );
-
 
 for w=min_w:W
     for t=1:T-w+1
@@ -34,13 +31,12 @@ for w=min_w:W
             if( ~isempty(low_cost) )
                 
                 new_score = (abs(sum( low_cost ))/element_count);
-                new_score = new_score * gwin(w);
                 score = score - (new_score * costsum_incentivebalance);
             end
             
             if( ~isempty(high_cost) )
+                
                 new_score =  (sum( high_cost )/element_count);
-              
                 score = score + new_score * (1-costsum_incentivebalance);
             end
         end

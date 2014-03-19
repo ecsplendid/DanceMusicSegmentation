@@ -19,10 +19,8 @@ for w=min_w:W
         C_square = C( t:t+w-1, t:t+w-1 );
         C_dags = getmatrix_indiagonals(C_square, 1);
         
-        mn = mean(mean( C_square ));
-        
-        high_thresh = mn;
-        low_thresh = -(mn+0.5);
+        high_thresh = mean(mean( C_square(C_square>0.5) ));
+        low_thresh = -(mean(mean( C_square(C_square<0.5) )));
         
        % figure(10)
        % imagesc(C_square)
@@ -39,12 +37,11 @@ for w=min_w:W
             % compare every symmetric pair
             for p=1:size( C_dags, 1 )-i
               
-                mix = abs(min(d1(p)) + abs(d2(p)));
+                mix = (abs(d1(p)) + abs(d2(p)))/2;
                 
                 if( d1(p) < low_thresh && d2(p) < low_thresh )
                    
                     new_incentive = (mix / w);
-                    new_incentive = new_incentive * gwin(w);
                     new_incentive = new_incentive * costsymmetry_incentivebalance;
                     
                     score = score - new_incentive;
@@ -53,7 +50,7 @@ for w=min_w:W
                 if( p > min_w && d1(p) > (high_thresh) && d2(p) > (high_thresh) )
                    
                     new_disincentive = (mix / w);
-                    new_disincentive = new_disincentive * gwin(w);
+               
                     new_disincentive = new_disincentive * (1-costsymmetry_incentivebalance);
                     
                     score = score + new_disincentive;

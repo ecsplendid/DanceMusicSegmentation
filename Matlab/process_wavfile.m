@@ -57,7 +57,8 @@ end
 if( use_costgaussian > 0 )
     
     SC_GAUSS = getcost_gaussian( T, W, min_w, ...
-        use_costgaussian, use_costgaussianwidth, costgauss_incentivebalance );
+        use_costgaussian, use_costgaussianwidth, costgauss_incentivebalance ) ...
+        .* use_costgaussian;
     
     if( use_costcontig > 0 || use_costsum > 0 || use_costsymmetry > 0 )
         
