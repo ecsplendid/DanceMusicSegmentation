@@ -6,10 +6,6 @@ T = size(C,1);
 SC = inf( T, W );
 gwin = gausswin( W );
 
-% dont tweak again
-high_thresh = 0.1;
-low_thresh = -0.4515;
-
 for w=min_w:W
     for t=1:T-w+1
 

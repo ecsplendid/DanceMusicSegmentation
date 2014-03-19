@@ -5,49 +5,62 @@ function [SC] = getcost_contig(...
 T = size(C,1);
 SC = inf( T, W );
 
+gwin_large = gausswin(W);
+
 %%
 tic;
 for w=min_w:W
     for t=1:T-w+1
 %%
-
         % we have the triangle
         C_square = C( t:t+w-1, t:t+w-1 );
-        C_line = getmatrix_indiagonals(C_square);
+        C_dags = getmatrix_indiagonals(C_square, 1);
 
-        red = C_line(C_line>0);
-        blue = C_line(C_line<=0);
+        red = abs(C_square(C_square>0));
+        blue = abs(C_square(C_square<=0));
         
         high_thresh = mean( red );
-        low_thresh = -(mean( blue )+0.5);
-            
+        low_thresh = -(mean( blue ));
+        
+        if(isnan(high_thresh)), high_thresh=0; end;
+        if(isnan(low_thresh)), low_thresh=0; end;
+        
         % we are looking for adjacent blues and reds
         % on the diags away from center
         
+        gwin = gausswin(w);
+        
         score = 0;
-       
-        for i=(W+1):length( C_line )
-           
-            le = C_line(i-1);
-            ri = C_line(i);
+        
+         % for every dag (no point looking at first one though)
+        for d=2:size( C_dags, 1 )
             
-            mix = abs(le)+abs(ri);
-            
-            if( le < low_thresh && ri < low_thresh)
-                
-               newscore = (mix/w);
-               newscore = newscore * costcontig_incentivebalance;
-               
-               score = score - newscore;
-            end
-            
-            if(  le > high_thresh && ri > high_thresh )
-               
-                newscore = (mix/w);
-                newscore = newscore * (1-costcontig_incentivebalance);
+            C_line = C_dags( d, 1:size( C_dags, 1 )-d+1 );
 
-                score =  score + newscore;
+            for i=2:length( C_line )
 
+                le = C_line(i-1);
+                ri = C_line(i);
+
+                mix = mean(abs(le)+abs(ri));
+
+                newscore = (mix);
+                % contiguity more important in the center 
+                % of the expected track size
+                newscore = newscore * gwin(w);
+                % contiguity more important the further away it is
+                newscore = newscore / d;
+
+                if( le < low_thresh && ri < low_thresh)
+                   newscore = newscore * costcontig_incentivebalance;
+                   score = score - newscore;
+                end
+
+                if(  le > high_thresh && ri > high_thresh )
+                    newscore = newscore * (1-costcontig_incentivebalance);
+                    score =  score + newscore;
+
+                end
             end
         end
         
