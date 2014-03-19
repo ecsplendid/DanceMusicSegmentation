@@ -1,60 +1,33 @@
 function [ SC ] = getcost_sum( C, W, min_w, ...
     costsum_incentivebalance )
-%   BUILD_SONGCOSTMATRIX Summary of this function goes here
-%   type is default 'area', or 'symetry'
-%   C is cost matrix
-%   T is total time in seconds
-%   W is the largest song width
-%   uses dynamic programming to get it fast
+%   getcost_sum 
+%   builds the sum cost matrix calling the dynamic program get_summationfast
+C_BLUE = C;
+C_BLUE(C_BLUE>=0) = 0;
+C_BLUE = abs(C_BLUE);
 
-T = size(C,1);
-SC = inf( T, W );
+C_RED = C;
+C_RED(C_RED<0) = 0;
+C_RED = abs(C_RED);
 
-for w=min_w:W
-    for t=1:T-w+1
+SC_BLUE = get_summationfast( C_BLUE, W, min_w );
+SC_RED = get_summationfast( C_RED, W, min_w );
 
-        % we have the triangle
-        C_square = C( t:t+w-1, t:t+w-1 );
-        
-        score = 0;
-        
-        element_count = size( C_square, 1 )^2;
+SC_BLUE = SC_BLUE ./ repmat( (1:W).^2, size(SC_BLUE,1), 1 );
+SC_RED = SC_RED ./ repmat( (1:W).^2, size(SC_RED,1), 1 );
 
-        low_cost = C_square(C_square<0);
-        high_cost = C_square(C_square>=0);
+SC_BLUE = SC_BLUE .* costsum_incentivebalance;
+SC_RED = SC_RED .* (1-costsum_incentivebalance);
 
-        if( ~isempty(low_cost) )
+SC_BLUE = 1-SC_BLUE;
 
-            new_score = (abs(sum( low_cost )));
-            new_score = new_score / element_count;
-            new_score = new_score * costsum_incentivebalance;
+SC = SC_BLUE+SC_RED;
 
-            score = score - new_score;
-        end
-
-        if( ~isempty(high_cost) )
-
-            new_score =  (sum( high_cost ));
-            new_score = new_score / element_count;
-            new_score = new_score * (1-costsum_incentivebalance);
-
-            score = score + new_score;
-        end
-       
-        
-        SC(t, w) = score;
-        
-    end
-    
-   %imagesc(SC);
-   % colorbar;
-   % drawnow;
-end
-
-
-SC = normalize_byincentivebias(SC, costsum_incentivebalance);
-
+SC(isnan(SC)) = inf;
 SC(:,1:min_w )=inf;
+
+SC = normalize_byincentivebias( SC, costsum_incentivebalance );
+
     
 end
 
