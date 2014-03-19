@@ -15,31 +15,32 @@ for w=min_w:W
 
         % we have the triangle
         C_square = C( t:t+w-1, t:t+w-1 );
-        C_dags = getmatrix_indiagonals(C_square, 1);
         
         score = 0;
         
-        for i=2:size(C_square,1)
-            
-            element_count = size( C_dags, 1 )-i+1;
-            
-            dag = C_dags( i, 1:element_count );
-            
-            low_cost = dag(dag<0);
-            high_cost = dag(dag>=0);
-            
-            if( ~isempty(low_cost) )
-                
-                new_score = (abs(sum( low_cost ))/element_count);
-                score = score - (new_score * costsum_incentivebalance);
-            end
-            
-            if( ~isempty(high_cost) )
-                
-                new_score =  (sum( high_cost )/element_count);
-                score = score + new_score * (1-costsum_incentivebalance);
-            end
+        element_count = size( C_square, 1 )^2;
+
+        low_cost = C_square(C_square<0);
+        high_cost = C_square(C_square>=0);
+
+        if( ~isempty(low_cost) )
+
+            new_score = (abs(sum( low_cost )));
+            new_score = new_score / element_count;
+            new_score = new_score * costsum_incentivebalance;
+
+            score = score - new_score;
         end
+
+        if( ~isempty(high_cost) )
+
+            new_score =  (sum( high_cost ));
+            new_score = new_score / element_count;
+            new_score = new_score * (1-costsum_incentivebalance);
+
+            score = score + new_score;
+        end
+       
         
         SC(t, w) = score;
         
