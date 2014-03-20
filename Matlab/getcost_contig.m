@@ -5,9 +5,7 @@ function [SC] = getcost_contig(...
 T = size(C,1);
 SC = inf( T, W );
 
-gwin_large = gausswin(W);
-
-C_BIGdags = getmatrix_indiagonals(C, 1);
+C_bigdags = getmatrix_indiagonals(C, 1);
 
 %%
 tic;
@@ -15,18 +13,8 @@ for w=min_w:W
     for t=1:T-w+1
 %%
         % we have the triangle
-     
-        C_dags = C_BIGdags(1:w, t:t+w-1);
-
-        red = 0;
-        blue = 0;
-        
-        high_thresh = mean( red );
-        low_thresh = -(mean( blue ));
-        
-        if(isnan(high_thresh)), high_thresh=0; end;
-        if(isnan(low_thresh)), low_thresh=0; end;
-        
+        C_dags = C_bigdags(1:w, t:t+w-1);
+ 
         % we are looking for adjacent blues and reds
         % on the diags away from center
         
@@ -44,26 +32,10 @@ for w=min_w:W
                 le = C_line(i-1);
                 ri = C_line(i);
 
-                mix = (abs(le)+abs(ri))/2;
-
-                newscore = (mix);
-                % contiguity more important in the center 
-                % of the expected track size
-                newscore = newscore * gwin(w);
-                % contiguity more important the further away it is
-                newscore = newscore / d;
-
-                
-                if( max(le, ri) < low_thresh)
-                   newscore = newscore * costcontig_incentivebalance;
-                   score = score - newscore;
-                end
-
-                if(  min(le,ri) > high_thresh )
-                    newscore = newscore * (1-costcontig_incentivebalance);
-                    score =  score + newscore;
-
-                end
+                score = score +  get_contigcost( ...
+                    le, ri, i, ...
+                    w, costcontig_incentivebalance, gwin );
+               
             end
         end
         
