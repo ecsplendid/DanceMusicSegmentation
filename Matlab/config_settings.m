@@ -2,12 +2,12 @@
 
 % Feature Extraction Parameters
 sampleRate = 4000;
-secondsPerTile = 10;
+secondsPerTile = 20;
 minTrackLength = 180;
 maxExpectedTrackWidth = 370*2;   % (magicisland=380*2 others 350*2)
 bandwidth = 5; % bandwith for the width of the convolution filter
 lowPassFilter = 1500; %Hz
-highPassFilter = 50; %Hz
+highPassFilter = 200; %Hz
 gaussian_filterdegree = 2; % for the convulution filter on FFT result
 
 % figure drawing parameters
@@ -25,12 +25,12 @@ use_costgaussianwidth = 1;
 
 % which cost functions to use and how much weight do they have (>0)
 use_costsymmetry = 1.4;
-use_costcontig = 1;
-use_costsum = 1;
-use_costgaussian = 1;
+use_costcontig = 0;
+use_costsum = 0;
+use_costgaussian = 0;
 
 % what incentive balance do the respective cost functions have [0,1]
-costsymmetry_incentivebalance = 0.4;
-costcontig_incentivebalance = 0.3;
+costsymmetry_incentivebalance = 0.5;
+costcontig_incentivebalance = 0.5;
 costsum_incentivebalance = 0.5;
 costgauss_incentivebalance = 0.5;

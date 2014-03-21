@@ -43,7 +43,7 @@ end
 
 if( use_costsymmetry > 0 )
     
-    SC_SYM =  (getcost_symmetry( C, W, min_w, costsymmetry_incentivebalance ) ...
+    SC_SYM =  (getcost_symmetry_reference( C, W, min_w, costsymmetry_incentivebalance ) ...
         .* use_costsymmetry);
         
     if( use_costcontig > 0 || use_costsum > 0 )
