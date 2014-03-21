@@ -5,13 +5,40 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, min_w, space ] = pr
     gaussian_filterdegree, ...
     use_costsymmetry, use_costcontig, use_costsum, use_costgaussian, use_costgaussianwidth, ...
     costcontig_incentivebalance, costsum_incentivebalance, costsymmetry_incentivebalance, ...
-    costgauss_incentivebalance)
+    costgauss_incentivebalance, use_cosinecache)
+
+global map;
+
+if( use_cosinecache )
+        
+    if(~exist('map'))
+       map = containers.Map; 
+    end
+    
+    id = sprintf('%d%d%d%d%d', length(audio_low), ...
+        secondsPerTile, lowPassFilter, highPassFilter, bandwidth );
+end
+
+if ( use_cosinecache && map.isKey(id) )
+    cache = map(id);
+    C = cell2mat(cache(1));
+    tileWidthSecs = cell2mat(cache(2));
+    space = cell2mat(cache(3));
+    W = cell2mat(cache(4));
+else
+    % todo, cache the "last" 6 things this was called with to give a 
+    % big speed up on the parameter search
+    [C, W, tileWidthSecs, space] = get_cosinematrix(...
+        audio_low, secondsPerTile, sampleRate,...
+        lowPassFilter, highPassFilter, bandwidth, maxExpectedTrackWidth, ...
+        gaussian_filterdegree );
+
+    if( use_cosinecache )
+        map(id) = {C,tileWidthSecs, space, W };
+    end
+end
 
 
-[C, W, tileWidthSecs, space] = get_cosinematrix(...
-    audio_low, secondsPerTile, sampleRate,...
-    lowPassFilter, highPassFilter, bandwidth, maxExpectedTrackWidth, ...
-    gaussian_filterdegree );
 
 %%
 
@@ -41,11 +68,18 @@ if( use_costsum > 0 )
     end
 end
 
+use_referenceversion = 1;
+
 if( use_costsymmetry > 0 )
     
-    SC_SYM =  (getcost_symmetry_reference( C, W, min_w, costsymmetry_incentivebalance ) ...
-        .* use_costsymmetry);
-        
+    if(use_referenceversion)
+    	SC_SYM = (getcost_symmetry_reference( C, W, min_w, costsymmetry_incentivebalance ) ...
+            .* use_costsymmetry);
+    else
+        SC_SYM = (getcost_symmetry( C, W, min_w, costsymmetry_incentivebalance ) ...
+            .* use_costsymmetry);
+    end
+    
     if( use_costcontig > 0 || use_costsum > 0 )
        
         SC = SC + SC_SYM;

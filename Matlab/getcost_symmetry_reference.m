@@ -22,7 +22,6 @@ for width=min_w:W
         for d=2:size( C_dags, 1 )
             
             dag_size = size( C_dags, 1 )-(d-1);
-            
             first_half = ceil(dag_size/2);
             
             for i=1:first_half

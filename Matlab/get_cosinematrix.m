@@ -24,8 +24,9 @@ function [C, W, tileWidthSecs, space] = get_cosinematrix(...
     for x=1:no_tiles
 
         dft = fft( audio_low( tileindexes+(x-1)*tileWidth ),nFFT);
-
-        Y = abs(dft( highPassFilterSamples:lowPassFilterSamples ));
+        
+        Y = abs(dft);
+        Y = Y( highPassFilterSamples:lowPassFilterSamples );
         Y = abs(conv(  Y, gaussFirstDerivative,'same' ));
         %normalize (unit length) vec, so dot below gives cosines;
         Y = Y./norm(Y); 

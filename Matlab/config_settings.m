@@ -2,7 +2,7 @@
 
 % Feature Extraction Parameters
 sampleRate = 4000;
-secondsPerTile = 20;
+secondsPerTile = 10;
 minTrackLength = 180;
 maxExpectedTrackWidth = 370*2;   % (magicisland=380*2 others 350*2)
 bandwidth = 5; % bandwith for the width of the convolution filter
@@ -15,6 +15,10 @@ drawsimmat = 1;
 compute_confs=0;
 draw_confs = 0;
 
+% save precomputed cosine matrices in memory for speed
+% dont use this if you are processing more than about 6 shows
+use_cosinecache = 1;
+
 % learning rate for posterior
 eta = 10;
 
@@ -24,8 +28,8 @@ solution_shift = 0;
 use_costgaussianwidth = 1;
 
 % which cost functions to use and how much weight do they have (>0)
-use_costsymmetry = 1.4;
-use_costcontig = 0;
+use_costsymmetry = 0;
+use_costcontig = 1;
 use_costsum = 0;
 use_costgaussian = 0;
 

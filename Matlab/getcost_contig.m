@@ -5,38 +5,47 @@ function [SC] = getcost_contig(...
 T = size(C,1);
 SC = inf( T, W );
 
-C_bigdags = getmatrix_indiagonals(C, 1);
-
 %%
 tic;
 for w=min_w:W
     for t=1:T-w+1
 %%
-        % we have the triangle
-        C_dags = C_bigdags(1:w, t:t+w-1);
- 
+        C_line = getmatrix_indiagonals( C( t:t+w-1, t:t+w-1 ), 2);
+        
         % we are looking for adjacent blues and reds
         % on the diags away from center
-        
-        gwin = gausswin(w);
-        
         score = 0;
         
-         % for every dag (no point looking at first one though)
-        for d=2:size( C_dags, 1 )
-            
-            C_line = C_dags( d, 1:size( C_dags, 1 )-d+1 );
+        len_cline = length( C_line );
+        
+        %precomute the normalization for speed
+        factors = (((1:len_cline)./len_cline).^-2).*w;
+        
+        for i=2:len_cline
 
-            for i=2:length( C_line )
+            p1 = C_line(i-1);
+            p2 = C_line(i);
 
-                le = C_line(i-1);
-                ri = C_line(i);
-
-                score = score +  get_contigscore( ...
-                    le, ri, i, ...
-                    w, costcontig_incentivebalance, gwin );
-               
+            if( max(p1, p2) < 0)
+                new_cost = (abs(p1)+abs(p2))/2;
+                % contiguity more important in the center 
+                % of the expected track size
+                % contiguity more important the further away it is
+                new_cost = new_cost / factors(i);
+                new_cost = new_cost * costcontig_incentivebalance;
+                score = score + -new_cost;
             end
+
+            if( min(p1,p2) > 0 )
+                new_cost = (abs(p1)+abs(p2))/2;
+                % contiguity more important in the center 
+                % of the expected track size
+                % contiguity more important the further away it is
+                new_cost = new_cost / factors(i);
+                new_cost = new_cost * (1-costcontig_incentivebalance);
+                score = score + new_cost;
+            end
+      
         end
         
         SC(t, w) = score;

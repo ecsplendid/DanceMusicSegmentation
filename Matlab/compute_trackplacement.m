@@ -62,9 +62,9 @@ function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplace
         colorbar;
         draw_scindexes(predictions, indexes_tilespace, w, T);
       
-        figure(3)
-        hist(predictions_timespace-indexes',50);
-        title('shift histogram')
+       % figure(3)
+       % hist(predictions_timespace-indexes',50);
+       % title('shift histogram')
 
     end
 
