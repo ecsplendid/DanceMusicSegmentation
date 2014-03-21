@@ -9,6 +9,9 @@ cd experiments
 
 while(true)
 
+    ts = [20 20 20];
+    secondsPerTile = ts(floor(rand*3)+1);
+    
     use_costsymmetry = rand * 4;
     use_costcontig = rand * 4;
     use_costsum = rand * 4;

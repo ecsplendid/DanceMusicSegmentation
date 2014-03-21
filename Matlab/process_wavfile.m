@@ -8,11 +8,15 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, min_w, space ] = pr
     costgauss_incentivebalance, use_cosinecache)
 
 global map;
+global maps_used;
+global maps_lastindex;
 
 if( use_cosinecache )
         
-    if(~exist('map'))
+    if(~exist('map','class'))
        map = containers.Map; 
+       maps_used = cell(8,1);
+       maps_lastindex = 1;
     end
     
     id = sprintf('%d%d%d%d%d', length(audio_low), ...
@@ -35,6 +39,14 @@ else
 
     if( use_cosinecache )
         map(id) = {C,tileWidthSecs, space, W };
+        maps_lastindex = maps_lastindex + 1;
+        if( map.isKey(maps_used{maps_lastindex}) )
+            map.remove( maps_used{maps_lastindex} );
+        end
+        maps_used{maps_lastindex} = id;
+        if( maps_lastindex>8)
+            maps_lastindex = 1;
+        end
     end
 end
 

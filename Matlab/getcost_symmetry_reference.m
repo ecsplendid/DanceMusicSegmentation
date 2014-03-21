@@ -14,7 +14,7 @@ for width=min_w:W
         %%
         
         % we have the triangle
-        C_dags = C_bigdags(1:width, t:t+width-1);
+        C_dags = C_bigdags(1:width, t:t+width-2);
         
         cost = 0;
        
