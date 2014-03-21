@@ -28,7 +28,7 @@ while(true)
     
     bandwidth = bws(floor(rand*2)+1); % bandwith for the width of the convolution filter
     lowPassFilter = floor(rand*1100)+800; %Hz
-    highPassFilter = 80; %Hz
+    highPassFilter = floor((rand * 50)+50); %Hz
     
     cd ..
     run_experiments;
