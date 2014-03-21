@@ -9,7 +9,7 @@ cd experiments
 
 while(true)
 
-    ts = [20 20 20];
+    ts = [5 10 20];
     secondsPerTile = ts(floor(rand*3)+1);
     
     use_costsymmetry = rand * 4;
