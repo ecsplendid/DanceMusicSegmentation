@@ -18,7 +18,7 @@ end
 %SC = SC ./ repmat( (1:W), size(SC,1), 1 );
 
 %SC = normalize_byincentivebias( SC, costsymmetry_incentivebalance );
-%SC(:,1:min_w) = inf;
+%SC(:,1:min_w-1) = inf;
 
 
 end

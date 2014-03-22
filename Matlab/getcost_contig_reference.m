@@ -1,4 +1,4 @@
-function [SC] = getcost_contig(...
+function [SC] = getcost_contig_reference(...
     C, W, min_w, ...
     costcontig_incentivebalance) 
 %%
@@ -6,7 +6,7 @@ T = size(C,1);
 SC = inf( T, W );
 
 %%
-tic;
+
 for w=min_w:W
     for t=1:T-w+1
 %%
@@ -53,11 +53,11 @@ for w=min_w:W
     end
     
 end
-toc;
+
 
 SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
 
-SC(:,1:min_w )=inf;
+SC(:,1:min_w-1 )=inf;
 
 
 

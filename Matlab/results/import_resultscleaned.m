@@ -85,54 +85,54 @@ clearvars filename delimiter formatSpec fileID dataArray ans;
 
 best_results = ix(1:100);
 
-subplot(6,2, 1);
+subplot(7,2, 1);
 hist( mean_res(best_results),20 );
 title( 'Mean Accuracy' )
 
-subplot(6,2, 2);
+subplot(7,2, 2);
 hist( heuristic(best_results),20 );
 title( 'Heuristic Accuracy' )
 
-subplot(6,2, 3);
+subplot(7,2, 3);
 hist( hp(best_results),20 );
 title( 'HPF' )
 
-subplot(6,2, 4);
+subplot(7,2, 4);
 hist( lp(best_results),20 );
 title( 'LPF' )
 
-subplot(6,2, 5);
+subplot(7,2, 5);
 hist( CO(best_results),20 );
 title( 'CONTIG' )
 
-subplot(6,2, 6);
+subplot(7,2, 6);
 hist( SU(best_results),20 );
 title( 'SUM' )
 
-subplot(6,2, 7);
+subplot(7,2, 7);
 hist( SY(best_results),20 );
 title( 'SYMMETRY' )
 
-subplot(6,2, 8);
+subplot(7,2, 8);
 hist( GA(best_results),20 );
 title( 'GAUSS' )
 
-subplot(6,2, 9);
+subplot(7,2, 9);
 hist( SYIB(best_results),20 );
 title( 'SYMMETRY INCENTIVE BIAS' )
 
-subplot(6,2, 10);
+subplot(7,2, 10);
 hist( COIB(best_results),20 );
 title( 'CONTIG INCENTIVE BIAS' )
 
-subplot(6,2, 11);
+subplot(7,2, 11);
 hist( SUIB(best_results),20 );
 title( 'SUM INCENTIVE BIAS' )
 
-subplot(6,2, 12);
+subplot(7,2, 12);
 hist( GAIB(best_results),20 );
 title( 'GAUSS INCENTIVE BIAS' )
 
-subplot(6,2, 13);
+subplot(7,2, 14);
 hist( bw(best_results),20 );
 title( 'BW' )

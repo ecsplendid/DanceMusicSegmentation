@@ -26,7 +26,7 @@ SC = SC_BLUE+SC_RED;
 SC = normalize_byincentivebias( SC, costsum_incentivebalance );
 
 SC(isnan(SC)) = inf;
-SC(:,1:min_w )=inf;
+SC(:,1:min_w-1 )=inf;
     
 end
 

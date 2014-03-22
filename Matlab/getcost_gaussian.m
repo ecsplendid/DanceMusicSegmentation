@@ -12,7 +12,7 @@ function [ SC ] = getcost_gaussian( T, W, min_w, ...
         
     SC = normalize_byincentivebias( SC, costgauss_incentivebalance );
 
-    SC(:,1:min_w) = inf;
+    SC(:,1:min_w-1) = inf;
         
 end
 

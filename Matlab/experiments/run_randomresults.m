@@ -12,10 +12,10 @@ while(true)
     ts = [5 10 20];
     secondsPerTile = ts(floor(rand*3)+1);
     
-    use_costsymmetry = rand * 4;
-    use_costcontig = rand * 4;
-    use_costsum = rand * 4;
-    use_costgaussian = rand * 4;
+    use_costsymmetry = rand
+    use_costcontig = rand;
+    use_costsum = rand;
+    use_costgaussian = rand;
     
     solution_shift = 0;
     
@@ -24,9 +24,8 @@ while(true)
     costsum_incentivebalance = rand;
     costgauss_incentivebalance = rand;
     
-    bws = [3 5];
     
-    bandwidth = bws(floor(rand*2)+1); % bandwith for the width of the convolution filter
+    bandwidth = floor(rand*10)+1; % bandwith for the width of the convolution filter
     lowPassFilter = floor(rand*1100)+800; %Hz
     highPassFilter = floor((rand * 50)+50); %Hz
     

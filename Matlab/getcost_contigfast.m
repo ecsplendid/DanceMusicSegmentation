@@ -1,76 +1,80 @@
 %function [SC] = getcost_contigfast(...
-%    C, W, min_w, ...
+ %   C, W, min_w, ...
  %   costcontig_incentivebalance) 
+% getcost_contigfast dynamic programming implementation of getcontig fast
+
 %%
+tic;
 T = size(C,1);
+SC_unnormalized = inf( T, W );
 SC = inf( T, W );
 
-gwin_large = gausswin(W);
+% note this skips the first dag
+C_dags = getmatrix_indiagonals( C, 1 );
 
-C_dags = getmatrix_indiagonals(C,1);
+score_changes = nan(T);
 
+% first place a track of size w then slide it
+for width=min_w:W
 
-% precompute the first triangle SC(W,1)
-
-score = 0;
-
-score_cache = zeros(T,W);
-
-for w=2:W
-   for i=2:W-w
-      p1=C_dags( w, i-1 );
-      p2=C_dags( w, i );
-      
-      mix = mean([p1 p2]);
-      
-      if( p1 < 0 && p2 < 0 )
-          score = score - mix;
-      end
-
-      if( p1 > 0 && p2 > 0 )
-          score = score + mix;
-      end
-   end
-   
-   if( w==2 )
-       score_cache( 1, w ) = score;
-   end
-end
-
-
-SC( 1, W ) = score;
-
-% now slide along to T-W+1 and do the dynamic program part
-
-for t=2:T-W+1
-   
-    new_score = 0;
+    initial_cost = 0;
+    % place a small manual triangle of size w
+    % for each dag, there are width dags
+    % -1 on width because getmatrix_indiagonals skips first dag
+    for progression=1:(width-1)
     
-    for i=2:W
-       
-        p1=C_dags( W-i+1, t );
-        p2=C_dags( W-i+2, t );
+        % for each element pair start (top down, fat diag first)
+        % the single element on the top gets ignored
+        for time = 2:(width-progression)
 
-        if( p1 < 0 && p2 < 0 )
-            new_score = new_score - mix;
+            p1 = C_dags(progression, time-1);
+            p2 = C_dags(progression, time );
+            
+            get_contigscore;
+            
+            initial_cost = initial_cost + new_cost;
+                
         end
-
-        if( p1 > 0 && p2 > 0 )
-            new_score = new_score + mix;
-        end  
     end
     
-    score_cache( t, W ) = new_score;
+    SC( 1, width ) = initial_cost;
     
-    SC( t, W ) = SC( t-1, W ) + new_score - score_cache( t-1, W );
-    
-    
-    
+    % now shift this triangle along to T-w+1
+    for t=2:T-(width+1)
+        
+        score_change = 0;
+        
+        from_previoustriangle = C_dags( 1:width-1, t-1 );
+        new_points = C_dags( 1:width-1, t );
+        
+        for progression=1:width-1
+            
+            p1 = from_previoustriangle(progression);
+            p2 = new_points(progression);
+            get_contigscore;
+            
+            score_change = score_change + new_cost;
+        end
+        
+        new_score = score_change;
+        
+        if( t>2 )
+            new_score = new_score - score_changes(t-1);
+        end
+        
+        SC(t, width) = (SC(t-1, width) + new_score );
+        
+        score_changes( t ) = score_change;
+    end
 end
 
+toc;
+
+SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
+
+SC(:,1:min_w-1 )=inf;
+
 imagesc(SC)
-
-
 
 
 %end

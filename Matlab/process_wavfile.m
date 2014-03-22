@@ -7,13 +7,12 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, min_w, space ] = pr
     costcontig_incentivebalance, costsum_incentivebalance, costsymmetry_incentivebalance, ...
     costgauss_incentivebalance, use_cosinecache)
 
-global map;
-global maps_used;
-global maps_lastindex;
-
 if( use_cosinecache )
-        
-    if(~exist('map','class'))
+    global map;
+    global maps_used;
+    global maps_lastindex;
+
+    if(~exist('map'))
        map = containers.Map; 
        maps_used = cell(8,1);
        maps_lastindex = 1;
@@ -58,13 +57,26 @@ end
 min_w = floor((minTrackLength) / tileWidthSecs);
 T = size(C,1);
 
-if( use_costcontig > 0 )
-    SC_CONTIG = getcost_contig( ...
+use_contigreferenceversion = 0;
+
+if( use_costcontig > 0 && use_contigreferenceversion )
+    
+    SC_CONTIG = getcost_contig_reference( ...
         C, W, min_w, ...
          costcontig_incentivebalance ...
         ) .* use_costcontig;
     SC = SC_CONTIG;
 end
+
+if( use_costcontig > 0 && ~use_contigreferenceversion )
+    
+    SC_CONTIG = getcost_contigfast( ...
+        C, W, min_w, ...
+         costcontig_incentivebalance ...
+        ) .* use_costcontig;
+    SC = SC_CONTIG;
+end
+
 
 if( use_costsum > 0 )
     
@@ -80,11 +92,11 @@ if( use_costsum > 0 )
     end
 end
 
-use_referenceversion = 1;
+use_symmetryreferenceversion = 1;
 
 if( use_costsymmetry > 0 )
     
-    if(use_referenceversion)
+    if(use_symmetryreferenceversion)
     	SC_SYM = (getcost_symmetry_reference( C, W, min_w, costsymmetry_incentivebalance ) ...
             .* use_costsymmetry);
     else
