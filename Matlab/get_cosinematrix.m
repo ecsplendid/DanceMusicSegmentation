@@ -46,6 +46,8 @@ function [C, W, tileWidthSecs, space] = get_cosinematrix(...
     % music. We can normalize it around 0.5 which means we can expect more
     % consistent behaviour with our methods!
 
+   % C = normalize_costmatrix(C);
+    
     mean_c = mean(C(1:size(C,1)^2));
     C=C.^(2*mean_c);
     % we do the normalization manually to keep it 0 centered

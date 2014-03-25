@@ -7,20 +7,18 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, min_w, space ] = pr
     costcontig_incentivebalance, costsum_incentivebalance, costsymmetry_incentivebalance, ...
     costgauss_incentivebalance, use_cosinecache)
 
-if( use_cosinecache )
+if( use_cosinecache && ~exist('map') )
     global map;
     global maps_used;
     global maps_lastindex;
 
-    if(~exist('map'))
-       map = containers.Map; 
-       maps_used = cell(8,1);
-       maps_lastindex = 1;
-    end
-    
-    id = sprintf('%d%d%d%d%d', length(audio_low), ...
-        secondsPerTile, lowPassFilter, highPassFilter, bandwidth );
+    map = containers.Map; 
+    maps_used = cell(8,1);
+    maps_lastindex = 1;
 end
+
+id = sprintf('%d%d%d%d%d', length(audio_low), ...
+    secondsPerTile, lowPassFilter, highPassFilter, bandwidth );
 
 if ( use_cosinecache && map.isKey(id) )
     cache = map(id);

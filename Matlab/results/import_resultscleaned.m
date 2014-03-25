@@ -83,7 +83,7 @@ clearvars filename delimiter formatSpec fileID dataArray ans;
 
 % take the best 20 results
 
-best_results = ix(1:100);
+best_results = ix(1:10);
 
 subplot(7,2, 1);
 hist( mean_res(best_results),20 );
@@ -136,3 +136,7 @@ title( 'GAUSS INCENTIVE BIAS' )
 subplot(7,2, 14);
 hist( bw(best_results),20 );
 title( 'BW' )
+
+subplot(7,2, 13);
+hist( time(best_results),20 );
+title( 'T' )

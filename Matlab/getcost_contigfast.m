@@ -1,112 +1,84 @@
 function [SC] = getcost_contigfast(...
     C, W, min_w, ...
-    costcontig_incentivebalance) 
+    costcontig_incentivebalance ) 
  %getcost_contigfast dynamic programming implementation of getcontig fast
 
 %%
-
-T = size(C,1);
+T = size( C, 1 );
 SC = inf( T, W );
 
-% note this skips the first dag
-C_dags = getmatrix_indiagonals( C, 1 );
+SF = getmatrix_selfsim( C, W, 1 );
+SP = getmatrix_selfsim( C, W, 0 );
 
-score_changes = nan(T);
+
+%S = S + getmatrix_selfsim( C, W, 1 );
+
+%S = cumsum(S')';
+
+%S = normalize_costmatrix(S);
+
+%SF = SF .* repmat( gausswin(W,2)', T, 1 );
+%SF = SF ./ repmat( (1:W), T, 1 );
+
+%imagesc(SF)
+
+%%
 
 % first place a track of size w then slide it
-for width=min_w:W
+for width=2:W
 
-    initial_cost = 0;
     % place a small manual triangle of size w
     % for each dag, there are width dags
-    % width from 2 because getmatrix_indiagonals skips first dag
-    % i.e. the first row is NaNs
-    for progression=2:(width)
-    
-        normalization_parameter = width / progression;
-        
-        % for each element pair start (top down, fat diag first)
-        % the single element on the top gets ignored
-        for time = 2:(width-progression)
+    % take progression 1 to mean we skip the main diag
 
-            p1 = C_dags(progression, time-1);
-            p2 = C_dags(progression, time );
-            
-            new_cost = 0;
-            if( max(p1, p2) < 0)
-            new_cost = (abs(p1)+abs(p2))/2;
-            % contiguity more important in the center 
-            % of the expected track size
-            % contiguity more important the further away it is
-            new_cost = new_cost / normalization_parameter;
-            new_cost = new_cost * -costcontig_incentivebalance;
-
-            elseif( min(p1,p2) > 0 )
-            new_cost = (abs(p1)+abs(p2))/2;
-            % contiguity more important in the center 
-            % of the expected track size
-            % contiguity more important the further away it is
-            new_cost = new_cost / normalization_parameter;
-            new_cost = new_cost * (1-costcontig_incentivebalance);
-            end
-
-            
-            initial_cost = initial_cost + new_cost;
-                
-        end
-    end
-    
-    SC( 1, width ) = initial_cost;
+  %  TR = C_DAG( 2:width, 2:width );
+   % TR = triu( fliplr(TR) );
+  %  initial_cost = sum( TR((1:(width-1)^2) ));
+  
+   % SC( 1, width ) = initial_cost;
     
     % now shift this triangle along to T-w+1
-    for t=2:T-(width+1)
+    for t=1:(T-(width))+1
         
-        score_change = 0;
+   
+        new_score = 0;
         
-        % we start from 2 because we don't consider the first diag
-        % we don't consider the single point case at all
-        from_previoustriangle = C_dags( 2:width-1, t-1 );
-        new_points = C_dags( 2:width-1, t );
+       % for d=1:width
+          %  d_score = 0;
+         %   d_score = d_score - C_DAG( d, t+(d) ) ;
+          %  d_score = d_score + C_DAG( d, t );
+         %   new_score = d_score;
+       % end
         
-        for progression=2:width-1
-            
-            normalization_parameter = (progression/ width);
-            
-            p1 = from_previoustriangle(progression-1);
-            p2 = new_points(progression-1);
-            
-           
-            if( max(p1, p2) < 0)
-            new_cost = (abs(p1)+abs(p2))/2;
-            % contiguity more important in the center 
-            % of the expected track size
-            % contiguity more important the further away it is
-            new_cost = new_cost / normalization_parameter;
-            new_cost = new_cost * -costcontig_incentivebalance;
-            score_change = score_change + new_cost;
-            elseif( min(p1,p2) > 0 )
-            new_cost = (abs(p1)+abs(p2))/2;
-            % contiguity more important in the center 
-            % of the expected track size
-            % contiguity more important the further away it is
-            new_cost = new_cost / normalization_parameter;
-            new_cost = new_cost * (1-costcontig_incentivebalance);
-            score_change = score_change + new_cost;
-            end
-            
-        end
         
-        new_score = score_change;
+        TF = SF( t:(t+width-1), 1:width );
+        TF = triu( flipud( TF )' );
         
-        if( t>2 )
-            new_score = new_score - score_changes(t-1);
-        end
+        blue = sum(sum(abs(TF(TF<0))));
+        red = sum(sum(abs(TF(TF>=0))));
         
-        SC(t, width) = (SC(t-1, width) + new_score );
+        blue=blue*2;
+        red=red*2;
         
-        score_changes( t ) = score_change;
+        blue = blue .* (costcontig_incentivebalance);
+        red = red .* (1-costcontig_incentivebalance);
+        
+        blue = blue / width;
+        red = red / width ;
+        
+        blue = 1-blue;
+        
+        score = (blue)+red;
+        
+        SC(t, width) = score;
+        
+        %%
+        
+        
     end
 end
+
+
 
 SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
 

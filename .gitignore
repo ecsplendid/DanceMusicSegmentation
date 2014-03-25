@@ -216,3 +216,6 @@ pip-log.txt
 *.asv
 *.mat
 Matlab/chain.m
+Matlab/results/results_cleaned
+Matlab/results/mars_results/results.txt
+Matlab/normalize_contigtemp.m

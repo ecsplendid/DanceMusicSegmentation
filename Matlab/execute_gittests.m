@@ -1,3 +1,4 @@
+% this is needed to avoid the cryptic bug loading shows
 clear all;
 
 cd dataset 

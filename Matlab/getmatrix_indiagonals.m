@@ -8,23 +8,28 @@ function [ D ] = getmatrix_indiagonals( M, return_matrix )
 [S, ~] = size(M);
 
 if( nargin > 1 && return_matrix == 1 )
-    D = nan( S-1, S-1 );
+    D = zeros( S, S );
 else
-    D = nan( ((S-1)*(S))/2, 1 );
+    D = zeros( ((S-1)*(S))/2, 1 );
     return_matrix = 0;
 end
 
+%%
+
 last_index = 1;
 
-for i=2:S
+for i=1:S
 
-        if( return_matrix)
-            D( i, 1:(S-i+1) ) = diag( M, i-1 );
-        else
-            D( last_index:(last_index+S-i) ) = diag( M, i-1 );
-        end
-    
-       last_index = (last_index+S-i)+1;
+    if( return_matrix)
+        
+        dg = diag( M, i-1 );
+        
+        D( i, 1:(length(dg)) ) = dg;
+    else
+        D( last_index:(last_index+S-i) ) = diag( M, -(i-1) );
+    end
+
+   last_index = (last_index+S-i)+1;
 end
 
 

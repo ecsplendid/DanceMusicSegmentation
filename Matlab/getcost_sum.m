@@ -13,8 +13,8 @@ C_RED = abs(C_RED);
 SC_BLUE = get_summationfast( C_BLUE, W, min_w );
 SC_RED = get_summationfast( C_RED, W, min_w );
 
-SC_BLUE = SC_BLUE ./ repmat( (1:W).^2, size(SC_BLUE,1), 1 );
-SC_RED = SC_RED ./ repmat( (1:W).^2, size(SC_RED,1), 1 );
+SC_BLUE = SC_BLUE ./ repmat( (1:W), size(SC_BLUE,1), 1 );
+SC_RED = SC_RED ./ repmat( (1:W), size(SC_RED,1), 1 );
 
 SC_BLUE = SC_BLUE .* costsum_incentivebalance;
 SC_RED = SC_RED .* (1-costsum_incentivebalance);
@@ -25,8 +25,8 @@ SC = SC_BLUE+SC_RED;
 
 SC = normalize_byincentivebias( SC, costsum_incentivebalance );
 
-SC(isnan(SC)) = inf;
-SC(:,1:min_w-1 )=inf;
+SC( isnan(SC) ) = inf;
+SC(:,1:min_w-1 ) = inf;
     
 end
 
