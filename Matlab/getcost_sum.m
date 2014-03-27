@@ -2,6 +2,8 @@ function [ SC ] = getcost_sum( C, W, min_w, ...
     costsum_incentivebalance )
 %   getcost_sum 
 %   builds the sum cost matrix calling the dynamic program get_summationfast
+%   which is described in detail in the first paper. Runs in O(TW)
+
 C_BLUE = C;
 C_BLUE(C_BLUE>=0) = 0;
 C_BLUE = abs(C_BLUE);

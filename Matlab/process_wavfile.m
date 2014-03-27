@@ -108,9 +108,8 @@ end
 
 if( use_costsum > 0 )
     
-    %SC = SC + (getcost_sum( C, W, min_w, costsum_incentivebalance ) .* use_costsum);
-    SC = SC + (getcost_sumfast2( C, W, min_w, costsum_incentivebalance ) .* use_costsum);
-    
+    SC = SC + (getcost_sum3( C, W, min_w, costsum_incentivebalance ) .* use_costsum);
+
 end
 
 

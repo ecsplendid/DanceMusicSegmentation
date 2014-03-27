@@ -1,7 +1,11 @@
-function [SC] = getcost_sum2(...
-    C, W, min_w, ...
-    costcontig_incentivebalance ) 
-% getcost_sumfast2 
+function [SC] = getcost_sum2( C, W, min_w, costcontig_incentivebalance ) 
+% getcost_sum2 this produces the same result as getcost_sum but uses a
+% different strategy to achieve the result, it takes a future self
+% similarity matrix from getmatrix_selfsim( C, W, 1 ) and then fits
+% triangles representing tracks of all sizes (1:W) down 1:T
+% it's slow but should be clear to understand, runs in O(TW^2)
+% we are going in this direction because it makes it easier to implement
+% the contiguity cost matrices in this fashion
  
 %%
 T = size( C, 1 );

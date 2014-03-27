@@ -40,7 +40,8 @@ function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplace
         draw_rectangles( [predictions T .* tileWidthSecs], 'k' );
       
         draw_indexes(space(end)./indexes_tilespace, indexes_tilespace);
-        title(sprintf('1-Cosine Matrix\n%s',showname));
+        title(sprintf('1-Cosine Matrix\n%s\nCosine Matrix Histogram (Cosine Normalization=%.1f, %d Tiles)',...
+            showname,cosine_normalization, T));
         xlabel('Tiles');
         ylabel('Tiles');
 
