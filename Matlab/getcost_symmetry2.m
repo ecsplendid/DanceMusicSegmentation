@@ -1,7 +1,10 @@
-function [SC] = getcost_symmetryfast(...
+function [SC] = getcost_symmetry2 (...
     C, W, min_w, ...
     costcontig_incentivebalance ) 
- %getcost_contigfast dynamic programming implementation of getcontig fast
+ % getcost_symmetry2 implementation of getcost_symmetry using the future
+ % and past self similarity matrices from getmatrix_selfsim for clarity,
+ % this is the first step to a dynamic programming solution to the same
+ % thing, runs in O(TW^2) time
 
 %%
 T = size( C, 1 );

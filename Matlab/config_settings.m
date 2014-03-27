@@ -41,8 +41,9 @@ use_costsymmetrysum     = 0;        costsymmetrysum_incentivebalance = 0.5;
 use_costsymmetrydiff    = 0;       costsymmetrydiff_incentivebalance = 0.5;
 use_costsymmetry        = 0;           costsymmetry_incentivebalance = 0.5;
 use_costcontigpast      = 0;         costcontigpast_incentivebalance = 0.5;
-use_costcontigfuture    = 0;       costcontigfuture_incentivebalance = 0.5;
-use_costsum             = 1;                costsum_incentivebalance = 0.5;
+use_costcontigfuture    = 1;       costcontigfuture_incentivebalance = 0.5;
+use_costsum             = 0;                costsum_incentivebalance = 0.5;
 use_costgaussian        = 0;              costgauss_incentivebalance = 0.5;
+use_costcontigevolution = 0;          costevolution_incentivebalance = 0.5;
 
 

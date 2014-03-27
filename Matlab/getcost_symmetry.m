@@ -1,6 +1,8 @@
-function [ SC ] = getcost_symmetry_reference( C, W, min_w, ...
+function [ SC ] = getcost_symmetry( C, W, min_w, ...
     costsymmetry_incentivebalance )
-% reference implementation
+% getcost_symmetry reference implementation takes diagonals of every single
+% track square in C and compares symmetric pairs going for the outside
+% inwards, normalizing on track width only. runs in O(TW^3) time
 
 %%
 T = size(C,1);
