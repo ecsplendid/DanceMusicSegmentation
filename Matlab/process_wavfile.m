@@ -13,12 +13,14 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, min_w, space, T ] =
 global map;
 global maps_used;
 global maps_lastindex;
+global map_initialized;
     
-if( use_cosinecache && ~exist('map') )
+if( use_cosinecache && isempty(map_initialized) )
     
     map = containers.Map; 
     maps_used = cell(8,1);
     maps_lastindex = 1;
+    map_initialized = 1;
 end
 
 id = sprintf('%d%d%d%d%d', length(audio_low), ...
