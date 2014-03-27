@@ -19,7 +19,7 @@ SC_RED = SC_RED ./ repmat( (1:W), size(SC_RED,1), 1 );
 SC_BLUE = SC_BLUE .* costsum_incentivebalance;
 SC_RED = SC_RED .* (1-costsum_incentivebalance);
 
-SC_BLUE = 1-SC_BLUE;
+SC_BLUE = -SC_BLUE;
 
 SC = SC_BLUE+SC_RED;
 

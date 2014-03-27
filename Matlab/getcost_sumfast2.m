@@ -8,11 +8,6 @@ T = size( C, 1 );
 SC = inf( T, W );
 
 SF = getmatrix_selfsim( C, W, 1 );
-SP = getmatrix_selfsim( C, W, 0 );
-
-SF = SF ./ repmat( (1:W), T, 1 );
-
-imagesc(SF);
 
 %%
 
@@ -30,8 +25,8 @@ for width=2:W
         blue = sum(sum(abs(TF(TF<0))));
         red = sum(sum(abs(TF(TF>=0))));
         
-        blue = blue * 2;
-        red = red * 2;
+        blue = blue ;
+        red = red ;
         
         blue = blue .* (costcontig_incentivebalance);
         red = red .* (1-costcontig_incentivebalance);
@@ -39,7 +34,7 @@ for width=2:W
         blue = blue / width;
         red = red / width;
         
-        blue = 1-blue;
+        blue = -blue;
         
         score = (blue)+red;
         

@@ -35,8 +35,8 @@ use_costsymmetrysum =  0;
 use_costsymmetrydiff =  0;
 use_costsymmetry =  0;
 use_costcontigpast = 0;
-use_costcontigfuture = 1;
-use_costsum = 0;
+use_costcontigfuture = 0;
+use_costsum = 1;
 use_costgaussian = 0;
 
 % what incentive balance do the respective cost functions have [0,1]
