@@ -12,14 +12,14 @@ function [SC] = getcost_contigstatic(...
  % future=1 use future self similarity, 0 means use past self similarity
 
 %%
+
 T = size( C, 1 );
-SC = inf( T, W );
 
 SS = getmatrix_selfsim( C, W, future );
 CF = inf( T, W-window_size-1 );
 
 % transform the self similarity matrix with the contiguity information
-for t=1:T
+for t = 1:T
     
     limit = t;
     
@@ -27,7 +27,7 @@ for t=1:T
         limit = T-t;
     end
     
-    for x=(window_size):min(W-window_size, limit)
+    for x=(window_size):min(W-window_size-1, limit)
         
         vals = SS( t, (x-window_size+1):x );
         
@@ -39,22 +39,38 @@ for t=1:T
             score = 0;
         end
         
-        CF( t, x-1 ) = score/x;
+        CF( t, x ) = score/x;
     end
 end
 
 
 %%
+SC = inf( T, W );
+
 % generate SC using the dynamic program from getcost_sum3
 for t=1:T
     
     score = 0;
     
-    for w=window_size:min(W-window_size-1, t)
+     limit = T-t;
+     t_ind = t;
+     
+     if(future)
+         limit = t;
+     end
+
+    for w=window_size:min(W-window_size-1, limit)
         
-        score = score + sum( CF( t-(w-1), window_size:w ) );
+        c_ind = t+(w-1);
+       
+        if(future)
+            c_ind = t-(w-1);
+            t_ind = (t-w)+1;
+        end 
         
-        SC( (t-w)+1, w+window_size+1 ) = score / w;
+        score = score + sum( CF( c_ind, window_size:w ) );
+        
+        SC( t_ind, w+window_size+1 ) = score / w;
     end
 end
 
@@ -62,5 +78,7 @@ end
 SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
 
 SC(:,1:min_w-1 )=inf;
+
+imagesc(SC)
 
 end

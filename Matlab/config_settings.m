@@ -40,7 +40,7 @@ contig_windowsize = 4;
 use_costsymmetrysum     = 0;        costsymmetrysum_incentivebalance = 0.5;
 use_costsymmetrydiff    = 0;       costsymmetrydiff_incentivebalance = 0.5;
 use_costsymmetry        = 0;           costsymmetry_incentivebalance = 0.5;
-use_costcontigpast      = 0;         costcontigpast_incentivebalance = 0.5;
+use_costcontigpast      = 1;         costcontigpast_incentivebalance = 0.5;
 use_costcontigfuture    = 1;       costcontigfuture_incentivebalance = 0.5;
 use_costsum             = 0;                costsum_incentivebalance = 0.5;
 use_costgaussian        = 0;              costgauss_incentivebalance = 0.5;
