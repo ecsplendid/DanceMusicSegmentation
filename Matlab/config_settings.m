@@ -31,13 +31,13 @@ use_costgaussianwidth = 1;
 contig_windowsize = 4;
 
 % which cost functions to use and how much weight do they have (>0)
-use_costsymmetrysum =  1;
-use_costsymmetrydiff =  1;
-use_costsymmetry =  1;
-use_costcontigpast = 1;
+use_costsymmetrysum =  0;
+use_costsymmetrydiff =  0;
+use_costsymmetry =  0;
+use_costcontigpast = 0;
 use_costcontigfuture = 1;
-use_costsum = 1;
-use_costgaussian = 1;
+use_costsum = 0;
+use_costgaussian = 0;
 
 % what incentive balance do the respective cost functions have [0,1]
 costsymmetrysum_incentivebalance = 0.5;
