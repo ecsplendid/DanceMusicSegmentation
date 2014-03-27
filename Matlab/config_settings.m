@@ -28,14 +28,22 @@ solution_shift = 0;
 % gaussian width (>1) higher values pinch the gaussian
 use_costgaussianwidth = 1;
 
+contig_windowsize = 4;
+
 % which cost functions to use and how much weight do they have (>0)
+use_costsymmetrysum =  1;
+use_costsymmetrydiff =  1;
 use_costsymmetry =  1;
-use_costcontig = 0;
-use_costsum = 0;
-use_costgaussian = 0;
+use_costcontigpast = 1;
+use_costcontigfuture = 1;
+use_costsum = 1;
+use_costgaussian = 1;
 
 % what incentive balance do the respective cost functions have [0,1]
+costsymmetrysum_incentivebalance = 0.5;
 costsymmetry_incentivebalance = 0.5;
-costcontig_incentivebalance = 0.5;
+costcontigfuture_incentivebalance = 0.5;
+costcontigpast_incentivebalance = 0.5;
+costsymmetrydiff_incentivebalance = 0.5;
 costsum_incentivebalance = 0.5;
 costgauss_incentivebalance = 0.5;
