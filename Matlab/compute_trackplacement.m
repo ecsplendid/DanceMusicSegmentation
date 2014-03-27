@@ -6,7 +6,7 @@ function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplace
             costsymmetrysum_incentivebalance, costsymmetry_incentivebalance, ...
             costcontigfuture_incentivebalance, costcontigpast_incentivebalance, ...
             costsymmetrydiff_incentivebalance, costsum_incentivebalance, ...
-            costgauss_incentivebalance, contig_windowsize ) 
+            costgauss_incentivebalance, contig_windowsize, cosine_normalization ) 
 
     [~, best_begin] = find_tracks( length(indexes)+1, SC );
 
@@ -73,6 +73,10 @@ function [predictions_timespace, matched_tracks, avg_shift] = compute_trackplace
         colorbar;
         draw_scindexes(predictions, indexes_tilespace, w, T);
       
+        figure(3);
+        hist(C(1:T^2),50)
+        title( sprintf('%s\nCosine Matrix Histogram (Cosine Normalization=%.1f, %d Tiles)', ...
+            showname, cosine_normalization, T));
        % figure(3)
        % hist(predictions_timespace-indexes',50);
        % title('shift histogram')

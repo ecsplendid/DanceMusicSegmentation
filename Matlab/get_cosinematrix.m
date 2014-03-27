@@ -1,8 +1,7 @@
 function [C, W, tileWidthSecs, space] = get_cosinematrix(...
-    audio_low, secondsPerTile, ...
-    sampleRate, ...
+    audio_low, secondsPerTile, sampleRate, ...
     lowPassFilter, highPassFilter, bandwidth, ...
-    maxExpectedTrackWidth, gaussian_filterdegree )
+    maxExpectedTrackWidth, gaussian_filterdegree, cosine_normalization )
 
     no_tiles = ceil((length(audio_low)/sampleRate)/secondsPerTile);
     tileWidth = floor(length(audio_low)/no_tiles); % we discard the last partial tile
@@ -50,7 +49,9 @@ function [C, W, tileWidthSecs, space] = get_cosinematrix(...
     
     mean_c = mean(C(1:size(C,1)^2));
     C=C.^(2*mean_c);
-    % we do the normalization manually to keep it 0 centered
+    C = C.^cosine_normalization;
+    
+    % we do the normalization manually to keep it centered
     C = (C.*2)-1; 
  
 
