@@ -11,7 +11,7 @@ highPassFilter = 80; %Hz
 gaussian_filterdegree = 2; % for the convolution filter on FFT result
 
 % figure drawing parameters
-drawsimmat = 1;
+drawsimmat = 0;
 compute_confs = 0;
 draw_confs = 0;
 

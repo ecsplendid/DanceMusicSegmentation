@@ -9,7 +9,7 @@ cd experiments
 
 while(true)
 
-    ts = [10 20];
+    ts = [5 10 20];
     secondsPerTile = ts(floor(rand*2)+1);
     
     solution_shift = floor((rand*3)-1);
@@ -27,10 +27,10 @@ use_costsum             = rand;                costsum_incentivebalance = rand;
 use_costgaussian        = rand;              costgauss_incentivebalance = rand;
 use_costcontigevolution = rand;          costevolution_incentivebalance = rand;
    
-    bandwidth = floor(rand*10)+1; % bandwith for the width of the convolution filter
-    lowPassFilter = floor(rand*1100)+800; %Hz
-    highPassFilter = floor((rand * 50)+50); %Hz
-    
+   % bandwidth = floor(rand*10)+1; % bandwith for the width of the convolution filter
+   % lowPassFilter = floor(rand*1100)+800; %Hz
+   % highPassFilter = floor((rand * 50)+50); %Hz
+   
     cd ..
     run_experiments;
     

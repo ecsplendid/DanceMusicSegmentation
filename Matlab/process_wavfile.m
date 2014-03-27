@@ -32,7 +32,7 @@ if ( use_cosinecache && map.isKey(id) )
     tileWidthSecs = cell2mat(cache(2));
     space = cell2mat(cache(3));
     W = cell2mat(cache(4));
-    disp('USED CACHED COSINE MATRIX!');
+    disp( sprintf('USED CACHED COSINE MATRIX!\n%s',id ));
 else
     % todo, cache the "last" 6 things this was called with to give a 
     % big speed up on the parameter search
@@ -53,6 +53,13 @@ else
         end
     end
 end
+
+% do the cosine normalization (out here so its not cached)
+
+C = C.^cosine_normalization;
+
+% we do the normalization manually to keep it centered
+C = (C.*2)-1; 
 
 
 %%

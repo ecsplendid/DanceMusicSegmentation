@@ -49,10 +49,7 @@ function [C, W, tileWidthSecs, space] = get_cosinematrix(...
     
     mean_c = mean(C(1:size(C,1)^2));
     C=C.^(2*mean_c);
-    C = C.^cosine_normalization;
-    
-    % we do the normalization manually to keep it centered
-    C = (C.*2)-1; 
+
  
 
 end
