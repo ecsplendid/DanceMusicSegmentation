@@ -10,11 +10,12 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, min_w, space, T ] =
             use_costcontigevolution, costevolution_incentivebalance, ...
             use_cosinecache, contig_windowsize, use_costgaussianwidth, cosine_normalization )
 
+global map;
+global maps_used;
+global maps_lastindex;
+    
 if( use_cosinecache && ~exist('map') )
-    global map;
-    global maps_used;
-    global maps_lastindex;
-
+    
     map = containers.Map; 
     maps_used = cell(8,1);
     maps_lastindex = 1;
@@ -29,6 +30,7 @@ if ( use_cosinecache && map.isKey(id) )
     tileWidthSecs = cell2mat(cache(2));
     space = cell2mat(cache(3));
     W = cell2mat(cache(4));
+    disp('USED CACHED COSINE MATRIX!');
 else
     % todo, cache the "last" 6 things this was called with to give a 
     % big speed up on the parameter search
