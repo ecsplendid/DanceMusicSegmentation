@@ -9,8 +9,8 @@ cd experiments
 
 while(true)
 
-    ts = [5 10 20];
-    secondsPerTile = ts(floor(rand*2)+1);
+    ts = [10];
+    secondsPerTile = 10;%ts(floor(rand*2)+1);
     
     solution_shift = floor((rand*3)-1);
     solution_shift = 0;

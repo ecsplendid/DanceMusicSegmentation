@@ -14,13 +14,15 @@ global map;
 global maps_used;
 global maps_lastindex;
 global map_initialized;
-    
+global map_limit;    
+
 if( use_cosinecache && isempty(map_initialized) )
     
     map = containers.Map; 
-    maps_used = cell(8,1);
     maps_lastindex = 1;
     map_initialized = 1;
+    map_limit = 15;
+    maps_used = cell(map_limit,1);
 end
 
 id = sprintf('%d%d%d%d%d', length(audio_low), ...
@@ -48,7 +50,7 @@ else
             map.remove( maps_used{maps_lastindex} );
         end
         maps_used{maps_lastindex} = id;
-        if( maps_lastindex>8)
+        if( maps_lastindex>map_limit)
             maps_lastindex = 1;
         end
     end
@@ -72,7 +74,7 @@ SC = zeros( T, W );
 
 if( use_costcontigevolution > 0 )
     
-    SC = SC + getcost_contigdiag( ...
+    SC = SC + getcost_contigdiag1( ...
         C, W, min_w, ...
          costevolution_incentivebalance ...
         ) .* use_costcontigevolution;   
