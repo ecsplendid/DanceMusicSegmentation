@@ -43,6 +43,8 @@ else
         lowPassFilter, highPassFilter, bandwidth, maxExpectedTrackWidth, ...
         gaussian_filterdegree, cosine_normalization );
 
+    clear audio_low;
+    
     if( use_cosinecache )
         map(id) = {C,tileWidthSecs, space, W };
         maps_lastindex = maps_lastindex + 1;

@@ -16,7 +16,14 @@ for t=1:T
     
     for w=1:min(W, t)
         
-        score = score + sum( SF( t-(w-1), 1:w ) );
+        vals = SF( t-(w-1), 1:w );
+        
+        blues = sum(vals( vals<=0 )) * (1-costsum_incentivebalance); 
+        reds = sum(vals( vals>0 )) * (costsum_incentivebalance); 
+        
+        new_score = (blues + reds);
+        
+        score = score + new_score;
         
         SC( (t-w)+1, w ) = score / w;
     end

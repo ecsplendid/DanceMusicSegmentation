@@ -16,7 +16,14 @@ for t = 1:T
 
     for w=1:min(W, t)
         
-        score = score + sum( C_dags( t-(w-1), 2:w ) ) * w;
+        vals = C_dags( t-(w-1), 2:w );
+        
+        blues = sum(vals( vals<=0 )) * (1-costdags_incentivebalance); 
+        reds = sum(vals( vals>0 )) * (costdags_incentivebalance); 
+        
+        new_score = (blues + reds)*w;
+        
+        score = score +  new_score;
         
         SC( (t-w)+1, w ) = score / w^2;
     end

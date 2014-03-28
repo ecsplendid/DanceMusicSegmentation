@@ -33,10 +33,16 @@ for t = 1:T
         
         same_sign = range( sign( vals ) ) == 0;
         
+        what_sign = sign( vals(1) );
+        
         score = mean(vals);
         
         if( ~same_sign )
             score = 0;
+        elseif (what_sign == -1)
+            score = score * (1-costcontig_incentivebalance);
+        else
+            score = score * (costcontig_incentivebalance);
         end
         
         CF( t, x ) = score/x;
