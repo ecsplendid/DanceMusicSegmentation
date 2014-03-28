@@ -2,7 +2,7 @@
 
 % Feature Extraction Parameters
 sampleRate = 4000;
-secondsPerTile = 10;
+secondsPerTile = 5;
 minTrackLength = 180;
 maxExpectedTrackWidth = 370*2;   % (magicisland=380*2 others 350*2)
 bandwidth = 5; % bandwith for the width of the convolution filter
@@ -42,8 +42,8 @@ use_costsymmetrydiff    = 0;       costsymmetrydiff_incentivebalance = 0.5;
 use_costsymmetry        = 0;           costsymmetry_incentivebalance = 0.5;
 use_costcontigpast      = 0;         costcontigpast_incentivebalance = 0.5;
 use_costcontigfuture    = 0;       costcontigfuture_incentivebalance = 0.5;
-use_costsum             = 1;                costsum_incentivebalance = 0.5;
+use_costsum             = 0;                costsum_incentivebalance = 0.5;
 use_costgaussian        = 0;              costgauss_incentivebalance = 0.5;
-use_costcontigevolution = 0;          costevolution_incentivebalance = 0.5;
+use_costcontigevolution = 1;          costevolution_incentivebalance = 0.5;
 
 

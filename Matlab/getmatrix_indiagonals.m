@@ -1,4 +1,4 @@
-function [ D ] = getmatrix_indiagonals( M, return_matrix )
+function [ D ] = getmatrix_indiagonals( M, return_matrix, num_dags )
 % getmatrix_indiagonals 
 % assumes a symetric matrix, will return a vector (S*(S+1))/2 of concatenated
 % diagonals, if m==1 then we return a matrix with a diagonal on each row
@@ -18,7 +18,7 @@ end
 
 last_index = 1;
 
-for i=1:S
+for i=1:num_dags
 
     if( return_matrix)
         

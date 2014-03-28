@@ -57,15 +57,11 @@ for w=min_w:W
         SC(t, w) = score;
  %%
     end
-    
 end
-
 
 SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
 
 SC(:,1:min_w-1 )=inf;
-
-
 
 
 end
