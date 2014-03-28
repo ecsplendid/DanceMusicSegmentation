@@ -32,7 +32,8 @@ chopper =  true( size( audio_low ) ) ;
     end
 
     audio_low = audio_low(chopper);
-
+    clear chopper;
+    
     M = length(indexes);
 
     %SC == song cost matrix, C = 1-cosine matrix, W=max trach width in
@@ -70,14 +71,14 @@ chopper =  true( size( audio_low ) ) ;
     
         [mean_indexplacementconfidence, worst_indexplacementconfidence, ...
         track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] = ...
-     find_posterior( SC, M, eta, draw_confs, output_width, showname );
+        find_posterior( SC, M, eta, draw_confs, output_width, showname );
 
-     track_placementconfidences_map( s, : ) = track_placementconfidence;
-     track_placementconfidenceavg_map ( s ) = track_placementconfidenceavg;
-     track_indexconfidences_map( s, : ) = track_indexconfidences;
-     worst_indexplacementconfidence_map( s ) = worst_indexplacementconfidence;
-     mean_indexplacementconfidence_map( s ) = mean_indexplacementconfidence;
-     predictive_loss( s,: ) = predictive_quality;
+        track_placementconfidences_map( s, : ) = track_placementconfidence;
+        track_placementconfidenceavg_map ( s ) = track_placementconfidenceavg;
+        track_indexconfidences_map( s, : ) = track_indexconfidences;
+        worst_indexplacementconfidence_map( s ) = worst_indexplacementconfidence;
+        mean_indexplacementconfidence_map( s ) = mean_indexplacementconfidence;
+        predictive_loss( s,: ) = predictive_quality;
     end
     
     toc;

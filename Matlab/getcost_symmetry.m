@@ -9,7 +9,7 @@ T = size(C,1);
 
 SC = inf( T, W );
 
-C_bigdags = getmatrix_indiagonals(C, 1);
+C_bigdags = getmatrix_indiagonals(C, 1, W);
 
 for width=min_w:W
     for t=1:T-width+1

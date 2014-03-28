@@ -21,7 +21,7 @@ for t = 1:T
         blues = sum(vals( vals<=0 )) * (1-costdags_incentivebalance); 
         reds = sum(vals( vals>0 )) * (costdags_incentivebalance); 
         
-        new_score = (blues + reds)*w;
+        new_score = (blues + reds) * w;
         
         score = score +  new_score;
         

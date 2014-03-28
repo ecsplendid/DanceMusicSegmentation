@@ -7,6 +7,7 @@ function [ S ] = getmatrix_selfsim( C, W, future )
 [T, ~] = size(C);
 S = nan( T, W );
 
+
 if(future)
     for t=1:T
 
