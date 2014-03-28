@@ -85,6 +85,5 @@ SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
 
 SC(:,1:min_w-1 )=inf;
 
-imagesc(SC)
 
 end
