@@ -301,7 +301,7 @@ C = \hat N \left( \frac{ \tilde C_{ft} }{ t-f+1 }, \Omega \right)
 	\end{dmath*}  where  $\kappa=\Lambda( f,t,i )$ and $\rho_i = \Lambda( f,t,i )_x$ for $x=|\Lambda( f,t,i )|, |\Lambda( f,t,i )|-1,\ldots,1$.
 	
 	
-	We will consider $3$ types of symmetry cost matrix. The standard symmetry version where 
+	We will consider $3$ types of symmetry cost matrix. The standard symmetry version where pair evaluator 
 		\begin{dmath*}\hat \delta( p,q, \Omega ) = \left\{
 				\begin{array}{lr}
 					\mathrm{sign}(p|q)=-1  & : (1-\Omega) ( p \cdot q ) \\
@@ -319,9 +319,11 @@ C = \hat N \left( \frac{ \tilde C_{ft} }{ t-f+1 }, \Omega \right)
 			\right.
 	\end{dmath*}
 	
-	The Symmetry change matrix is defined where $\hat \delta$ is the same as the Symmetry summation and the inner sum of the definition becomes the first order differences. For the sake of brevity we have omitted the dynamic programming formulations which run in $O(TW^2)$ time but they have been implemented in code and are available on-line (see Section~\ref{sec:materials}).
+	The Symmetry change matrix is defined where $\hat \delta$ is the same as the Symmetry summation, the width normalization is removed and the inner sum of the definition becomes the first order differences. For the sake of brevity we have omitted the dynamic programming formulations which run in $O(TW^2)$ time but they have been implemented in code and are available on-line (see Section~\ref{sec:materials}).
 	
 	\subsection{Evolutionary Contiguity}
+	
+	Any diagonal traces in $S$ that are parallel to the main diagonal are copies of track which evolve in respect of time. Evolutionary Contiguity is a cost matrix that evaluates all adjacent pairs on the diagonals in $\hat t$ and performs the 
 	
 	\subsection{Static Contiguity}
 	
