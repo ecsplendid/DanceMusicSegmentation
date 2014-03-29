@@ -13,10 +13,9 @@ while(true)
     secondsPerTile = 20;%ts(floor(rand*2)+1);
     
     solution_shift = floor((rand*3)-1);
-    solution_shift = 0;
     
     cosine_normalization = rand+0.5;
-    contig_windowsize = floor(rand*5+2);
+    contig_windowsize = floor(rand*80)+5;
     
 use_costsymmetrysum     = rand;        costsymmetrysum_incentivebalance = rand;
 use_costsymmetrydiff    = rand;       costsymmetrydiff_incentivebalance = rand;
@@ -27,9 +26,9 @@ use_costsum             = rand;                costsum_incentivebalance = rand;
 use_costgaussian        = rand;              costgauss_incentivebalance = rand;
 use_costcontigevolution = rand;          costevolution_incentivebalance = rand;
    
-   % bandwidth = floor(rand*10)+1; % bandwith for the width of the convolution filter
-   % lowPassFilter = floor(rand*1100)+800; %Hz
-   % highPassFilter = floor((rand * 50)+50); %Hz
+    bandwidth = floor(rand*10)+1; % bandwith for the width of the convolution filter
+    lowPassFilter = floor(rand*1100)+800; %Hz
+    highPassFilter = floor((rand * 50)+50); %Hz
    
     cd ..
     run_experiments;

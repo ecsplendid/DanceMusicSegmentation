@@ -2,7 +2,7 @@
 
 % Feature Extraction Parameters
 sampleRate = 4000;
-secondsPerTile = 5;
+secondsPerTile = 15;
 minTrackLength = 180;
 maxExpectedTrackWidth = 370*2;   % (magicisland=380*2 others 350*2)
 bandwidth = 5; % bandwith for the width of the convolution filter
@@ -11,7 +11,7 @@ highPassFilter = 80; %Hz
 gaussian_filterdegree = 2; % for the convolution filter on FFT result
 
 % figure drawing parameters
-drawsimmat = 1;
+drawsimmat = 0;
 compute_confs = 0;
 draw_confs = 0;
 
@@ -33,16 +33,17 @@ use_costgaussianwidth = 1;
 % distribution, I would guess a value slightly greater than 1 is optimal for
 % the symmetry and contig cost matrices. >1 shifts mean higher
 cosine_normalization = 1;
-contig_windowsize = 4;
+% contig_windowsize in seconds
+contig_windowsize = 30;
 
 % which cost functions to use and how much weight do they have (>0)
 % what incentive balance do the respective cost functions have [0,1]
-use_costsymmetrysum     = 0;        costsymmetrysum_incentivebalance = 0.5;
+use_costsymmetrysum     = 1;        costsymmetrysum_incentivebalance = 0.5;
 use_costsymmetrydiff    = 0;       costsymmetrydiff_incentivebalance = 0.5;
 use_costsymmetry        = 0;           costsymmetry_incentivebalance = 0.5;
 use_costcontigpast      = 0;         costcontigpast_incentivebalance = 0.5;
 use_costcontigfuture    = 0;       costcontigfuture_incentivebalance = 0.5;
-use_costsum             = 1;                costsum_incentivebalance = 0.5;
+use_costsum             = 0;                costsum_incentivebalance = 0.5;
 use_costgaussian        = 0;              costgauss_incentivebalance = 0.5;
 use_costcontigevolution = 0;          costevolution_incentivebalance = 0.5;
 

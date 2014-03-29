@@ -10,53 +10,16 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, min_w, space, T ] =
             use_costcontigevolution, costevolution_incentivebalance, ...
             use_cosinecache, contig_windowsize, use_costgaussianwidth, cosine_normalization )
 
-global map;
-global maps_used;
-global maps_lastindex;
-global map_initialized;
-global map_limit;    
 
-if( use_cosinecache && isempty(map_initialized) )
+% todo, cache the "last" 6 things this was called with to give a 
+% big speed up on the parameter search
+[C, W, tileWidthSecs, space] = get_cosinematrix(...
+    audio_low, secondsPerTile, sampleRate,...
+    lowPassFilter, highPassFilter, bandwidth, maxExpectedTrackWidth, ...
+    gaussian_filterdegree, cosine_normalization );
+
+clear audio_low;
     
-    map = containers.Map; 
-    maps_lastindex = 1;
-    map_initialized = 1;
-    map_limit = 15;
-    maps_used = cell(map_limit,1);
-end
-
-id = sprintf('%d%d%d%d%d', length(audio_low), ...
-    secondsPerTile, lowPassFilter, highPassFilter, bandwidth );
-
-if ( use_cosinecache && map.isKey(id) )
-    cache = map(id);
-    C = cell2mat(cache(1));
-    tileWidthSecs = cell2mat(cache(2));
-    space = cell2mat(cache(3));
-    W = cell2mat(cache(4));
-    disp( sprintf('USED CACHED COSINE MATRIX!\n%s',id ));
-else
-    % todo, cache the "last" 6 things this was called with to give a 
-    % big speed up on the parameter search
-    [C, W, tileWidthSecs, space] = get_cosinematrix(...
-        audio_low, secondsPerTile, sampleRate,...
-        lowPassFilter, highPassFilter, bandwidth, maxExpectedTrackWidth, ...
-        gaussian_filterdegree, cosine_normalization );
-
-    clear audio_low;
-    
-    if( use_cosinecache )
-        map(id) = {C,tileWidthSecs, space, W };
-        maps_lastindex = maps_lastindex + 1;
-        if( map.isKey(maps_used{maps_lastindex}) )
-            map.remove( maps_used{maps_lastindex} );
-        end
-        maps_used{maps_lastindex} = id;
-        if( maps_lastindex>map_limit)
-            maps_lastindex = 1;
-        end
-    end
-end
 
 % do the cosine normalization (out here so its not cached)
 
