@@ -1,7 +1,7 @@
 
 if( exist('execute_config') && execute_config ), config_settings, end;
 
-config_settings;
+%config_settings;
 
 show = shows{which_shows(s)};
 
