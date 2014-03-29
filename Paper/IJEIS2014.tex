@@ -187,7 +187,7 @@
 		%\hspace{1em}
 		\includegraphics[width=0.4\textwidth]{images/simmat_plain}
 		
-		\caption{An illustration of what the similarity matrix $S(i,j)$ looks like}
+		\caption{An illustration of the similarity matrix $S$}
 		\label{fig:simmatrix}
 	\end{figure*} 
 	
@@ -237,16 +237,20 @@
 				S_{ij} <= 1 & :  \left( 1-\Omega \right) S_{ij} \\
 			\end{array}
 			\right.} 
-	\end{dmath*} for all $i,j \in S.$ Direct computation using the definition takes $O(TW^3)$ time. We can improve this to $O(TW^2)$ using the recursive formulation
-	\begin{dmath*}
-		C( t-w+1,w ) = C( t-w,w-1 ) + \sum_{i=1}^{w} C(t-(w-1),t-(w-1)+i)
+	\end{dmath*} for all $i,j \in S.$ Direct computation using the definition takes $O(TW^3)$ time. We can improve this to $O(TW^2)$ using the recursive formulation for the unnormalized quantity 
+	\begin{dmath*} 
+		\begin{array}{ll}
+		\tilde C( t-(w+1),t+(w-1) ) = \\
+		 \tilde C( t-(w-1),t+(w-1) ) \\
+		\hspace{1em} +  \sum_{i=1}^{w} \tilde C(t-(w-1),t+(w-1)+i)
+		\end{array}
 	\end{dmath*} for all $t=1,\ldots, T$ and $w=1,\ldots,\min(w,t)$.
 	
 	$O(TW)$ is achievable using the following recursion for the unnormalized quantity $\tilde
 	C(f,t) = C(f,t)(t-f)$ (for $f+1 \le t-1$)
 	\begin{dmath*}
 		\tilde C(f,t) ~=~ \tilde C(f+1,t) + \tilde C(f,t-1) - \tilde C(f+1,t-1) + \hat S(f,t) + \hat S(t,f).
-	\end{dmath*}
+	\end{dmath*} (having first pre-computed $C$ for each $1 \le f \le t \le T$). This can be better understood with the following illustration
 	
 	\begin{center}
 		\begin{tikzpicture}
@@ -257,8 +261,8 @@
 		\draw[fill=gray!10, fill opacity=0.3] (2,0) -- (3,0) -- (3,1) -- (2,1) -- (2,0);
 		
 		
-		\node[color=black] at (0.5,2.5) {S(f,t)};
-		\node[color=black] at (2.5,0.5) {S(f,t)};
+		\node[color=black] at (0.5,2.5) {$\hat S(f,t)$};
+		\node[color=black] at (2.5,0.5) {$\hat S(f,t)$};
 		\node at (1.5,1.5) {C(f+1,t-1)};
 		
 		
@@ -269,8 +273,57 @@
 		\node[color=black] at (1,0.5) {C(f,t-1)};
 		\node[color=black] at (2,2.5) {C(f+1,t)};
 		
-		\end{tikzpicture}
-	\end{center}
+		\end{tikzpicture}.
+	\end{center} The final cost matrix is normalized by width and incentive bias
+\[
+C = \hat N \left( \frac{ \tilde C_{ft} }{ t-f+1 }, \Omega \right)
+\] for all $t,f \in \tilde C$.
+	
+	\subsection{Symmetry}	
+	
+	A common feature on dance music tracks is symmetry, that is to say that for any given track it can be mirrored on itself in time and still look almost the same. 
+	
+	Let \begin{dmath*}
+		\Lambda( f,t,d ) = \left\{ 
+		S(f+d-1,f), S(f+d, f+1), S(f+d+1, f+2),\ldots, S(t, t-d-1)
+		~ \right\} 
+	\end{dmath*}take the diagonal $d$ from track $\hat t= S( i \ge f \le t, j \ge f \le t)$. For each diagonal in $\hat t$ we want to compare each element against its mirror counterpart. `symmetric' pairs that contain the same sign are multiplied together. Pairs that have a different sign are set to $0$ and 
+	
+	Let symmetry cost matrix
+	\begin{dmath*} \frac{1}{t-f+1} \cdot \mathrm{Sym}(f, t, \Omega, \hat \delta) =  
+		\sum_{d=1}^{t-f+1} 
+		\sum_{i=1}^{|\Lambda( f,t,d )|}{ \left\{
+			\begin{array}{lr}
+				\mathrm{sign}( \kappa_{i} ) \ne \mathrm{sign}( \rho_i )  & : 0   \\
+				\mathrm{sign}( \kappa_{i} ) = \mathrm{sign}( \rho_i ) & : \hat \delta( \kappa_{i}, \rho_i, \Omega )  \\
+			\end{array}
+			\right.}
+	\end{dmath*}  where  $\kappa=\Lambda( f,t,i )$ and $\rho_i = \Lambda( f,t,i )_x$ for $x=|\Lambda( f,t,i )|, |\Lambda( f,t,i )|-1,\ldots,1$.
+	
+	
+	We will consider $3$ types of symmetry cost matrix. The standard symmetry version where 
+		\begin{dmath*}\hat \delta( p,q, \Omega ) = \left\{
+				\begin{array}{lr}
+					\mathrm{sign}(p|q)=-1  & : (1-\Omega) ( p \cdot q ) \\
+					\mathrm{sign}(p|q)= 1  & : (\Omega) ( p \cdot q )    \\
+				\end{array}
+				\right.
+		\end{dmath*}
+		
+		Symmetry summation:
+		\begin{dmath*}\hat \delta( p,q, \Omega ) = \left\{
+			\begin{array}{lr}
+				\mathrm{sign}(p|q)=-1  & : (1-\Omega) \frac{1}{2} ( p + q ) \\
+				\mathrm{sign}(p|q)= 1  & : (\Omega) \frac{1}{2} ( p + q )    \\
+			\end{array}
+			\right.
+	\end{dmath*}
+	
+	The Symmetry change matrix is defined where $\hat \delta$ is the same as the Symmetry summation and the inner sum of the definition becomes the first order differences. For the sake of brevity we have omitted the dynamic programming formulations which run in $O(TW^2)$ time but they have been implemented in code and are available on-line (see Section~\ref{sec:materials}).
+	
+	\subsection{Evolutionary Contiguity}
+	
+	\subsection{Static Contiguity}
 	
 	\subsection{Gaussian}
 	Let \[
@@ -350,7 +403,7 @@
 		%\hspace{1em}
 		\includegraphics[width=\textwidth]{images/simmat_preds}
 		
-		\caption{An illustration of what the similarity matrix $S(i,j)$ looks like with the reconstructed indexes superimposed. White crosses indicate the human captured indices, and black dotted lines are the reconstructed indices. Note the error where one track has an end segment which is unlike the rest. }
+		\caption{An illustration of the similarity matrix $S$ with the reconstructed indexes superimposed. White crosses indicate the human captured indices, and black dotted lines are the reconstructed indices. Note the error where one track has an end segment which is unlike the rest. }
 		\label{fig:predictions}
 	\end{figure*} 
 	
@@ -449,7 +502,7 @@ We selected $6$ shows at random (two of each show type) to use to develop the co
 
 
 
-\section{Materials}
+\section{Materials}\label{sec:materials}
 
 All of the code presented in this paper with the small working test set is available on GitHub \footnote{\url{github.com/ecsplendid/DanceMusicSegmentation}}. The large data set ($\approx100$GB) we received from Dennis Goncharov can easily be made available on request (it is in a Google Drive account).
 
