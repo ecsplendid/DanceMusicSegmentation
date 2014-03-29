@@ -8,8 +8,6 @@ SC = inf( T, W );
 
 SF = getmatrix_selfsim( C, W, 1 );
 
-%%
-
 for t=1:T
     
     score = 0;

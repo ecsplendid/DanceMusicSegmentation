@@ -20,7 +20,6 @@ function [ avg_shift, matched_tracks, predictions, SC, C, W, min_w, space, T ] =
 
 clear audio_low;
     
-
 % do the cosine normalization (out here so its not cached)
 
 C = C.^cosine_normalization;
