@@ -65,7 +65,6 @@ C = C.^cosine_normalization;
 % we do the normalization manually to keep it centered
 C = (C.*2)-1; 
 
-
 %%
 
 % minimum track length in tiles
@@ -73,6 +72,8 @@ min_w = floor((minTrackLength) / tileWidthSecs);
 T = size(C,1);
 
 SC = zeros( T, W );
+
+contig_windowsize = ceil(contig_windowsize / tileWidthSecs);
 
 if( use_costcontigevolution > 0 )
     
