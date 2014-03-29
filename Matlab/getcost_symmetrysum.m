@@ -1,73 +1,164 @@
-function [SC] = getcost_symmetrysumfast(...
+function [SC] = getcost_symmetrysum(...
     C, W, min_w, ...
-    costcontig_incentivebalance ) 
+    incentivebalance ) 
  %implementation of the symmetry addition concept
+ %essentially on the symmetric pairs it adds them together rather than
+ %checking for matching signs as in normal symmetry, it could transform
+ %checkerboard tracks into completley solid tracks, this is the dynamic
+ %programming implementation pretty much copied from getcost_symmetry3
+
+%%
 
 %%
 T = size( C, 1 );
 SC = inf( T, W );
 
-SF = getmatrix_selfsim( C, W, 1 );
-SP = getmatrix_selfsim( C, W, 0 );
+% evens
+for t = 1:T
 
-%% For every T make a triangle with the symmetry calculation for
-% future self similarity and past self similarity
+    odd_score = 0;
 
-% now shift this triangle along to T-w+1
-for width = min_w:W
-    for t=1:T-width+1
+    ws = 1:2:min(W, T-t+1 );
+    l = length(ws);
+    
+    for w = 1:l
 
-        TF = SF( t:(t+width-1), 1:width );
-        TF = tril( (flipud( TF )) );
+        wi = ws(w);
         
-        TP = SP( t:(t+width-1), 1:width );
-        TP = tril(TP);
-   
-        neg_sign = sign(TF)==-1 | sign(TP)==-1;
-        pos_sign = ~neg_sign;
+        ct = t+(l-w);
         
-        maxes = max(TF, TP);
-        mins = min(TF, TP);
-        
-        maxes(neg_sign) = 0;
-        mins(pos_sign) = 0;
-        
-        sym_mat = maxes + mins;
-        
-        sym_mat( neg_sign ) = sym_mat( neg_sign ) .* (1-costcontig_incentivebalance);
-        sym_mat( pos_sign ) = sym_mat( pos_sign ) .* (costcontig_incentivebalance);
-        
-        sym_mat = fliplr(sym_mat');
-        
-        score = 0;
-        
-        for y=1:width
-            for x=2:(width-y)
-                p1 = sym_mat(y,x-1);
-                p2 = sym_mat(y,x);
+        ahead = min( (ct)+(wi-1), T );
 
-                new_score = (p1+p2)/2;
+        future = C( ct, (ct):ahead);
+        past = C( ahead:-1:(ct), ahead)';
 
-                if( sign(p1) ~= sign(p2) )
-                    new_score = 0;
-                end
+        sym = (past + future)/2;
 
-                new_score = new_score * y;
-
-                score = score + new_score;
-            end
+        new_score = sum(sym); 
+        
+        if(new_score<0)
+           new_score = new_score * (1-incentivebalance);
+        else
+           new_score = new_score * (incentivebalance);
         end
         
-        score = score + sym_mat(width, 1);
-        new_score = new_score/width;
+        odd_score = odd_score + new_score;
         
-        SC(t, width) = new_score;
+        SC( ct, wi ) = odd_score / wi;
+ 
+    end
+    
+    score = 0;
+
+    ws = 2:2:min(W, T-t+1 );
+    l = length(ws);
+    
+    for w = 1:l
+
+        wi = ws(w);
+        
+        ct = t+(l-w);
+        
+        ahead = min( (ct)+(wi-1), T );
+        behind = (ct)-(wi-1);
+        
+        future = C( ct, (ct):ahead);
+        past = C( ahead:-1:(ct), ahead)';
+        sym = (past + future)/2;
+
+        new_score = sum(sym); 
+        
+        if(new_score<0)
+           new_score = new_score * (1-incentivebalance);
+        else
+           new_score = new_score * (incentivebalance);
+        end
+        
+        score = score + new_score ;
+        
+        SC( ct, wi ) = score / wi;
+ 
+    end
+end
+
+
+% now we have to build up the triangle 1:W iteratively
+for i=1:2:W-1
+
+    t=1;
+
+    score = 0;
+
+    ws = 2:2:i;
+
+    l = length(ws);
+
+    % assuming W is an odd number
+    for w = 1:l
+
+        wi = ws(w);
+
+        ct = t+(l-w);
+
+        ahead = min( (ct)+(wi-1), T );
+        behind = (ct)-(wi-1);
+
+        future = C( ct, (ct):ahead);
+        past = C( ahead:-1:(ct), ahead)';
+
+                sym = (past + future)/2;
+
+        new_score = sum(sym); 
+        
+        if(new_score<0)
+           new_score = new_score * (1-incentivebalance);
+        else
+           new_score = new_score * (incentivebalance);
+        end
+
+        score = score + new_score;
+
+        SC( ct, ws(w) ) = score / wi;
+
+    end
+
+    score = 0;
+
+    ws = 1:2:i;
+
+    l = length(ws);
+
+    % assuming W is an odd number
+    for w = 1:l
+
+        wi = ws(w);
+
+        ct = t+(l-w);
+
+        ahead = min( (ct)+(wi-1), T );
+        behind = (ct)-(wi-1);
+
+        future = C( ct, (ct):ahead);
+        past = C( ahead:-1:(ct), ahead)';
+
+        sym = (past + future)/2;
+
+        new_score = sum(sym); 
+        
+        if(new_score<0)
+           new_score = new_score * (1-incentivebalance);
+        else
+           new_score = new_score * (incentivebalance);
+        end
+
+        score = score + new_score;
+
+        SC( ct, ws(w) ) = score / wi;
 
     end
 end
 
-SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
-
+SC = normalize_byincentivebias(SC, incentivebalance);
 SC(:,1:min_w-1 )=inf;
 
 end

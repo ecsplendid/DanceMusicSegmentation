@@ -8,7 +8,6 @@ function [SC] = getcost_symmetry3 (...
 T = size( C, 1 );
 SC = inf( T, W );
 
-tic;
 % evens
 for t = 1:T
 
@@ -87,9 +86,8 @@ for t = 1:T
  
     end
 end
-toc;
 
-tic;
+
 % now we have to build up the triangle 1:W iteratively
 for i=1:2:W-1
 
@@ -176,10 +174,7 @@ for i=1:2:W-1
     end
 end
 
-
 SC = normalize_byincentivebias(SC, incentivebalance);
 SC(:,1:min_w-1 )=inf;
-
-imagesc(SC)
 
 end
