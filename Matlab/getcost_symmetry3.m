@@ -8,6 +8,7 @@ function [SC] = getcost_symmetry3 (...
 T = size( C, 1 );
 SC = inf( T, W );
 
+tic;
 % evens
 for t = 1:T
 
@@ -47,11 +48,7 @@ for t = 1:T
         SC( ct, wi ) = odd_score / wi;
  
     end
-end
-
-% odds
-for t = 1:T
-
+    
     score = 0;
 
     ws = 2:2:min(W, T-t+1 );
@@ -90,151 +87,99 @@ for t = 1:T
  
     end
 end
+toc;
 
+tic;
 % now we have to build up the triangle 1:W iteratively
+for i=1:2:W-1
 
-for i=1:W-1
+    t=1;
 
-    for t = 1:W
+    score = 0;
 
-        score = 0;
+    ws = 2:2:i;
 
-        ws = 2:2:i;
+    l = length(ws);
 
-        l = length(ws);
+    % assuming W is an odd number
+    for w = 1:l
 
-        % assuming W is an odd number
-        for w = 1:l
+        wi = ws(w);
 
-            wi = ws(w);
+        ct = t+(l-w);
 
-            ct = t+(l-w);
+        ahead = min( (ct)+(wi-1), T );
+        behind = (ct)-(wi-1);
 
-            ahead = min( (ct)+(wi-1), T );
-            behind = (ct)-(wi-1);
+        future = C( ct, (ct):ahead);
+        past = C( ahead:-1:(ct), ahead)';
 
-            future = C( ct, (ct):ahead);
-            past = C( ahead:-1:(ct), ahead)';
+        diff_sign = sign(past) ~= sign(future);
+        neg_sign = sign(past)==-1 | sign(future)==-1;
+        pos_sign = ~neg_sign;
 
-            diff_sign = sign(past) ~= sign(future);
-            neg_sign = sign(past)==-1 | sign(future)==-1;
-            pos_sign = ~neg_sign;
+        sym = (past .* future);
 
-            sym = (past .* future);
+        sym( diff_sign ) = 0;
 
-            sym( diff_sign ) = 0;
+        sym( neg_sign ) = -sym( neg_sign );
 
-            sym( neg_sign ) = -sym( neg_sign );
+        sym( neg_sign ) = sym( neg_sign ) .* (1-incentivebalance);
+        sym( pos_sign ) = sym( pos_sign ) .* (incentivebalance);
 
-            sym( neg_sign ) = sym( neg_sign ) .* (1-incentivebalance);
-            sym( pos_sign ) = sym( pos_sign ) .* (incentivebalance);
+        new_score = sum(sym); 
 
-            new_score = sum(sym) ; 
+        score = score + new_score;
 
-            score = score + new_score;
+        SC( ct, ws(w) ) = score / wi;
 
-            SC( ct, ws(w) ) = score / wi;
+    end
 
-        end
+    score = 0;
+
+    ws = 1:2:i;
+
+    l = length(ws);
+
+    % assuming W is an odd number
+    for w = 1:l
+
+        wi = ws(w);
+
+        ct = t+(l-w);
+
+        ahead = min( (ct)+(wi-1), T );
+        behind = (ct)-(wi-1);
+
+        future = C( ct, (ct):ahead);
+        past = C( ahead:-1:(ct), ahead)';
+
+        diff_sign = sign(past) ~= sign(future);
+        neg_sign = sign(past)==-1 | sign(future)==-1;
+        pos_sign = ~neg_sign;
+
+        sym = (past .* future);
+
+        sym( diff_sign ) = 0;
+
+        sym( neg_sign ) = -sym( neg_sign );
+
+        sym( neg_sign ) = sym( neg_sign ) .* (1-incentivebalance);
+        sym( pos_sign ) = sym( pos_sign ) .* (incentivebalance);
+
+        new_score = sum(sym) ; 
+
+        score = score + new_score;
+
+        SC( ct, ws(w) ) = score / wi;
+
     end
 end
 
-
-for i=1:W-1
-
-    for t = 1:W
-
-        score = 0;
-
-        ws = 2:2:i;
-
-        l = length(ws);
-
-        % assuming W is an odd number
-        for w = 1:l
-
-            wi = ws(w);
-
-            ct = t+(l-w);
-
-            ahead = min( (ct)+(wi-1), T );
-            behind = (ct)-(wi-1);
-
-            future = C( ct, (ct):ahead);
-            past = C( ahead:-1:(ct), ahead)';
-
-            diff_sign = sign(past) ~= sign(future);
-            neg_sign = sign(past)==-1 | sign(future)==-1;
-            pos_sign = ~neg_sign;
-
-            sym = (past .* future);
-
-            sym( diff_sign ) = 0;
-
-            sym( neg_sign ) = -sym( neg_sign );
-
-            sym( neg_sign ) = sym( neg_sign ) .* (1-incentivebalance);
-            sym( pos_sign ) = sym( pos_sign ) .* (incentivebalance);
-
-            new_score = sum(sym) ; 
-
-            score = score + new_score;
-
-            SC( ct, ws(w) ) = score / wi;
-
-        end
-    end
-end
-
-%first tri even
-for i=1:W-1
-
-    for t = 1:W
-
-        score = 0;
-
-        ws = 1:2:i;
-
-        l = length(ws);
-
-        % assuming W is an odd number
-        for w = 1:l
-
-            wi = ws(w);
-
-            ct = t+(l-w);
-
-            ahead = min( (ct)+(wi-1), T );
-            behind = (ct)-(wi-1);
-
-            future = C( ct, (ct):ahead);
-            past = C( ahead:-1:(ct), ahead)';
-
-            diff_sign = sign(past) ~= sign(future);
-            neg_sign = sign(past)==-1 | sign(future)==-1;
-            pos_sign = ~neg_sign;
-
-            sym = (past .* future);
-
-            sym( diff_sign ) = 0;
-
-            sym( neg_sign ) = -sym( neg_sign );
-
-            sym( neg_sign ) = sym( neg_sign ) .* (1-incentivebalance);
-            sym( pos_sign ) = sym( pos_sign ) .* (incentivebalance);
-
-            new_score = sum(sym) ; 
-
-            score = score + new_score;
-
-            SC( ct, ws(w) ) = score / wi;
-
-        end
-    end
-end
 
 SC = normalize_byincentivebias(SC, incentivebalance);
 SC(:,1:min_w-1 )=inf;
 
+imagesc(SC)
 
 end

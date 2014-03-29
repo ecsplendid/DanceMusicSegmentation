@@ -2,7 +2,7 @@
 
 % Feature Extraction Parameters
 sampleRate = 4000;
-secondsPerTile = 15;
+secondsPerTile = 5;
 minTrackLength = 180;
 maxExpectedTrackWidth = 370*2;   % (magicisland=380*2 others 350*2)
 bandwidth = 5; % bandwith for the width of the convolution filter
