@@ -4,16 +4,15 @@
 \BOOKMARK [1][-]{section.4}{Preprocessing}{}% 4
 \BOOKMARK [1][-]{section.5}{Feature Extraction}{}% 5
 \BOOKMARK [1][-]{section.6}{Cost Matrices}{}% 6
-\BOOKMARK [2][-]{subsection.6.1}{Summation}{section.6}% 7
-\BOOKMARK [2][-]{subsection.6.2}{Contiguity}{section.6}% 8
-\BOOKMARK [2][-]{subsection.6.3}{Symmetry}{section.6}% 9
-\BOOKMARK [2][-]{subsection.6.4}{Gaussian}{section.6}% 10
-\BOOKMARK [1][-]{section.7}{Mixing Cost Functions}{}% 11
-\BOOKMARK [1][-]{section.8}{Computing Best Segmentation}{}% 12
-\BOOKMARK [1][-]{section.9}{Posterior Marginal of Song Boundary}{}% 13
-\BOOKMARK [1][-]{section.10}{Posterior Marginal of Song Position}{}% 14
-\BOOKMARK [1][-]{section.11}{Materials}{}% 15
-\BOOKMARK [1][-]{section.12}{Methodology}{}% 16
-\BOOKMARK [1][-]{section.13}{Results}{}% 17
-\BOOKMARK [1][-]{section.14}{Summary}{}% 18
-\BOOKMARK [1][-]{section.15}{Acknowledgements}{}% 19
+\BOOKMARK [2][-]{subsection.6.1}{Normalization}{section.6}% 7
+\BOOKMARK [2][-]{subsection.6.2}{Summation}{section.6}% 8
+\BOOKMARK [2][-]{subsection.6.3}{Gaussian}{section.6}% 9
+\BOOKMARK [1][-]{section.7}{Mixing Cost Functions}{}% 10
+\BOOKMARK [1][-]{section.8}{Computing Best Segmentation}{}% 11
+\BOOKMARK [1][-]{section.9}{Posterior Marginal of Song Boundary}{}% 12
+\BOOKMARK [1][-]{section.10}{Posterior Marginal of Song Position}{}% 13
+\BOOKMARK [1][-]{section.11}{Methodology}{}% 14
+\BOOKMARK [1][-]{section.12}{Materials}{}% 15
+\BOOKMARK [1][-]{section.13}{Results}{}% 16
+\BOOKMARK [1][-]{section.14}{Summary}{}% 17
+\BOOKMARK [1][-]{section.15}{Acknowledgements}{}% 18
