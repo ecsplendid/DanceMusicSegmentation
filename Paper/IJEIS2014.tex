@@ -6,7 +6,7 @@
 \usepackage{bm}
 \usepackage{breqn}
 \usepackage{hyperref}
-
+\usepackage{rotating}
 \usepackage{pseudocode}
 
 \usepackage{graphicx}
@@ -124,39 +124,40 @@ The shows come in $44100$ samples per second, $16$ bit stereo MP3 files sampled 
 
 There is already a large community of people interested in getting track metadata for DJ sets. ``CueNation''\footnote{\url{http://www.cuenation.com}} is an example of this. CueNation is a website allowing people to submit \textit{cue sheets} for popular DJ Mixes and radio shows. A cue sheet is a text file containing time metadata (indices) for a media file.
 
-We had our time metadata (indices) and radio shows provided to us and hand captured by \textit{Dennis Goncharov}; a domain expert and one of the principal contributors to \textit{CueNation}. One of the significant problems with this task is that there is an (apparently Gaussian) error variable attached to the human captured indices themselves. On some tracks, it is unclear where to place the optimal index and when analysing our results, we have noticed some obvious human errors. Regrettably, there is no obvious way of quantifying this. Many of the cue sheet authors themselves reject the idea of automating the task citing the poor precision of any such result (they often place indices on the exact MP3 frame). However this sentiment seems misplaced given that they make blatant mistakes or that it is a matter of opinion where to place the track and some consistent method would be preferential. A potential outcome of our method would be a way to assist them with initial placements. Our results demonstrate that it is indeed possible to automate this task and that while there is some uncertainty attached to the optimal placement, it is still largely predictable.
+We had our time metadata (indices) and radio shows provided to us and hand captured by \textit{Dennis Goncharov}; a domain expert and one of the principal contributors to \textit{CueNation}. One of the significant problems with this task is that there is an (apparently Gaussian) error variable attached to the human captured indices themselves. On some tracks, it is unclear where to place the optimal index and when analysing our results, we have noticed some obvious human errors. Regrettably, there is no obvious way of quantifying this. Many of the cue sheet authors themselves reject the idea of automating the task citing the poor precision of any such result (they often place indices on the exact MP3 frame). However this sentiment seems misplaced given that they make blatant mistakes or that it is a matter of opinion where to place the track and some consistent method may be preferential. A potential outcome of our method would be a way to assist them with initial placements. Our results demonstrate that it is indeed possible to automate this task and that while there is some uncertainty attached to the optimal placement, it is still largely predictable.
 
-\textit{Dennis Goncharov} provided us with this description of how he captures the indices. To quote from a personal email exchange with Dennis:
+\textit{Dennis Goncharov} provided us with the following description of how he captures the indices. To quote from a personal email exchange with Dennis:
 
 \begin{quote}
 	The transition length is usually in factors of $8$ bars ($1$ bar is $4$ beats. At $135$ beats per minute, $8$ bars is $14.2$ sec). It is a matter of personal preference which point of the transition to call the index. My preference is to consider the index to be the point at which the second track becomes the focus of attention and the first track is sent to the background. Most of the time the index is the point at which the bass line ($400$Hz and lower) of the previous track is cut and the bass line of the second track is introduced. If the DJ decides to exchange the adjacent tracks gradually over the time instead of mixing them abruptly then it is up to the cue sheet maker to listen further into the second track noting the musical qualities of both tracks and then go back and choose at which point the second track actually becomes the focus of attention.
 \end{quote}
 
-The most obvious and pervasive element in dance music is the percussion (the beats). We believe on balance that ignoring the percussive information is advantageous, because DJs use percussion primarily to blur boundaries between tracks.  We tried to capture percussive based features and found that the transitions between tracks and indeed groups of tracks appeared as stronger self-similar regions in $S$ than the actual tracks. It is clear from our research that it is the boundaries between instruments and harmonic content that reveals track boundaries, not percussion or rhythm. When we tried implementing a rhythm feature extractor by looking at a transformed autocorrelation of the time domain tiles, it was ineffective because it is the rhythm more than the instruments that is matched between adjacent tracks by the DJs. Some DJs do mix harmonically too but this preys on human hearing and perception. An algorithm capturing the harmonic information would most likely be able to easily distinguish two harmonically compatible tracks. Admittedly more sophisticated rhythm detection than we tried would likely still work to some extent and should be explored further. 
+The most obvious and pervasive element in dance music is the percussion (the beats). We believe on balance that ignoring the percussive information is advantageous, because DJs use percussion primarily to blur boundaries between tracks.  We tried to capture percussive based features and found that the transitions between tracks and indeed groups of tracks appeared as stronger self-similar regions in $S$ than the actual tracks. It is clear from our research that it is the boundaries between instruments and harmonic content that reveals track boundaries, not percussion or rhythm. When we tried implementing a rhythm feature extractor by looking at a transformed autocorrelation of the time domain tiles, it was ineffective because it is the rhythm more than the instruments that is matched between adjacent tracks by the DJs. Some DJs do mix harmonically too but this preys on human hearing and perception. An algorithm capturing the harmonic information would most likely be able to easily distinguish two harmonically compatible tracks. Perhaps more sophisticated rhythm detection (than what we tried) might still work and should be explored further. 
 
 
 \section{Evaluation Criteria}\label{eval_crit}
 
-It is challenging to quantify the performance of our method because if we misplace any tracks, it may have a cascade effect. For example if we place one track too many early on in a show, many of the subsequent tracks may be correctly placed but out of alignment. 
+It is challenging to quantify the performance of our method because if we misplace any tracks, it may have a cascade effect. For example if we place one track too many early on in a show, many of the subsequent tracks may be correctly detected but placed out of alignment. 
 
-We perform three types of evaluation: `\textit{average}', \textit{precision}', and `\textit{thresholds}'.
+We perform three types of evaluation: `\textit{average}', \textit{heuristic precision}', and `\textit{thresholds}'.
 
+The \textit{average} (in seconds) given as $$\frac{1}{|P|}\sum_{i=1}^{|P|}{|P_i-A_i|}$$ is quite simply the mean absolute difference between constructed and actual indices ($P$ is constructed indices, and $A$ is the human indices). Naturally this metric will have a reduced meaning in some sense because although it depends on the real accuracy it also depends on the amount of misplacements and where in the track those misplacements were. The uncertainty variable attached to the misplacements is wide (in relation to the size of the shows and the number of tracks) but does regularise over the course of a large dataset. This metric is the most meaningful for capturing the overall \textit{robustness} of the method.
 
-The \textit{average} (in seconds) given as $$\frac{1}{|P|}\sum_{i=1}^{|P|}{|P_i-A_i|}$$ is quite simply the mean absolute difference between constructed and actual indices ($P$ is constructed indices, and $A$ is the human indices). Naturally this metric will have a reduced meaning because although it depends on the real accuracy it also depends on the amount of misplacements and where in the track those misplacements were. The uncertainty variable attached to the misplacements is wide (in relation to the size of the shows and the number of tracks) but does regularise over the course of a large dataset.
-
-
-The \textit{precision} metric denoted by 
+The \textit{heuristic precision} metric denoted by 
 \[
-\hat H(P,A) \leftarrow \frac{1}{|P|} \sum_{i=1}^{|P|}{    \mathrm{Sort}\left( |P-A_i|\right)_1   } \] for all
- takes the mean of the absolute difference between each prediction and the nearest index.
+\hat H(P,A) =  \mathrm{Median}\left(    \mathrm{Sort}\left( |P-A_i|\right)_1 \right)
+\] for all
+ takes the median of the absolute differences between each prediction in $P$ and the nearest actual index in $A$. This is the most meaningful single metric of accuracy, it is largely invariant to misplacements.
  
  The thresholds metric is the percentage of matched tracks within different intervals of time $\{60, 30, 20, 10, 5, 3, 1\}$, in \emph{seconds} as a margin around any of the track indices we have been given. This metric is also invariant to alignment and is provided for comparison with our other paper \cite{scarfe2013long}.
+ 
+ Note that our results will contain the mean average of these metrics (captured for each show) across the dataset being evaluated. 
 
 \section{Preprocessing}\label{proprocessing} % Fourier/xcorr
 
-The dataset had some outliers that may have slightly distorted the analysis of our method. Many of the tracks in our data set were in fact not tracks at all but rather introductions or voice-overs. Almost all of these outlier tracks were short in length. These are quite clearly visible on the distribution of track lengths on Figure~\ref{fig:tracklengths}. To ameliorate the situation we simply removed any tracks that were shorter than $180$ seconds. We also removed any end tracks that were shorter than $240$ seconds as very often the end tracks on a radio show contain some strange elements. This required some manipulation of the cue sheets and audio files. The offending segments of the audio files are chopped out, and the cue sheets are re-flowed so that the time indices point to the correct location in the file. 
+The dataset had some outliers that may have slightly distorted the analysis of our method. Many of the ``tracks'' in our data set (of indices) were in fact not tracks at all but rather introductions or voice-overs. Almost all of these outlier tracks were short in length. These are quite clearly visible on the distribution of track lengths on Figure~\ref{fig:tracklengths}. To ameliorate the situation we simply removed any tracks that were shorter than $180$ seconds. We also removed any end tracks that were shorter than $240$ seconds as very often the end tracks on a radio show contain some strange elements (for example voice-overs, interviews, show-related `jingles'). This required some manipulation of the cue sheets and audio files. The offending segments of the audio files are chopped out, and the cue sheets are re-flowed so that the time indices point to the correct location in the file. 
 
-The algorithm still performs similarly in most cases when removing just these indices and leaving the audio intact underneath. 
+The algorithm still performs similarly when removing just these indices and leaving the audio intact underneath, so it would not significantly effect any real-world implementation. 
 
  For those wishing to use this algorithm in practice with pre-recorded shows; the introductions at the start of the shows can be thought of as being fixed length (with a different length for each show type).
 
@@ -165,18 +166,18 @@ The algorithm still performs similarly in most cases when removing just these in
 We used SoX (see Sect.~\ref{dataset}) to downsample the shows to $4000$Hz. We are not particularly interested in frequencies above around $2000$Hz because instrument harmonics become less visible in the spectrum as the frequency increases. The Nyquist theorem \cite{nyquist1928certain} states that the highest representable frequency is half the sampling rate, so this explains our reason to use $4000$Hz. We will refer to the sample rate as $R$. Let $L$ be the length of the show in samples.
 
 Fourier analysis allows one to represent a time domain process as a set of integer oscillations of trigonometric functions. We used the discrete Fourier transform (DFT) to transform the tiles into the frequency domain. The DFT 
-$$F(x_k) = X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i 2 \pi \frac{k}{N} n}$$ transforms a sequence of complex numbers $x_0,\ldots,x_N$ into another sequence of complex numbers $X_0,\ldots,X_N$ where $$e^{-i 2 \pi \frac{k}{N} n}$$ are points on the complex unit circle. Note that the fftw algorithm \cite{frigo2004fftw} that we used to perform this computation operates significantly faster when N is a power of 2 so we zero pad the input to make that the case. Because we are passing real values into the DFT fuction, the second half of the result is a rotational copy of the first half. As we are not always interested in the entire range of the spectrum, we use $l$ to represent a low pass filter (in Hz) and $h$ the high pass filter (in Hz). So we will capture the range from $h$ to $l$ on the first half of the result of $F$. We always discard the imaginary components of $F$.
+$$F(x_k) = X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i 2 \pi \frac{k}{N} n}$$ transforms a sequence of complex numbers $x_0,\ldots,x_N$ into another sequence of complex numbers $X_0,\ldots,X_N$ where $$e^{-i 2 \pi \frac{k}{N} n}$$ are points on the complex unit circle. Note that the fftw algorithm \cite{frigo2004fftw} that we used to perform this computation operates significantly faster when N is a power of 2 so we zero pad the input to make that the case. Because we are passing real values into the DFT fuction, the second half of the result is a rotational copy of the first half. As we are not always interested in the entire range of the spectrum, we use $l$ to represent a low pass filter (in Hz) and $h$ the high pass filter (in Hz). So we will capture the range from $h$ to $l$ on the first half of the result of $F$. We take the absolute values of the complex DFT result (defined as its distance in the complex plane from the origin using the Pythagorean theorem).
 
-Show samples are collated into a time series $Q_i, i \in \{1,2,\ldots,\lfloor\frac{L}{M_s}\rfloor\} $ of contiguous, non-overlapping, adjacent \emph{tiles} of equal size. Samples at the end of the show that do not fill a complete tile get discarded. We denote the tile width by $M$ in seconds (an algorithm parameter) and $M_s$ in samples $(M_s = M \times R)$. For each tile $t_i \in Q$ we take the DFT $F(t_i)$ and place a segment of it into feature matrix $D_i$ ($|Q|$ feature vectors in $D$). For each DFT transform we select vector elements $\lceil h \times \frac{M_s}{R} \rceil+1$ to $\lceil l \times \frac{M_s}{R} \rceil+1$ to allow effective spectral filtering.
+Show samples are collated into a time series $Q_i, i \in \{1,2,\ldots,\lfloor\frac{L}{M_s}\rfloor\} $ of contiguous, non-overlapping, adjacent \emph{tiles} of equal size. Samples at the end of the show that do not fill a complete tile get discarded. We denote the tile width by $M$ in seconds (an algorithm parameter) and $M_s$ in samples $(M_s = M \times R)$. For each tile $t_i \in Q$ we take the DFT $F(t_i)$ and place a segment of it into feature matrix $D_i$ ($|Q|$ feature vectors in $D$). For each DFT transform we select vector elements $\lceil h \times \frac{M_s}{R} \rceil+1$ to $\lceil l \times \frac{M_s}{R} \rceil+1$ to enable spectral filtering.
 
-To focus on the instruments and improve performance we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution we have from having such large DFT inputs. Typically a STFT approach is used which has smaller DFTs (for example \cite{tzanetakis1999multifeature}). 
+To focus on the instruments and improve performance we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution we have from having such large DFT inputs. For example with a tile size of $10$ seconds and a sample rate of $4000$ we have a have a frequency resolution of $\frac{1}{2}10 \cdot 4000 = 20$KHz. Typically a STFT approach is used which has smaller DFTs (for example \cite{tzanetakis1999multifeature}). 
 
 The Gaussian first derivative filter is defined as 
 $$- \frac{2 G}{B^2}  e^{-\frac{G^2}{B^2}} $$ where 
 
-$$G=\left\{-\lfloor 2B\rfloor,\lfloor-2B+1\rfloor,\ldots, \lfloor 2 B \rfloor\right\},$$ and $$B = b \left( \frac{N}{R} \right).$$ $b$ is the bandwidth of the filter in Hz and this is a parameter of the algorithm. After the convolution filter is applied to each feature vector in $D$, we take the absolute values and normalize each one 
+$$G=\left\{-\lfloor 2B\rfloor,\lfloor-2B+1\rfloor,\ldots, \lfloor 2 B \rfloor\right\},$$ and $$B = b \left( \frac{N}{R} \right).$$ $b$ is the bandwidth of the filter in Hz and this is a parameter of the algorithm. After the convolution filter is applied to each feature vector in $D$, we take the absolute values and normalize on the vector lengths.  
 
-Because the application domain is well defined in this setting, we can design features that look specifically for what we are interested in (musical instruments). Typically in the literature; algorithms use an amalgam of general purpose feature extractors. For example; spectral centroid, spectral moments, pitch, harmonicity \cite{tzanetakis1999framework}. We construct a disimilarity matrix of cosines $S$ from $D \times D^\top$ (dot products).
+Because the application domain is well defined in this setting, we can design features that look specifically for what we are interested in (musical instruments). Typically in the literature; algorithms use an amalgam of general purpose feature extractors. For example; spectral centroid, spectral moments, pitch, harmonicity \cite{tzanetakis1999framework}. We construct a disimilarity matrix of cosines $S ~=~ \left< D_{i} \cdot D_{j} \right>$, center it around the mean $S = S^{2 \cdot \frac{1}{T^2}\sum S_{ij}}$, normalize it by $\hat c$, $S=S^{\hat c}$ then place it on a small interval around $0$. $S_{ij} = \left( 2 \cdot S_{ij} \right)-1$. It is necessary to have \textit{incentives} and \textit{disincentives} for meaningful track placement which is why we opted for this interval. The distribution of values in $S$ is normal with a raised section on left (negatives) representing the tracks we want to find. When $\hat c$ is $1$ there is no change, smaller values will shift the mean below $0$ and vice versa. This will become relevant when we discuss cost matrices as some of them depend on the sign of the value in $S$. 
 
 See Figure~\ref{fig:simmatrix} for an illustration of $S$.
 
@@ -186,123 +187,41 @@ See Figure~\ref{fig:simmatrix} for an illustration of $S$.
 	%\hspace{1em}
 	\includegraphics[width=0.4\textwidth]{images/simmat_plain}
 	
-	\caption{An illustration of what the dissimilarity matrix $S(i,j)$ looks like}
+	\caption{An illustration of what the similarity matrix $S(i,j)$ looks like}
 	\label{fig:simmatrix}
 \end{figure*} 
 
 \section{Cost Matrices}\label{costmatrix_sec} % dynamic recursion
 
-We now have a dissimilarity matrix $S(i,j)$ as described in Section~\ref{feat_ex}. 
+We now have a similarity matrix $S(i,j)$ as described in Section~\ref{feat_ex}. 
 
 Let $w$ and $W$ denote the minimum and maximum track length in seconds, these will be parameters.
 
-Intuitively, most features within the same track are similar, while pairs of tiles that do not belong to the same track are significantly more dissimilar. 
+We require a cost matrix $C(f,t)$ that describes the cost of placing a track of length $t-f+1$ at $f$. After analysing the data set, we have created $8$ cost matrices that exploit observed phenomena in $S$. We also provide an additional cost matrix which is just a Gaussian random function centred around the mean track length for all times which can be used to regularise the other $8$ matrices or used on its own as a comparator to a more naive method of placement. 
 
-We require a cost matrix $C(f,t)$ that describes the cost of placing a track of length $t-f+1$ at $f$. After analysing the data set, we designed three cost matrices that exploited themes present in the possible track placements in $S$. These were; summation, contiguity and symmetry.  
+The more sophisticated matrices exploit themes such as contiguity, symmetry, evolution and change as well as simple summation of $S$ as was presented in our last paper. In our previous work \cite{scarfe2013long} $S$ was on the interval $[0,1]$ and the summation method could only consider disincentives. All of the new matrices have a parameter to shift the consideration of incentive verses disincentive and will contain values on the interval $[-1,1]$.
+
+Intuitively, most tiles within the same track are similar, while pairs of tiles that do not belong to the same track are significantly more dissimilar. However, often this is not the case and many tracks have dissimilar regions within them. 
 
 \subsection{Summation}
 
-The most obvious strategy of all is to sum up the relevant elements in $S$ for each candidate track from tile $f$ through tile $t$. We define $C(f,t)$, the cost of a candidate track from tile $f$ through tile $t$, to be the sum of the dissimilarities between all pairs of tiles inside it, normalized on track length with a regularization exponent $\omega$
+The most obvious strategy of all is to sum up all relevant tiles in $S$ for each candidate track from tile $f$ through tile $t$. We define $C(f,t)$, the cost of a candidate track from tile $f$ through tile $t$, to be the sum of the similarities between all pairs of tiles inside it, normalized on track length.
 
 \begin{dmath*}
 C(f,t) ~=~ \frac{ \sum_{i=f}^{t} \sum_{j=f}^{t} S(i,j) }{ (t-f+1)^\omega }.
 \end{dmath*}
 
-As a first step, we pre-compute $C$ for each $1 \le f \le t \le T$. Direct calculation using the definition takes $O(T W^3)$ time. However, we can compute the full cost matrix in $O(W T)$ time using the following recursion for the unnormalized quantity $\tilde
-C(f,t) = C(f,t)(t-f)$ (for $f+1 \le t-1$)
+As a first step, we pre-compute $C$ for each $1 \le f \le t \le T$. Direct calculation using the definition takes $O(T W^3)$ time.
 
-\begin{dmath*}
-\tilde C(f,t) ~=~ \tilde C(f+1,t) + \tilde C(f,t-1) - \tilde C(f+1,t-1) + S(f,t) + S(t,f)
-.
-\end{dmath*}
- Note that the track size normalization step can be done independently of the DP procedure. 
-
-Here is a visualisation of the update routine in the domain of $S$.
-
-    \begin{center}
-    \begin{tikzpicture}
-    \draw[step=1cm,color=gray] (0,0) grid (3,3);
-    
-    \draw[fill=gray!50, fill opacity=0.3] (1,1) -- (1,2) -- (2,2) -- (2,1) -- (1,1);
-    \draw[fill=gray!10, fill opacity=0.3] (0,2) -- (0,3) -- (1,3) -- (1,2) -- (0,2);
-    \draw[fill=gray!10, fill opacity=0.3] (2,0) -- (3,0) -- (3,1) -- (2,1) -- (2,0);
-    
-    
-    \node[color=black] at (0.5,2.5) {S(f,t)};
-    \node[color=black] at (2.5,0.5) {S(f,t)};
-    \node at (1.5,1.5) {C(f+1,t-1)};
-    
-    
-    
-    \draw[color=black] (0,0) -- (0,2) -- (2,2) -- (2,0) -- (0,0);
-    \draw[color=black] (3,3) -- (1,3) -- (1,1) -- (3,1) -- (3,3);
-    
-    \node[color=black] at (1,0.5) {C(f,t-1)};
-    \node[color=black] at (2,2.5) {C(f+1,t)};
-    
-    \end{tikzpicture}
-    \end{center}
-
-One caveat is that this method only looks for disincentives for track placement. This might fall down when you have self-similar regions in tracks that are completely dissimilar to the rest of the track. So we define the \textit{sum cost incentive bias} $\mu \in \left[0,1\right]$ to describe the ratio of incentive verses disincentive (with $0.5$ meaning equal incentive and disincentive). To enable this work we use $\tilde S=S-\mu$ on the computation.
-
-\subsection{Contiguity}
-
-Let \begin{dmath*}
-	\Omega( f,t ) \mapsto \left\{ \\
-		S(f,f), S(f+1,f+1), S(f+2,f+2) \ldots \\
-		S(f+1,f), S(f+2,f+1), S(f+3,f+2) \ldots \\
-		\ldots \\
-		S(t,t) 
-		 ~ \right\}  
-\end{dmath*} return a vector corresponding to concatenated diagonals in one half of the symmetric matrix $S( f \ldots t, f \ldots t )$. We are interested in rewarding adjacent pairs that have both have low value (less than \textit{contiguity threshold} $\psi$) and punishing pairs that both have a high value (more than $1-\psi$). Scores are weighted by the contiguity incentive bias $\varrho$.
-
-Therefore, let
-\begin{dmath*}\hat\Upsilon(f, t) \mapsto  \sum_{i=2}^{|\Omega( f,t )|}{ \left\{
-\begin{array}{lr}
-\theta_{i-1} < \psi \land \theta_i < \psi & :  \xi\varrho  \\
-\theta_{i-1} > 1-\psi \land \theta_i > 1-\psi & : \xi(1-\varrho)  \\
-\end{array}
-\right.}
-\end{dmath*} denote the contiguity cost matrix ($\theta=\Omega( f,t )$ ) where $\xi=\frac{1}{2}\left(\theta_{i-1}+\theta_{i}\right)$.
-
-$\Upsilon(f, t)$ is normalized by the track length regularized by exponent $\lambda$.
-
-\begin{multline*}
-\hat\Upsilon(f, t) = \frac{\hat\Upsilon(f, t)}{(t-f+1)^\lambda} \\
-\Upsilon(f, t) = \frac{ \left( \Upsilon(f, t) - \min \Upsilon \right) }{ \max \Upsilon -\min \Upsilon  }
-\end{multline*} 
-
-\subsection{Symmetry}
-
-Let \begin{dmath*}
-	\Lambda( f,t,d ) \leftarrow \left\{ 
-	S(f+d-1,f), S(f+d, f+1), S(f+d+1, f+2),\ldots, S(t, t-d-1)
-	~ \right\} 
-\end{dmath*}take the diagonal $d$ from $S( f \ldots t, f \ldots t )$. For each diagonal in $S( f \ldots t, f \ldots t )$ we want to compare each element against its mirror counterpart. `symmetric' pairs that are both lower than \textit{symmetry threshold} $\nu$ confer an advantage (average value of both elements normalized by the track length and weighted by the \textit{symmetry incentive balance} $\varsigma$), and vice versa.
-
-Let symmetry cost matrix
-\begin{dmath*}\hat\Gamma(f, t) \mapsto  \sum_{i=1}^{|\Lambda( f,t,d )|}{ \left\{
-		\begin{array}{lr}
-			\kappa_{i} < \nu \land \rho_i < \nu & : \alpha\varsigma   \\
-			\kappa_{i} > 1-\nu \land \rho_i > 1-\nu & : \alpha(1-\varsigma)   \\
-		\end{array}
-		\right.}
-\end{dmath*} for all $d=1,2,\ldots,t-f+1$ where $\alpha=(t-f+1)\frac{1}{2}\left(\kappa_{i}+\rho_{i}\right)$, $\kappa=\Lambda( f,t,i )$ and $\rho_i = \Lambda( f,t,i )_x$ for $x=|\Lambda( f,t,i )|, |\Lambda( f,t,i )|-1,\ldots,1$.
-
-$\Gamma(f, t)$ is normalized by the track length regularized by exponent $\zeta$ and scaled onto the $[0,1]$ interval.
-\begin{multline*}
-\hat\Gamma(f, t) = \frac{\hat\Gamma(f, t)}{(t-f+1)^\zeta}  \\
-\Gamma(f, t) = \frac{ \left( \Gamma(f, t) - \min \Gamma \right) }{ \max \Gamma -\min \Gamma  }
-\end{multline*} 
 
 \subsection{Gaussian}
 Let \[
 G( \varpi, N )_{tw} = e^{ - \frac{1}{2} \frac{\varpi n}{ \frac{1}{2} W}^2  }
-\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularising the other three and for use on its own for comparison against a `naive' approach to the problem. Increasing values of $\varpi$ will tighten up the Gaussian although for simplicity we will just assume it has a value of $1$.
+\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularising the others and for use on its own for comparison against a `naive' competitor. Increasing values of $\varpi$ will tighten up the Gaussian although for simplicity we will just assume it has a value of $1$.
 
 \section{Mixing Cost Functions}
 
-
+We mix cost matrices together by adding them together. In our experiments we will have a parameter for each cost matrix $\biguplus_{\mathrm{costfunction}} \in [0,1]$ to show its contribution to the mixture. The cost matrices will be multiplied by this number before being mixed. 
 
 \section{Computing Best Segmentation}\label{best_cost}
 
@@ -373,7 +292,7 @@ In this formula $t_i$ ranges from $t-W$ to $t-w$. We have $T \times m$ values of
 %\hspace{1em}
 \includegraphics[width=\textwidth]{images/simmat_preds}
 
-\caption{An illustration of what the dissimilarity matrix $S(i,j)$ looks like with the reconstructed indexes superimposed. White crosses indicate the human captured indices, and black dotted lines are the reconstructed indices. Note the error where one track has an end segment which is unlike the rest. }
+\caption{An illustration of what the similarity matrix $S(i,j)$ looks like with the reconstructed indexes superimposed. White crosses indicate the human captured indices, and black dotted lines are the reconstructed indices. Note the error where one track has an end segment which is unlike the rest. }
 \label{fig:predictions}
 \end{figure*} 
 
@@ -466,73 +385,38 @@ In the same vein as the last section, we now get
 P(j,s,f) ~=~ \frac{\head^{s-1}_{j-1} \cdot e^{-\eta C(s, f-s+1)} \cdot \tail^{f+1}_{m-j}}{\head^T_m}.
 \]
 
-\section{Materials}
-
-All of the code presented in this paper with a small working test set is available on GitHub \footnote{\url{github.com/ecsplendid/DanceMusicSegmentation}}. The large data set ($\approx100$GB) we received from Dennis can be made available on request.
-
-
 \section{Methodology}
 
-TODO: parameters, 
+We selected $6$ shows at random (two of each show type) to use to develop the cost matrices and to find an optimal set of parameters using a random search. These shows were A State of Trance $453$ and $462$. Magic Island $98$ and $112$ and Trance Around the World $364$ and $372$.
 
+
+
+\section{Materials}
+
+All of the code presented in this paper with the small working test set is available on GitHub \footnote{\url{github.com/ecsplendid/DanceMusicSegmentation}}. The large data set ($\approx100$GB) we received from Dennis Goncharov can easily be made available on request (it is in a Google Drive account).
 
 \section{Results}
 
 
 \begin{table*}[t]
 \centering
-	\begin{tabular}{lllllllllllll}
+	\begin{tabular}{|llllllll|lll|llllll|}
 		\hline 
 	
-			Sym & Cont  & Sum  &  Gauss   & Mean & Heuristic & Shift & 60s(\%) & 30s(\%) & 20s(\%) & 10s(\%) & 5s(\%) & 1s(\%)    \\ \hline 
+			\begin{sideways}Summation\end{sideways}&\begin{sideways}Symmetry\end{sideways} &\begin{sideways}Evolution\end{sideways}&\begin{sideways}Contig Past\end{sideways} &\begin{sideways}Contig Future\end{sideways}&\begin{sideways}Sym Diff\end{sideways}&\begin{sideways}Sym Sum\end{sideways} &\begin{sideways}Gaussian\end{sideways} &  \begin{sideways}Mean\end{sideways} & \begin{sideways}Heuristic\end{sideways} & \begin{sideways}Shift\end{sideways} & \begin{sideways}60s(\%)\end{sideways} & \begin{sideways}30s(\%)\end{sideways} & \begin{sideways}20s(\%)\end{sideways} & \begin{sideways}10s(\%)\end{sideways} & \begin{sideways}5s(\%)\end{sideways} & \begin{sideways}1s(\%)\end{sideways}    \\ \hline 
 			
 	
-\multicolumn{13}{c}{\textbf{}} \\
 
-\multicolumn{13}{c}{{Tile Size 20s}, $\mu=0.5$}  \vspace{0.3cm}      
-\\
-
-1 & 1 & 1 & $\frac{1}{2}$ &  21.51    & 15.12          &  0.32      & 97.70    &  89.22   &  77.41   & 47.48    & 25.71   & 15.74   \\ [1ex]
-1 & 0 & 0 & $\frac{1}{2}$ &  22.25    & 15.91          &  1.07      & 97.78    &  88.46   &  73.58   & 43.72    & 23.54   & 14.54   \\ [1ex]
-0 & 1 & 0 & $\frac{1}{2}$ &  21.82    & 16.58          &  -0.73     & 96.71    &  85.59   &  74.29   & 46.94    & 25.72   & 15.47   \\ [1ex]
-0 & 0 & 1 & $\frac{1}{2}$ &  22.21    & 15.43          &  0.75      & 97.35    &  87.73   &  77.19   & 48.84    & 26.33   & 16.14   \\ [1ex]
-0 & 0 & 0 & 1             &  104.8    & 76.18          &  -38.4     & 43.57    &  22.58   &  15.39   & 8.19     & 4.55    & 2.75 \vspace{0.3cm}  \\ 
-
-1 & 1 & 1 & \textbf{0} &  40.94    &    17.90       &   -1.20   &   96.45  &   87.62  &   76.12  &  46.75   &  25.19  &  15.44  \\ [1ex]
-1 & 0 & 0 & \textbf{0} &  40.16    &    18.39       &   -2.32    &  96.69   &  86.96   &  72.19   & 42.72    & 23.30   & 14.34   \\ [1ex]
-0 & 1 & 0 & \textbf{0} &  44.62    &    19.72       &   0.91     &  95.31   &  83.79   &  72.70   & 45.69    & 24.76   & 14.99   \\ [1ex]
-0 & 0 & 1 & \textbf{0} &  42.66    &    18.78       &   -0.08    &  95.84   &  86.04   &  75.22   & 47.16    & 25.43   & 15.47   \\ [1ex]
-
-
-\multicolumn{13}{c}{{Tile Size 10s}, $\mu=0.5$}  \vspace{0.3cm}         
-\\
-
-1 & 1 & 1 & $\frac{1}{2}$ &  22.03    &   14.79        &   2.18     &  97.28   &  88.19   & 78.10    & 54.24    & 29.99   & 18.72   \\ [1ex]
-1 & 0 & 0 & $\frac{1}{2}$ &  21.32    &   15.16        &   1.67     &  97.45   &  88.12   & 77.21    & 51.10    & 27.33   & 16.86   \\ [1ex]
-0 & 1 & 0 & $\frac{1}{2}$ &  22.29    &   15.81        &   1.38     &  96.74   &  86.06   & 75.00    & 52.73    & 29.20   & 18.06   \\ [1ex]
-0 & 0 & 1 & $\frac{1}{2}$ &  21.97    &   14.94        &   0.32     &  97.09   &  87.55   & 77.31    & 55.08    & 30.02   & 18.57   \\ [1ex]
-0 & 0 & 0 & 1             &  99.35    &   75.54        &   -20.4    &  43.65   &  22.90   & 15.81    & 7.90     & 4.12    & 2.55  \vspace{0.3cm} \\ 
-	
-
-\multicolumn{13}{c}{{Tile Size 5}, $\mu=0.4$}    \vspace{0.3cm}      
-\\
-
-0& 0 & 1 & $\frac{1}{2}$ &   20.12   &    14.59       &   0.34    &  97.22   &  87.48   &  77.43   &  57.52   & 30.57  &  18.84  \\ [1ex]
-
-\multicolumn{13}{c}{{Tile Size 2}, $\mu=0.4$}    \vspace{0.3cm}      
-\\
-
-0& 0 & 1 & $\frac{1}{2}$ &   19.27   &    14.53       &   -1.01    &  97.18   &  87.67   &  76.75   &  58.04   & 30.63  &  18.87  \\ [1ex]
 
 	\hline 
 	\end{tabular}
-\caption{Main results.}
+\caption{TODO: place results here}
 \end{table*}
 
 
 \section{Summary}\label{conclusions}
 
-We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. Our overall average is encouraging, taking into account the difficulty of the task at hand. The dissimilarity matrix we use is based solely on instrument features. 
+We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. Our overall average is encouraging, taking into account the difficulty of the task at hand. The similarity matrix we use is based solely on instrument features. 
 
 \textbf{TODO: percussive features}
 We captured the percussive features by taking the cross correlation of the samples in the time domain, and using the same convolution filter. 
@@ -540,6 +424,7 @@ We captured the percussive features by taking the cross correlation of the sampl
 
  We would also like to implement some of the methods in the literature (which were mostly designed for scene analysis) to see if we outperform them. It would be tricky to get an exact comparison because we could not find a unsupervised deterministic algorithm which finds a fixed number of strictly contiguous clusters. We could however adapt existing algorithms to get a like for like comparison. We would like to evaluate the performance of J Theiler's contiguous K-means algorithm in particular \cite{theiler1997contiguity} and also similar algorithms. We have the property of being deterministic but probabilistic methods should be explored. Theiler's algorithm would require some modification to work in this scenario because we require strictly contiguous clusters, not just a contiguity bias. 
 
+Another idea would be to add a cost function to account for how many contiguous region transients exist for all potential song placements. 
 
 \section{Acknowledgements}
 
