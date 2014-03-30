@@ -141,7 +141,7 @@
 	
 	We perform three types of evaluation: `\textit{average}', \textit{heuristic precision}', and `\textit{thresholds}'.
 	
-	The \textit{average} (in seconds) given as $$\frac{1}{|P|}\sum_{i=1}^{|P|}{|P_i-A_i|}$$ is quite simply the mean absolute difference between constructed and actual indices ($P$ is constructed indices, and $A$ is the human indices). Naturally this metric will have a reduced meaning in some sense because although it depends on the real accuracy it also depends on the amount of misplacements and where in the track those misplacements were. The uncertainty variable attached to the misplacements is wide (in relation to the size of the shows and the number of tracks) but does regularise over the course of a large dataset. This metric is the most meaningful for capturing the overall \textit{robustness} of the method.
+	The \textit{average} (in seconds) given as $$\hat A(P,A) = \frac{1}{|P|}\sum_{i=1}^{|P|}{|P_i-A_i|}$$ is quite simply the mean absolute difference between constructed and actual indices ($P$ is constructed indices, and $A$ is the human indices). Naturally this metric will have a reduced meaning in some sense because although it depends on the real accuracy it also depends on the amount of misplacements and where in the track those misplacements were. The uncertainty variable attached to the misplacements is wide (in relation to the size of the shows and the number of tracks) but does regularise over the course of a large dataset. This metric is the most meaningful for capturing the overall \textit{robustness} of the method.
 	
 	The \textit{heuristic precision} metric denoted by 
 	\[
@@ -197,7 +197,7 @@
 	
 	Let $w$ and $W$ denote the minimum and maximum track length in seconds, these will be parameters.
 	
-	We require a cost matrix $C(f,t)$ that describes the cost of placing a track of length $t-f+1$ at $f$. After analysing the data set, we have created $8$ cost matrices that exploit observed phenomena in $S$. We also provide an additional cost matrix which is just a Gaussian random function centred around the mean track length for all times which can be used to regularise the other $8$ matrices or used on its own as a comparator to a more naive method of placement. 
+	We require a cost matrix $C(f,t)$ that describes the cost of placing a track of length $t-f+1$ at $f$. After analysing the data set, we have created $7$ cost matrices that exploit observed phenomena in $S$. We also provide an additional cost matrix which is just a Gaussian random function centred around the mean track length for all times which can be used to regularise the other $7$ matrices or used on its own as a comparator to a more naive method of placement. 
 	
 	The more sophisticated matrices exploit themes such as contiguity, symmetry, evolution and change as well as simple summation of $S$ as was presented in our last paper. In our previous work \cite{scarfe2013long} $S$ was on the interval $[0,1]$ and the summation method could only consider disincentives. All of the new matrices have a parameter to shift the consideration of incentive verses disincentive and will contain values on the interval $[-1,1]$.
 	
@@ -385,12 +385,11 @@ C = \hat N_\Omega \left( \frac{ \tilde C_{ft} }{ t-f+1 } \right)
 	
 	\subsection{Mixing Cost Functions}
 	
-	We mix cost matrices together by adding them together. In our experiments we will have a parameter for each cost matrix $\biguplus_{\mathrm{costfunction}} \in [0,1]$ to show its contribution to the mixture. The cost matrices will be multiplied by this number before being mixed. 
+	We mix cost matrices together by adding them together. In our experiments we will have a parameter for each cost matrix $\in [0,1]$ to show its contribution to the mixture. The cost matrices will be multiplied by this number before being mixed. 
 	
 	\section{Computing Best Segmentation}\label{best_cost}
 	
 	We obtain the cost of a full segmentation by summing the costs of its tracks. The goal is now to efficiently compute the segmentation of least cost.
-	
 	
 	A sequence $\t = (t_1, \ldots, t_{m+1})$ is called an $m/T$-segmentation if
 	\[
@@ -462,6 +461,7 @@ C = \hat N_\Omega \left( \frac{ \tilde C_{ft} }{ t-f+1 } \right)
 	
 \section{Confidence Intervals}\label{sec:confidence-intervals}
 	
+It may be useful for some applications to build a framework to allow confidence intervals for our predicted indices. This may also be useful for meaningful comparison of cost matrices.
 	
 	\subsection{Posterior Marginal of Song Boundary}
 	Fix a learning rate $\eta$, and fix $T$ and $M$. Let
@@ -549,11 +549,20 @@ In the same vein as the last section, we now get
 P(j,s,f) ~=~ \frac{\head^{s-1}_{j-1} \cdot e^{-\eta C(s, f-s+1)} \cdot \tail^{f+1}_{m-j}}{\head^T_m}.
 \]
 
+
+\subsection{Track Index Confidence}
+TODO:
+\subsection{Track Time Confidence}
+
+TODO:
+
 \section{Methodology}\label{sec:methodology}
 
-We selected $6$ shows at random (two of each show type) to use to develop the cost matrices and to find an optimal set of parameters using a random search. These shows were A State of Trance $453$ and $462$, Magic Island $98$ and $112$ and Trance Around the World $364$ and $372$.
+We selected $6$ shows at random (two of each show type) to use to develop the cost matrices and to find an optimal set of parameters using a random search. These shows were A State of Trance $453$ and $462$, Magic Island $98$ and $112$ and Trance Around the World $364$ and $372$.  
 
+In our experiments we decided to fix the tile size at $5$ seconds for the sake of speed. A lower tile size does increase performance but not significantly. Higher tile sizes can perform more robustly (less catastrophic misalignments) but progressively lose out on precision.
 
+In our results we will perform some obvious combinations of cost matrices. We also performed a random search of cost matrix contributions and parameters. This has also been provided in the results (see $\dagger$ in the results). We selected the best set of parameters based on the lowest cost sum of heuristic precision and mean average precision $\sum \hat A(P,A) + \hat H(P,A) \rightarrow \min_i$ for all shows. 
 
 \section{Materials}\label{sec:materials}
 
@@ -561,34 +570,62 @@ All of the code presented in this paper with the small working test set is avail
 
 \section{Results}\label{sec:results}
 
+Please see Table~\ref{tab:results} for the main table of results.
+
+Our parameter search was slightly limited (we searched $2000$ random parameters), and should be done again more extensively. 
+
+Adding the Gaussian cost matrix in most cases improves performance because it regularises the track index estimates (see experiment $6$ and the improvement in $11$). Using the Gaussian cost matrix on its makes a useful to how our method in general improves on a potential naive approach to the problem. 
+
+The symmetry sum is the best performing single cost matrix with an even incentive bias with summation and evolution close behind. The gains from decreasing window size past $T=5$ asymptotically decay and which lead us to believe we are either approaching some kind of limit. More interestingly is that when we perform a random parameter search we also hit a bit of a barrier when we would have expected improved results. We estimate that we are now limited by the error variable associated with the human indices rather than our method. 
+
 
 \begin{table*}[t]
 	\centering
-	\begin{tabular}{|llllllll|lll|llllll|}
+	\caption{Main results. Tile size $T$ was $5$s for all results. Shift refers to the mean average of the differences in predictions verses human captured indices. $\star$; $h=1662$Hz, $b=5$Hz, $\hat c=1$, $\rho=20$ $\dagger (random search);$ $h=1662$Hz, $b=5$Hz, $\hat c=1.2$, $\rho=26$. Blank cells indicate no contribution from that cost matrix.  }
+	\begin{tabular}{|l|l|llllllll|lll|llllll|}
 		\hline 
+	\begin{sideways}Experiment \end{sideways} &	\begin{sideways}$h$, $l$, $b$, $\hat c$, $\rho$ \end{sideways} &
+		\begin{sideways}Sym Sum\end{sideways}&\begin{sideways}Sym Diff\end{sideways} &\begin{sideways}Symmetry\end{sideways}&\begin{sideways}Contig Past\end{sideways} &\begin{sideways}Contig Fut.\end{sideways}&\begin{sideways}Summation\end{sideways}&\begin{sideways}Gaussian\end{sideways} &\begin{sideways}Evolution\end{sideways} & 
+	 \begin{sideways}Mean (S)\end{sideways} & \begin{sideways}Heuristic (S)\end{sideways} & \begin{sideways}Shift (S)\end{sideways} & \begin{sideways}60s(\%)\end{sideways} & \begin{sideways}30s(\%)\end{sideways} & \begin{sideways}20s(\%)\end{sideways} & \begin{sideways}10s(\%)\end{sideways} & \begin{sideways}5s(\%)\end{sideways} & \begin{sideways}1s(\%)\end{sideways}    \\ \hline 
+	
 		
-		\begin{sideways}Summation\end{sideways}&\begin{sideways}Symmetry\end{sideways} &\begin{sideways}Evolution\end{sideways}&\begin{sideways}Contig Past\end{sideways} &\begin{sideways}Contig Future\end{sideways}&\begin{sideways}Sym Diff\end{sideways}&\begin{sideways}Sym Sum\end{sideways} &\begin{sideways}Gaussian\end{sideways} &  \begin{sideways}Mean\end{sideways} & \begin{sideways}Heuristic\end{sideways} & \begin{sideways}Shift\end{sideways} & \begin{sideways}60s(\%)\end{sideways} & \begin{sideways}30s(\%)\end{sideways} & \begin{sideways}20s(\%)\end{sideways} & \begin{sideways}10s(\%)\end{sideways} & \begin{sideways}5s(\%)\end{sideways} & \begin{sideways}1s(\%)\end{sideways}    \\ \hline 
+$1$ &	$\ast $	&  \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways} &\begin{sideways}$$\end{sideways}&  $32.13 $&$ 8.59 $& $ 1.37 $& \begin{sideways}$96.06$\end{sideways}& \begin{sideways}$87.28$\end{sideways}&\begin{sideways}$ 78.15$\end{sideways}&\begin{sideways}$ 60.48$\end{sideways}& \begin{sideways}$33.82$ \end{sideways}& \begin{sideways}$20.89$\end{sideways}  \\
+		$2$ &	$\ast $	&  \begin{sideways}$$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways} &\begin{sideways}$$\end{sideways}&  $35.20 $&$ 16.56$& $ 2.52 $& \begin{sideways}$91.83$\end{sideways}& \begin{sideways}$73.00$\end{sideways}&\begin{sideways}$ 58.54$\end{sideways}&\begin{sideways}$ 36.40$\end{sideways}& \begin{sideways}$19.75$ \end{sideways}& \begin{sideways}$12.41$\end{sideways} \\
+	$3$ &	$\ast $	&  \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways} &\begin{sideways}$$\end{sideways}&  $68.33 $&$ 11.50$& $ 1.39 $& \begin{sideways}$92.70$\end{sideways}& \begin{sideways}$80.35$\end{sideways}&\begin{sideways}$ 69.51$\end{sideways}&\begin{sideways}$ 50.59$\end{sideways}& \begin{sideways}$27.55$ \end{sideways}& \begin{sideways}$17.62$\end{sideways} \\
+		$4$ &	$\ast $	&  \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways} &\begin{sideways}$$\end{sideways}&  $152.58$&$ 21.75$& $ 5.36 $& \begin{sideways}$79.64$\end{sideways}& \begin{sideways}$63.05$\end{sideways}&\begin{sideways}$ 49.20$\end{sideways}&\begin{sideways}$ 33.12$\end{sideways}& \begin{sideways}$17.93$ \end{sideways}& \begin{sideways}$10.90$\end{sideways} \\
+	$5$ &	$\ast $	&  \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways} &\begin{sideways}$$\end{sideways}&  $160.09$&$ 27.60$& $ 12.25$& \begin{sideways}$76.97$\end{sideways}& \begin{sideways}$54.36$\end{sideways}&\begin{sideways}$ 42.27$\end{sideways}&\begin{sideways}$ 27.43$\end{sideways}& \begin{sideways}$14.67$ \end{sideways}& \begin{sideways}$9.04 $\end{sideways}\\
+	$6$ &	$\ast $		&  \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$$\end{sideways} &\begin{sideways}$$\end{sideways}&  $34.30 $&$ 8.65 $& $ 1.52 $& \begin{sideways}$95.85$\end{sideways}& \begin{sideways}$87.17$\end{sideways}&\begin{sideways}$ 77.76$\end{sideways}&\begin{sideways}$ 60.48$\end{sideways}& \begin{sideways}$33.66$ \end{sideways}& \begin{sideways}$20.81$\end{sideways} \\
+	$7$ &	$\ast $	&  \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways} &\begin{sideways}$$\end{sideways}&  $97.83 $&$ 73.16$& $ -6.08$& \begin{sideways}$43.37$\end{sideways}& \begin{sideways}$22.89$\end{sideways}&\begin{sideways}$ 15.53$\end{sideways}&\begin{sideways}$ 7.54 $\end{sideways}& \begin{sideways}$3.86 $ \end{sideways}& \begin{sideways}$2.38 $\end{sideways}\\
+	$8$ &	$\ast $		&  \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways} &\begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}&  $33.99 $&$ 8.49 $& $ 3.95 $& \begin{sideways}$96.01$\end{sideways}& \begin{sideways}$87.76$\end{sideways}&\begin{sideways}$ 79.61$\end{sideways}&\begin{sideways}$ 60.70$\end{sideways}& \begin{sideways}$33.82$ \end{sideways}& \begin{sideways}$21.40$\end{sideways} \\
+	$9$ &	$\ast $	&  \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways} &\begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}&  $24.88 $&$ 8.43 $& $ 3.01 $& \begin{sideways}$97.20$\end{sideways}& \begin{sideways}$89.00$\end{sideways}&\begin{sideways}$ 80.24$\end{sideways}&\begin{sideways}$ 60.55$\end{sideways}& \begin{sideways}$33.57$ \end{sideways}& \begin{sideways}$20.98$\end{sideways} \\
+	$10$ &	$\ast $	&  \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways} &\begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}&  $16.31 $&$ 8.09 $& $ 2.40 $& \begin{sideways}$97.61$\end{sideways}& \begin{sideways}$89.23$\end{sideways}&\begin{sideways}$ 80.93$\end{sideways}&\begin{sideways}$ 61.87$\end{sideways}& \begin{sideways}$34.85$ \end{sideways}& \begin{sideways}$22.07$\end{sideways} \\ 
 		
-		
+	$11$ &	$\ast $	&  \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$$\end{sideways}& \begin{sideways}$1.0_{\Omega^{\frac{1}{2}}}$\end{sideways}& \begin{sideways}$1.0_{\Omega^{0.8}}$\end{sideways} &\begin{sideways}$$\end{sideways}&  $21.57 $&$ 8.92$& $ 1.52$& \begin{sideways}$97.19$\end{sideways}& \begin{sideways}$87.57$\end{sideways}&\begin{sideways}$ 78.19$\end{sideways}&\begin{sideways}$ 59.34 $\end{sideways}& \begin{sideways}$32.65 $ \end{sideways}& \begin{sideways}$20.64 $\end{sideways}\\
 		
 		\hline 
+$12$ &	$\dagger$	&\begin{sideways}$0.4_{\Omega^{0.4}}$\end{sideways}&\begin{sideways}$0.1_{\Omega^{0.1}}$\end{sideways}&\begin{sideways}$0.1_{\Omega^{0.7}}$\end{sideways}&\begin{sideways}$0.2_{\Omega^{0.2}}$\end{sideways}&\begin{sideways}$0.0_{\Omega^{0.7}}$\end{sideways}&\begin{sideways}$0.6_{\Omega^{0.6}}$\end{sideways}&\begin{sideways}$0.7_{\Omega^{0.8}}$\end{sideways}&\begin{sideways}$0.4_{\Omega^{0.1}}$\end{sideways}&$16.91 $&$ 8.27 $& $ 2.33 $& \begin{sideways}$97.93$\end{sideways}& \begin{sideways}$89.76$\end{sideways}&\begin{sideways}$ 80.74$\end{sideways}&\begin{sideways}$ 61.22$\end{sideways}& \begin{sideways}$34.65$ \end{sideways}& \begin{sideways}$22.16$\end{sideways} \\
+		
+		
+				\hline 
 	\end{tabular}
-	\caption{TODO: place results here}
+	
+	\label{tab:results}
 \end{table*}
 
 
 \section{Summary}\label{conclusions}
 
-We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. Our overall average is encouraging, taking into account the difficulty of the task at hand. The similarity matrix we use is based solely on instrument features. 
+We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. It would be fantastic if Spotify\footnote{\url{http://spotify.com}} for example started to do something similar. Spotify is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to visually segment the shows reliably. 
 
-\textbf{TODO: percussive features}
-We captured the percussive features by taking the cross correlation of the samples in the time domain, and using the same convolution filter. 
+The new cost matrices in combination improve robustness significantly over single matrices or regularised single matrices. We are seeing about a 50\% improvement in overall mean accuracy. The new cost matrices improve on many drawbacks of our previous work; that they were vulnerable to dissimilar regions within tracks. 
+
+Our method still has one key drawback that we are aware of. This is the rare instance where you have head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements. In spite of this issue we feel that our predictions should be more accurate and more consistent than the human equivalents while not being as precise. 
+
+
+Our overall average is encouraging, taking into account the difficulty of the task at hand. The similarity matrix we use is based solely on instrument features. 
 
 We would also like to implement some of the methods in the literature (which were mostly designed for scene analysis) to see if we outperform them. It would be tricky to get an exact comparison because we could not find a unsupervised deterministic algorithm which finds a fixed number of strictly contiguous clusters. We could however adapt existing algorithms to get a like for like comparison. We would like to evaluate the performance of J Theiler's contiguous K-means algorithm in particular \cite{theiler1997contiguity} and also similar algorithms. We have the property of being deterministic but probabilistic methods should be explored. Theiler's algorithm would require some modification to work in this scenario because we require strictly contiguous clusters, not just a contiguity bias. 
 
-Another idea would be to add a cost function to account for how many contiguous region transients exist for all potential song placements. 
-
-Future work -- confidence predictions
 
 \section{Acknowledgements}\label{sec:acknowledgements}
 
