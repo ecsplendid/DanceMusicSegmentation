@@ -49,3 +49,5 @@ I would be happy to collaborate. Get in touch.
 I would like to personally thank Dennis Goncharov for providing me with a dataset complete with cues
 for my research and also Mikael Lindgren from CueNation. Both provided me with insight on how they
 find the optimal track indices. The dataset I have from Dennis is quite large but I will supply it on request.
+
+Some information from Denis about how he makes the cuesheets -- https://docs.google.com/a/developer-x.com/document/d/1vgr7x0nwzoWrVewLFyRS9xO0ehZowdeyKdCGDvSfQN8/edit
