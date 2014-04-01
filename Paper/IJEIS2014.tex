@@ -67,12 +67,12 @@
 	
 	\begin{abstract}
 		
-		We describe an unsupervised, deterministic algorithm for segmenting DJ-mixed Electronic Dance Music (EDM) streams (for example; pod-casts, radio shows, live events) into their respective tracks. We attempt to reconstruct boundaries as close as possible to what a human domain expert would create in respect of the same task. The goal of DJ-mixing is to render track boundaries effectively invisible from the standpoint of human perception which makes the problem difficult.
+		We describe an unsupervised, deterministic algorithm for segmenting DJ-mixed Electronic Dance Music (EDM) streams (for example; pod-casts, radio shows, live events) into their respective tracks. We attempt to reconstruct a fixed number of boundaries as close as possible to what a human domain expert would assign in respect of the same task. The goal of DJ-mixing is to render track boundaries effectively invisible from the standpoint of human perception which makes the problem difficult.
 		
-		We use dynamic programming to optimally segment domain inspired cost matrices derived from a self-similarity matrix. The similarity matrix is based on the normalized cosines of a time series of convolution-transformed Fourier based features. Our method is applied to EDM streams. Its formulation incorporates long-term self similarity as a first class concept combined with dynamic programming and it is qualitatively assessed on a large corpus of two hour long radio shows which have been hand labelled by a domain expert.
+		We use optimally segment domain inspired cost matrices derived from a self-similarity matrix. Dynamic programming is used (which means solutions to a problem are described in terms of overlapping sub-solutions to achieve a significant improvement in time complexity and therefore execution time). The similarity matrix is based on the normalized cosines of a time series of transformed Fourier based features. Our method is applied to dance music radio shows. Its formulation incorporates long-term self similarity over a variable (but limited) horizon as a first class concept combined and it is quantitatively assessed on a large corpus of $304$, two hour long radio shows which have been hand-labelled by a domain expert.
 		\smallskip
 		
-		\noindent \textbf{Keywords.} \noindent music,segmentation,DJ mix,dynamic programming
+		\noindent \textbf{Keywords.} \noindent music,~segmentation,~DJ,~mix,~dynamic programming
 		
 	\end{abstract}
 	
@@ -127,7 +127,7 @@
 		The transition length is usually in factors of $8$ bars ($1$ bar is $4$ beats. At $135$ beats per minute, $8$ bars is $14.2$ sec). It is a matter of personal preference which point of the transition to call the index. My preference is to consider the index to be the point at which the second track becomes the focus of attention and the first track is sent to the background. Most of the time the index is the point at which the bass line ($400$Hz and lower) of the previous track is cut and the bass line of the second track is introduced. If the DJ decides to exchange the adjacent tracks gradually over the time instead of mixing them abruptly then it is up to the cue sheet maker to listen further into the second track noting the musical qualities of both tracks and then go back and choose at which point the second track actually becomes the focus of attention.
 	\end{quote}
 	
-	The most obvious and pervasive element in dance music is the percussion (the beats). We believe on balance that ignoring the percussive information is advantageous, because DJs use percussion primarily to blur boundaries between tracks.  We tried to capture percussive based features and found that the transitions between tracks and indeed groups of tracks appeared as stronger self-similar regions in $S$ than the actual tracks. It is clear from our research that it is the boundaries between instruments and harmonic content which reveal track boundaries, not percussion or rhythm. When we tried implementing a rhythm feature extractor by looking at a transformed autocorrelation of the time domain tiles, it was ineffective because it is the rhythm more than the instruments that is matched between adjacent tracks by the DJs. Some DJs do mix harmonically too but this preys on human hearing and perception. An algorithm capturing the harmonic information would most likely be able to distinguish two harmonically compatible tracks. Perhaps more sophisticated rhythm detection (than we tried) might still work and should be explored further. 
+	The most obvious and pervasive element in dance music is the percussion (the beats). We believe on balance that ignoring the percussive information is advantageous, because DJs use percussion primarily to blur boundaries between tracks.  We tried to capture percussive based features and found that the transitions between tracks and indeed groups of tracks appeared as stronger self-similar regions in $S$ than the actual tracks. It is clear from our research that it is the boundaries between instruments and harmonic content which reveal track boundaries, not percussion or rhythm. When we tried implementing a rhythm feature extractor by looking at a transformed autocorrelation of the time domain tiles, it was ineffective because it is the rhythm more than the instruments that is matched between adjacent tracks by the DJs. Some DJs mix harmonically (by matching instruments as opposed to percussion) but this preys on human hearing and perception. An algorithm capturing the harmonic information would most likely be able to distinguish two harmonically compatible tracks. Perhaps more sophisticated rhythm detection (than we tried) might still work and should be explored further. 
 	
 	
 	\section{Evaluation Criteria}\label{eval_crit}
@@ -140,11 +140,11 @@
 	
 	The \textit{heuristic precision} metric denoted by 
 	\[
-	\hat H(P,A) =  \mathrm{Median}\left(    \mathrm{Sort}\left( |P-A_i|\right)_1 \right)
-	\] for all
+	\hat H(P,A) =  \mathrm{Median}\left(    \mathrm{Sort}\left( |P_i-A_{1,2,\ldots,|P|}|\right)_1 \right)
+	\] for all $i=1,2,\ldots,|A|$
 	takes the median of the absolute differences between each prediction in $P$ and the nearest actual index in $A$. This is the most meaningful single metric of accuracy. It is largely invariant to misplacements.
 	
-	The thresholds metric is the percentage of matched tracks within different intervals of time $\{60, 30, 20, 10, 5, 3, 1\}$, in \emph{seconds} as a margin around any of the track indices we have been given. This metric is also invariant to alignment and is provided for comparison with our other paper \cite{scarfe2013long}.
+	The thresholds metric is the percentage of matched tracks within different intervals of time \[\{~60, ~30, ~20, ~10, ~5, ~3, ~1~\},\] in \emph{seconds} as a margin around any of the track indices we have been given. This metric is also invariant to alignment and is provided for comparison with our other paper \cite{scarfe2013long}.
 	
 	Note that our results will contain the mean average of these metrics (captured for each show) across the dataset being evaluated. 
 	
@@ -160,19 +160,55 @@
 	
 	We used SoX (see Sect.~\ref{dataset}) to downsample the shows to $4000$Hz. We are not particularly interested in frequencies above around $2000$Hz because instrument harmonics become less visible in the spectrum as the frequency increases. The Nyquist theorem \cite{nyquist1928certain} states that the highest representable frequency is half the sampling rate, so this explains our reason to use $4000$Hz. We will refer to the sample rate as $R$. Let $L$ be the length of the show in samples.
 	
-	Fourier analysis allows one to represent a time domain process as a set of integer oscillations of trigonometric functions. We used the discrete Fourier transform (DFT) to transform the tiles into the frequency domain. The DFT 
-	$$F(x_k) = X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i 2 \pi \frac{k}{N} n}$$ transforms a sequence of complex numbers $x_0,\ldots,x_N$ into another sequence of complex numbers $X_0,\ldots,X_N$ where $$e^{-i 2 \pi \frac{k}{N} n}$$ are points on the complex unit circle. Note that the fftw algorithm \cite{frigo2004fftw} that we used to perform this computation operates significantly faster when N is a power of 2 so we zero pad the input to make that the case. Because we are passing real values into the DFT function, the second half of the result is a rotational copy of the first half. As we are not always interested in the entire range of the spectrum, we use $l$ to represent a low pass filter (in Hz) and $h$ the high pass filter (in Hz). So we will capture the range from $h$ to $l$ on the first half of the result of $F$. We take the absolute values of the complex DFT result (defined as its distance in the complex plane from the origin using the Pythagorean theorem).
+	Fourier analysis allows one to represent a time domain process as a set of integer oscillations of trigonometric functions. We transform the tiles into the frequency domain using the discrete Fourier transform
+\[
+F(x_k) = X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i 2 \pi \frac{k}{N} n}
+\] which transforms a sequence of complex numbers $x_0,\ldots,x_N$ into another sequence of complex numbers $X_0,\ldots,X_N$ where $$e^{-i 2 \pi \frac{k}{N} n}$$ are points on the complex unit circle. Note that the fftw algorithm \cite{frigo2004fftw} that we used to perform this computation operates significantly faster when $N$ is a power of $2$ so we zero pad the input to the next power of $2$. We denote the tile width by $M$ in seconds (an algorithm parameter). Note that
+\[
+N = \frac{L}{M}
+\] denotes the tile size in samples (length of show in samples over the tile size). Let 
+\[
+T = \left\lfloor\frac{L}{\tilde{M}}\right\rfloor
+\] be the total number of tiles, and \[
+\tilde{M}=\frac{L}{N}
+\] the tile width in samples.
+Because we are passing real values into the $F(x_k)$, the second half of the result is a rotational copy of the first half.
 	
-	Show samples are collated into a time series $Q_i, i \in \{1,2,\ldots,\lfloor\frac{L}{M_s}\rfloor\} $ of contiguous, non-overlapping, adjacent \emph{tiles} of equal size. Samples at the end of the show that do not fill a complete tile get discarded. We denote the tile width by $M$ in seconds (an algorithm parameter) and $M_s$ in samples $(M_s = M \times R)$. For each tile $t_i \in Q$ we take the DFT $F(t_i)$ and place a segment of it into feature matrix $D_i$ ($|Q|$ feature vectors in $D$). For each DFT transform we select vector elements $\lceil h \times \frac{M_s}{R} \rceil+1$ to $\lceil l \times \frac{M_s}{R} \rceil+1$ to enable spectral filtering.
+	Show samples are collated into a time series $Q_i^y$ ($T \times N$) of contiguous, non-overlapping, adjacent \emph{tiles} of equal size where $i=1,2,\ldots, T$. Samples at the end of the show that do not fill a complete tile get discarded. The affect of this is increasingly negligible with decreasing tile size. Since we zero-pad $N$ to the next power of two, this also decreases the affect.
 	
-	To focus on the instruments and improve performance we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution we achieve from having such large DFT inputs. For example with a tile size of $10$ seconds and a sample rate of $4000$ we have a frequency resolution of $\frac{1}{2}10 \cdot 4000 = 20$KHz. Typically a STFT approach is used which has smaller DFTs (for example \cite{tzanetakis1999multifeature}). 
+	As we are not always interested in the entire range of the spectrum, we use $l$ to represent a low pass filter (in Hz) and $h$ the high pass filter (in Hz). So we will capture the range from $h$ to $l$ on the first half of the result of $F$. Let $\hat{h} = \lceil~h~\cdot~\frac{{N}}{R} ~\rceil+1$ be the position of $h$ in the spectrum, and $\hat l=~\lceil~l~\cdot~\frac{{N}}{R}~\rceil+1$ be the position of $l$ in the spectrum.
+	
+	Let $D_e^y$ ($T \times \hat{l}-\hat{h}+1$) denote the feature matrix.
+	
+	For each tile $i\ast=1,2,\ldots,T$ we assign 
+\[
+D_{i\ast}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{i\ast}^{1,\ldots,\tilde{M}})_{\hat{h},~\hat{h}+1,~\ldots,~\hat{l} }~\right|
+\]
+ selecting the part of the spectrum between the high and low pass filters $h$ and $f$.  We take the absolute values of the complex result of $F(x_k)$ (defined as its distance in the complex plane from the origin using the Pythagorean theorem).
+	
+	To focus on the instruments and improve performance we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution we achieve from having such large inputs into $F(t_i)$. For example with a tile size of $10$ seconds and a sample rate of $4000$ we have a frequency resolution of $\frac{1}{2}10 \cdot 4000 = 20$KHz. 
+	
+	Typically a `short-time discrete Fourier transform' is used which has smaller sized inputs (windows) into $F(t_i)$ which are usually overlapping and are multiplied by a window function, attenuating the tails to reduce spectral leakage. Usually these window functions look similar to a Gaussian, for example;  
+	\[
+	\mathrm{Hann}_i = 0.5 - 0.5 \cos\frac{2\pi i}{n-1}{w(i)}
+	\] where $n$ is the window size
+	(see \cite{tzanetakis1999multifeature} for an example). The short-time Fourier transform is relevant when increased time precision is needed as there is a frequency-time resolution trade-off with respect of the input size to $F(t_i)$. This is not a concern in this particular application as our time resolution is never required to be better than $1$ second which would still give us adequate frequency resolution.
 	
 	The Gaussian first derivative filter is defined as 
-	$$- \frac{2 G}{B^2}  e^{-\frac{G^2}{B^2}} $$ where 
+	$$- \frac{2 \hat{\lambda}}{\upsilon^2}  e^{-\frac{\hat{\lambda}^2}{\upsilon^2}} $$ where 
 	
-	$$G=\left\{-\lfloor 2B\rfloor,\lfloor-2B+1\rfloor,\ldots, \lfloor 2 B \rfloor\right\},$$ and $$B = b \left( \frac{N}{R} \right).$$ $b$ is the bandwidth of the filter in Hz and this is a parameter of the algorithm. After the convolution filter is applied to each feature vector in $D$, we take the absolute values and normalize on the vector lengths.  
+	$$\hat{\lambda}=\left\{~-\lfloor 2\upsilon\rfloor,\lfloor-2\upsilon+1\rfloor,\ldots, \lfloor 2 \upsilon \rfloor~\right\},$$ and $$\upsilon = b  \frac{N}{R} .$$ $b$ is the bandwidth of the filter in Hz and this is a parameter of the algorithm. After the convolution filter is applied to each feature vector in $D$, we take the absolute values and normalize on the vector lengths.  
 	
-	Because the application domain is well defined in this setting, we can design features that look specifically for what we are interested in (musical instruments). Typically in the literature; algorithms use an amalgam of general purpose feature extractors. For example; spectral centroid, spectral moments, pitch, harmonicity \cite{tzanetakis1999framework}. We construct a dissimilarity matrix of cosines $S ~=~ \left< D_{i} \cdot D_{j} \right>$, and center it around the mean $S = S^{2 \cdot \frac{1}{T^2}\sum S_{ij}}$, normalize it by $\hat c$ (an algorithm parameter), $S=S^{\hat c}$ then place it on a small interval around $0$. $S_{ij} = \left( 2 \cdot S_{ij} \right)-1$. It is necessary to have \textit{incentives} and \textit{disincentives} for meaningful track placement which is why we opted for this interval. The distribution of values in $S$ is normal with a raised section on left (negatives) representing the tracks we want to find. When $\hat c$ is $1$ there is no change, smaller values will shift the mean above $0$ and vice versa. This will become relevant when we discuss cost matrices as some of them depend on the sign of the value in $S$. 
+	Because the application domain is well defined in this setting, we can design features that look specifically for what we are interested in (musical instruments). Typically in the literature; algorithms use an amalgam of general purpose feature extractors. For example; spectral centroid, spectral moments, pitch, harmonicity \cite{tzanetakis1999framework}. We construct a dissimilarity matrix of cosines as is common in the literature for similar applications \cite{foote1999visualizing}. The cosines are quickly computable because they are the the inner products of the respective features (the features have been normalized to unit length).
+	
+	Let
+	\[
+	S~(T \times T) ~=~ 1-\left<~D_{i} \cdot D_{j}~\right>,
+	\] define the dissimilarity matrix.
+	
+	We center $S$ around its mean \[
+	S = S^{2 \cdot \frac{1}{T^2}\sum_{i=1}^T \sum_{j=1}^T S_{ij}},
+	\] then normalize it by $\hat c$ (an algorithm parameter), $S=S^{\hat c}$ and place it on a small interval around $0$. $S_{ij} = \left( 2 \cdot S_{ij} \right)-1$. It is necessary to have \textit{incentives} and \textit{disincentives} for meaningful track placement which is why we opted for this interval. The distribution of values in $S$ is normal with a raised section on left (negatives) representing the tracks we want to find. When $\hat c$ is $1$ there is no change, smaller values will shift the mean above $0$ and vice versa. This will become relevant when we discuss cost matrices as some of them depend on the sign of the value in $S$. 
 	
 	See Figure~\ref{fig:simmatrix} for an illustration of $S$ and Figure~\ref{fig:cosine_norm} for an illustration of the cosine normalization.
 	
@@ -430,6 +466,8 @@ where
 	
 	We obtain the cost of a full segmentation by summing the costs of its tracks. The goal is now to compute efficiently the segmentation of least cost.
 	
+	We want to reconstruct to find $m$ track boundaries ($m+1$ tracks).
+	
 	A sequence $\t = (t_1, \ldots, t_{m+1})$ is called an $m/T$-segmentation if
 	\[
 	1 = t_1 < \ldots < t_m < t_{m+1} = T+1.
@@ -447,11 +485,9 @@ where
 	
 	We can reduce this number slightly by imposing upper and lower bounds on the song length.  Recall that $W$ is the upper bound (in seconds) of the song length, $w$ the lower bound (in seconds) and $m$ the number of tracks. With the track length restriction in place, the number of possible segmentations is still massive. A number now on the order of $10^{56}$ for a two hour show with $25$ tracks, $w=190$ and $W=60\times15$.
 	
-	
-	
 	Let $N(T,W,w,m)$ be the number of segmentations with time $T$ (in tiles),
 	
-	We can write the recursive relation $$N(T,W,w,m) = \sum N(t_m-1,W,w,m-1)$$, where the sum is taken over $t_m$ such that 
+	We can write the recursive relation $$N(T,W,w,m) = \sum N(t_m-1,W,w,m-1),$$ where the sum is taken over $t_m$ such that 
 	\begin{align*}
 		t_m &\le T-w+1 & t_m &\ge T-W+1\\
 		t_m &\ge (m-1)w+1 & t_m &\le (m-1)W+1
@@ -459,7 +495,7 @@ where
 	
 	The first two inequalities mean that the length of the last track is within an acceptable boundary between $w$ and $W$. The last two inequalities mean that the lengths of the first $m-1$ tracks are within the same boundaries. 
 	
-	We calculated the value of $N(7000, 60\times15, 190, 25)$ and got $5.20 \times 10^{56}$ which is still infeasible to compute with brute force.
+	We calculated the value of $N(~7000, 60\times15, 190, 25~)$ and got $5.20 \times 10^{56}$ which is still infeasible to compute with brute force.
 	
 	Our solution to this problem is to find a dynamic programming recursion.
 	
@@ -478,13 +514,12 @@ where
 		\best^t_1 ~=~ C(1, t) 
 	\end{equation*}
 	and for $i\ge2$
-	\begin{multline*}
-		\best^t_i ~=~
-		\min_{\t \in \segs^t_i} \loss(\t)
-		~=~ \min_{t_i} \min_{\t \in \segs^{t_i-1}_{i-1}} \loss(\t) + C(t_i, t)~=~  \\
-		\min_{t_i} C(t_i, t) + \min_{\t \in \segs^{t_i-1}_{i-1}} \loss(\t) 
-		~=~ \min_{t_i} C(t_i, t) + \best^{t_i-1}_{i-1}
-	\end{multline*}
+\begin{align*}
+		\best^t_i ~=~& \min_{\t \in \segs^t_i} \loss(\t)  \\
+		~=~& \min_{t_i} \min_{\t \in \segs^{t_i-1}_{i-1}} \loss(\t) + C(t_i, t)  \\
+		~=~&  	\min_{t_i} C(t_i, t) + \min_{\t \in \segs^{t_i-1}_{i-1}} \loss(\t)  \\ 
+		~=~& \min_{t_i} C(t_i, t) + \best^{t_i-1}_{i-1} \\
+\end{align*}
 	%On page 7: t_i should range from t-W to t-w. It is about the position of the /last/ song.
 	
 	In this formula $t_i$ ranges from $t-W$ to $t-w$. We have $T \times m$ values of $\best^T_m$ and calculating each takes at most $O(W)$ steps. The total time complexity is $O(TWm)$.
@@ -494,7 +529,7 @@ where
 It may be useful for some applications to build a framework to allow confidence intervals for our predicted indices. This may also be useful for meaningful comparison of cost matrices.
 	
 	\subsection{Posterior Marginal of Song Boundary}
-	Fix a learning rate $\eta$, and fix $T$ and $M$. Let
+	Fix a learning rate $\eta$, and fix $T$ and $m$. Let
 	\[
 	P(j,s) ~=~ 
 	\frac{\displaystyle
@@ -570,7 +605,7 @@ and for $m\ge2$
 See Figure~\ref{fig:posterior} for an example of the posterior for a radio show. 
 
 \subsection{Posterior Marginal of Song Position}
-Fix a learning rate $\eta$, and fix $T$ and $M$. Let
+Fix a learning rate $\eta$, and fix $T$ and $m$. Let
 \[
 P(j,s,f) ~=~ 
 \frac{\displaystyle
@@ -629,7 +664,7 @@ Please see Table~\ref{tab:results} for the main table of results, Figure~\ref{fi
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.4\textwidth]{images/shift_histogram}
-		\caption{Histogram of the differences between reconstructed and human captured time indices on experiment 10. The slight bumps are misplacements of tracks. }
+		\caption{Histogram of the differences between reconstructed and human captured time indices on experiment 10. The slight bumps are misplacements of tracks. The humans are much more likely to place an index before a predicted index.  }
 		\label{fig:shifthistogram}
 	\end{figure} 
 
