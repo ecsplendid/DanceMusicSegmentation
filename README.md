@@ -30,7 +30,7 @@ on basic accuracy. Manually finding the indices is (I think) a laborious error-p
 that they have the will or the inclination to do it manually, but they do. A potential fork of this
 project would be to use the self-similarity matrix visualization as a helper for them to do it manually faster.
 
-See http://www.developer-x.com/papers/trackindexes for more information and associated papers.
+See http://www.developer-x.com/papers/segmentationextended for more information and associated papers.
 
 On this github project we supply the working code with a sample test set in ./Matlab/examples.
 The project is written in Matlab although some helper functions i.e. for pre-processing the dataset,
