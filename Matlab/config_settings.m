@@ -12,8 +12,8 @@ gaussian_filterdegree = 2; % for the convolution filter on FFT result
 
 % figure drawing parameters
 drawSimMat = 1;
-compute_confs = 1;
-draw_confs = 1;
+compute_confs = 0;
+draw_confs = 0;
 
 % save precomputed cosine matrices in memory for speed
 % useful for repetition experiments
@@ -37,12 +37,12 @@ cosine_normalization = 1;
 contig_windowsize = 20;
 
 % which cost functions to use and how much weight do they have (>0)
-use_costsymmetrysum     = 0;        costsymmetrysum_incentivebalance = 1;
+use_costsymmetrysum     = 0;        costsymmetrysum_incentivebalance = 0.5;
 use_costsymmetrydiff    = 0;       costsymmetrydiff_incentivebalance = 0.5;
 use_costsymmetry        = 0;           costsymmetry_incentivebalance = 0.5;
-use_costcontigpast      = 0;         costcontigpast_incentivebalance = 0.5;
+use_costcontigpast      = 1;         costcontigpast_incentivebalance = 0.5;
 use_costcontigfuture    = 0;       costcontigfuture_incentivebalance = 0.5;
-use_costsum             = 1;                costsum_incentivebalance = 0;
+use_costsum             = 0;                costsum_incentivebalance = 0.5;
 use_costgaussian        = 0;              costgauss_incentivebalance = 0.5;
 use_costcontigevolution = 0;          costevolution_incentivebalance = 0.5;
 

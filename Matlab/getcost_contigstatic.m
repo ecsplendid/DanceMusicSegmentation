@@ -8,7 +8,7 @@ function [SC] = getcost_contigstatic(...
  %contigous self similar regions that do not evolve with time i.e. it
  %captures how much the track stays the same/static and how far into the
  %future/past
- %runs in O(TW)
+ %runs in O(2T(1/2(W^2)))
  % future=1 use future self similarity, 0 means use past self similarity
 
 %%
@@ -33,22 +33,22 @@ for t = 1:T
         
         same_sign = range( sign( vals ) ) == 0;
         
-        what_sign = sign( vals(1) );
-        
-        score = mean(vals);
-        
         if( ~same_sign )
             score = 0;
-        elseif (what_sign == -1)
+        elseif ( sign( vals(end) ) == -1)
+
+            score =  vals(end) / length(vals);
+            
             score = score * (1-costcontig_incentivebalance);
         else
+           score =  vals(end) / length(vals);
+           
             score = score * (costcontig_incentivebalance);
         end
         
-        CF( t, x ) = score/x;
+        CF( t, x ) = score;
     end
 end
-
 
 %%
 SC = inf( T, W );

@@ -6,13 +6,19 @@
 \BOOKMARK [1][-]{section.6}{Cost Matrices}{}% 6
 \BOOKMARK [2][-]{subsection.6.1}{Normalization}{section.6}% 7
 \BOOKMARK [2][-]{subsection.6.2}{Summation}{section.6}% 8
-\BOOKMARK [2][-]{subsection.6.3}{Gaussian}{section.6}% 9
-\BOOKMARK [1][-]{section.7}{Mixing Cost Functions}{}% 10
-\BOOKMARK [1][-]{section.8}{Computing Best Segmentation}{}% 11
-\BOOKMARK [1][-]{section.9}{Posterior Marginal of Song Boundary}{}% 12
-\BOOKMARK [1][-]{section.10}{Posterior Marginal of Song Position}{}% 13
-\BOOKMARK [1][-]{section.11}{Methodology}{}% 14
-\BOOKMARK [1][-]{section.12}{Materials}{}% 15
-\BOOKMARK [1][-]{section.13}{Results}{}% 16
-\BOOKMARK [1][-]{section.14}{Summary}{}% 17
-\BOOKMARK [1][-]{section.15}{Acknowledgements}{}% 18
+\BOOKMARK [2][-]{subsection.6.3}{Symmetry}{section.6}% 9
+\BOOKMARK [2][-]{subsection.6.4}{Static Contiguity}{section.6}% 10
+\BOOKMARK [2][-]{subsection.6.5}{Evolutionary Contiguity}{section.6}% 11
+\BOOKMARK [2][-]{subsection.6.6}{Gaussian}{section.6}% 12
+\BOOKMARK [2][-]{subsection.6.7}{Mixing Cost Functions}{section.6}% 13
+\BOOKMARK [1][-]{section.7}{Computing Best Segmentation}{}% 14
+\BOOKMARK [1][-]{section.8}{Confidence Intervals}{}% 15
+\BOOKMARK [2][-]{subsection.8.1}{Posterior Marginal of Song Boundary}{section.8}% 16
+\BOOKMARK [2][-]{subsection.8.2}{Posterior Marginal of Song Position}{section.8}% 17
+\BOOKMARK [2][-]{subsection.8.3}{Track Index Confidence}{section.8}% 18
+\BOOKMARK [2][-]{subsection.8.4}{Track Time Confidence}{section.8}% 19
+\BOOKMARK [1][-]{section.9}{Methodology}{}% 20
+\BOOKMARK [1][-]{section.10}{Materials}{}% 21
+\BOOKMARK [1][-]{section.11}{Results}{}% 22
+\BOOKMARK [1][-]{section.12}{Summary}{}% 23
+\BOOKMARK [1][-]{section.13}{Acknowledgements}{}% 24

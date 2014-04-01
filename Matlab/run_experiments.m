@@ -41,14 +41,18 @@ else
 end
 
 %%
-
-if( drawsimmat )
+%%
+if( drawSimMat )
     figure(3)
-    hist(shifts,50);
-    title('shift histogram') 
+    hist(shifts,1000);
+    title('Shift Histogram (Experiment 10)');
+    colormap Gray;
+    xlabel('Seconds')
+    ylabel('Number Tracks')
+    axis square;
 end
 
-
+%%
 if( compute_confs && size( predictive_loss,1 )>1 )
 
     predictive_loss_normalised = sum(predictive_loss);
@@ -65,14 +69,19 @@ if( compute_confs && size( predictive_loss,1 )>1 )
     track_indexconfidences_map_normalised = track_indexconfidences_map_normalised ./ max(track_indexconfidences_map_normalised);
 
     if( draw_confs )
-        figure(12);
-        plot( ( predictive_performance_normalised ),'b' );
+        h = figure(12);
+        plot( ( predictive_performance_normalised ),'k', 'LineWidth', 2 );
         hold on;
-        plot( ( track_placementconfidences_map_normalised ),'r' );
-        plot( ( track_indexconfidences_map_normalised ),'k' );
+        plot( ( track_placementconfidences_map_normalised ),'k:', 'LineWidth', 1 );
+        plot( ( track_indexconfidences_map_normalised ),'k--' );
         hold off;
         legend('performance','time confidence','index confidence')
-        title('Comparative performance over the whole data set')
+        title(sprintf('Summation Cost Matrix Only'))
+        xlabel('Show Progression');
+        axis square;
+set(gca,'xtick',[]);
+set(gca,'xticklabel',[]); 
+
     end
 
 end
