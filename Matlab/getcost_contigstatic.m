@@ -37,12 +37,14 @@ for t = 1:T
             score = 0;
         elseif ( sign( vals(end) ) == -1)
 
-            score =  vals(end) / length(vals);
+           % score =  vals(end) / length(vals);
+           score =  mean(vals);
             
             score = score * (1-costcontig_incentivebalance);
         else
-           score =  vals(end) / length(vals);
-           
+           %score =  vals(end) / length(vals);
+            score =  mean(vals);
+            
             score = score * (costcontig_incentivebalance);
         end
         

@@ -46,7 +46,7 @@ for t=1:T
         score = score + sum( SS( c_ind, window_size:w ) );
       
         if( same_sign )
-            score = score;
+            score = score + sum( ( SS( t_ind, (w-window_size+2):w ) ) );
         end
         
         SC( t_ind, w+window_size+1 ) = score / w;

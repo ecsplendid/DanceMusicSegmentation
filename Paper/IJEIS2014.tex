@@ -101,7 +101,7 @@
 	
 	We compare our error to the relative error of cue sheets created by human domain experts. We focus directly on DJ mixed electronic dance music.
 	
-	In the coming sections we describe the corpus (see Section~\ref{dataset}), the evaluation criteria (see Section~\ref{eval_crit}), how we pre-process the data (see Section~\ref{proprocessing}), how we perform feature extraction (see Section~\ref{feat_ex}), designing the cost matrices using observed phenomena in the domain (see Section~\ref{costmatrix_sec}), computing the best segmentation (see Section~\ref{best_cost}), discussion of confidence intervals (see Section~\ref{sec:confidence-intervals}), our methodology (see Section~\ref{sec:methodology}), materials used (see Section~\ref{sec:materials}), results (see Section~\ref{sec:results}) and finally the summary (see Section~\ref{conclusions}).
+	In the coming sections we describe the corpus (see Section~\ref{dataset}), human accuracy (see Section~\ref{human_acc}),  the evaluation criteria (see Section~\ref{eval_crit}), how we pre-process the data (see Section~\ref{proprocessing}), how we perform feature extraction (see Section~\ref{feat_ex}), designing the cost matrices using observed phenomena in the domain (see Section~\ref{costmatrix_sec}), computing the best segmentation (see Section~\ref{best_cost}), discussion of confidence intervals (see Section~\ref{sec:confidence-intervals}), our methodology (see Section~\ref{sec:methodology}), materials used (see Section~\ref{sec:materials}), results (see Section~\ref{sec:results}) and finally the summary (see Section~\ref{conclusions}).
 	
 	\section{Corpus}\label{dataset}
 	
@@ -119,16 +119,29 @@
 	
 	There is already a large community of people interested in getting track metadata for DJ sets. ``CueNation''\footnote{\url{http://www.cuenation.com}} is an example of this. CueNation is a website allowing people to submit \textit{cue sheets} for popular DJ Mixes and radio shows. A cue sheet is a text file containing time metadata (indices) for a media file.
 	
-	We had our time metadata (indices) and radio shows provided to us and hand captured by \textit{Dennis Goncharov}; a domain expert and one of the principal contributors to \textit{CueNation}. One of the significant problems with this task is that there is an (apparently Gaussian) error variable attached to the human captured indices themselves. On some tracks, it is unclear where to place the optimal index and when analysing our results, we have noticed some obvious human errors. Regrettably, there is no clear way of quantifying this. Many of the cue sheet authors themselves reject the idea of automating the task citing the poor precision of any such result (they often place indices on the exact MP3 frame). However this sentiment seems misplaced given that they make blatant mistakes or that it is a matter of opinion where to place the track and some consistent method may be preferential. A potential outcome of our method could be a way to assist them with initial placements. Our results demonstrate that it is indeed possible to automate this task and that while there is some uncertainty attached to the optimal placement, it is still largely predictable.
+	We had our time metadata (indices) and radio shows provided to us and hand captured by \textit{Dennis Goncharov}; a domain expert and one of the principal contributors to \textit{CueNation}. One of the significant problems with this task is that there is a random error variable associated with the human captured indices themselves. On some tracks, it is unclear where to place the optimal index and when analysing our results, we have noticed some obvious human errors. Regrettably, there is no clear way of quantifying this. Many of the cue sheet authors themselves reject the idea of automating the task citing the poor precision of any such result (they often place indices on the exact MP3 frame). However this sentiment seems misplaced given that they frequently make mistakes or that it is a matter of opinion where to place the track and some consistent method may be preferential. A potential outcome of our method could be a way to assist them with initial placements. Our results demonstrate that it is indeed possible to automate this task and that while there is some uncertainty attached to the optimal placement, it is still largely predictable.
 	
 	\textit{Dennis Goncharov} provided us with the following description of how he captures the indices. To quote from a personal email exchange with Dennis:
 	
 	\begin{quote}
-		The transition length is usually in factors of $8$ bars ($1$ bar is $4$ beats. At $135$ beats per minute, $8$ bars is $14.2$ sec). It is a matter of personal preference which point of the transition to call the index. My preference is to consider the index to be the point at which the second track becomes the focus of attention and the first track is sent to the background. Most of the time the index is the point at which the bass line ($400$Hz and lower) of the previous track is cut and the bass line of the second track is introduced. If the DJ decides to exchange the adjacent tracks gradually over the time instead of mixing them abruptly then it is up to the cue sheet maker to listen further into the second track noting the musical qualities of both tracks and then go back and choose at which point the second track actually becomes the focus of attention.
+		Trance music is made in slices of $8$ bars ($1$ bar is $4$ beats. At $135$ beats per minute, $8$ bars is $\frac{60}{135} ( 4 \cdot 8 ) \approx 14.8$ sec). Trance music tends to be around $130$-$135$ BPM. It is a matter of personal preference which point of the transition to call the index. My preference is to consider the index to be the point at which the second track becomes the focus of attention and the first track is sent to the background. Most of the time the index is the point at which the bass line ($400$Hz and lower) of the previous track is cut and the bass line of the second track is introduced. If the DJ decides to exchange the adjacent tracks gradually over the time instead of mixing them abruptly then it is up to the cue sheet maker to listen further into the second track noting the musical qualities of both tracks and then go back and choose at which point the second track actually becomes the focus of attention.
 	\end{quote}
 	
 	The most obvious and pervasive element in dance music is the percussion (the beats). We believe on balance that ignoring the percussive information is advantageous, because DJs use percussion primarily to blur boundaries between tracks.  We tried to capture percussive based features and found that the transitions between tracks and indeed groups of tracks appeared as stronger self-similar regions in $S$ than the actual tracks. It is clear from our research that it is the boundaries between instruments and harmonic content which reveal track boundaries, not percussion or rhythm. When we tried implementing a rhythm feature extractor by looking at a transformed autocorrelation of the time domain tiles, it was ineffective because it is the rhythm more than the instruments that is matched between adjacent tracks by the DJs. Some DJs mix harmonically (by matching instruments as opposed to percussion) but this preys on human hearing and perception. An algorithm capturing the harmonic information would most likely be able to distinguish two harmonically compatible tracks. Perhaps more sophisticated rhythm detection (than we tried) might still work and should be explored further. 
 	
+	\section{Human Accuracy}\label{human_acc}
+	
+	We did some analysis on how accurate the humans themselves are at creating indices. In the absence of a perfect data set our analysis instead hinged on the amount to which the humans disagreed with each other aggregated over a large amount of historical data. Mikael Lindgren was kind enough to send us a dump of his cuesheet database to experiment with. As ASOT is such a popular show there were many independently captured cuesheets to compare against for all of the historical shows. We selected all the shows having at least $3$ distinct cuesheets (not copies or shifted/misaligned copies of each other)  and that all the cuesheets had the same number of tracks. The first track was ignored (as it was always $0$ seconds). We ended up with $115$ shows with $3$ authors. $65$ shows with $4$ authors and $30$ shows with $5$ authors.  We generated a histogram of distances from the median time for each track, for each cuesheet and assumed values greater than $100$ seconds or less than $-100$ seconds were outliers. The standard deviation of the `human disagreement' variable is $9.13$ seconds. See Figure~\ref{fig:human_muchconfuse} for an illustration. So at this stage it does not seem feasible for us to achieve a higher accuracy when we are testing against a method which is intrinsically no more reliable.
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.45\textwidth]{images/human_confusion}
+		
+		\caption{Illustration of the `human disagreement' random variable (zoomed in at the bottom), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($\approx 14.8$ seconds) which corroborates the analysis from Dennis Goncharov in Section~\ref{dataset}. }
+		\label{fig:human_muchconfuse}
+	\end{figure} 
+	
+	   
 	
 	\section{Evaluation Criteria}\label{eval_crit}
 	
@@ -180,19 +193,19 @@ Because we are passing real values into the $F(x_k)$, the second half of the res
 	
 	Let $D_e^y$ ($T \times \hat{l}-\hat{h}+1$) denote the feature matrix.
 	
-	For each tile $i\ast=1,2,\ldots,T$ we assign 
+	For each tile $\bar{i}=1,2,\ldots,T$ we assign 
 \[
-D_{i\ast}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{i\ast}^{1,\ldots,\tilde{M}})_{\hat{h},~\hat{h}+1,~\ldots,~\hat{l} }~\right|
+D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde{M}})_{\hat{h},~\hat{h}+1,~\ldots,~\hat{l} }~\right|
 \]
  selecting the part of the spectrum between the high and low pass filters $h$ and $f$.  We take the absolute values of the complex result of $F(x_k)$ (defined as its distance in the complex plane from the origin using the Pythagorean theorem).
 	
-	To focus on the instruments and improve performance we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution we achieve from having such large inputs into $F(t_i)$. For example with a tile size of $10$ seconds and a sample rate of $4000$ we have a frequency resolution of $\frac{1}{2}10 \cdot 4000 = 20$KHz. 
+	To accentuate instrument harmonics we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution from having such large inputs into $F(t_i)$. For example with a tile size of $10$ seconds and a sample rate of $4000$ we have a frequency resolution of $\frac{1}{2}10 \cdot 4000 = 20$KHz. 
 	
 	Typically a `short-time discrete Fourier transform' is used which has smaller sized inputs (windows) into $F(t_i)$ which are usually overlapping and are multiplied by a window function, attenuating the tails to reduce spectral leakage. Usually these window functions look similar to a Gaussian, for example;  
 	\[
 	\mathrm{Hann}_i = 0.5 - 0.5 \cos\frac{2\pi i}{n-1}{w(i)}
 	\] where $n$ is the window size
-	(see \cite{tzanetakis1999multifeature} for an example). The short-time Fourier transform is relevant when increased time precision is needed as there is a frequency-time resolution trade-off with respect of the input size to $F(t_i)$. This is not a concern in this particular application as our time resolution is never required to be better than $1$ second which would still give us adequate frequency resolution.
+	(see \cite{tzanetakis1999multifeature} for an example). The short-time Fourier transform is relevant when increased time precision is needed as there is a frequency-time resolution trade-off with respect of the input size to $F(t_i)$. This is not a concern in this particular application as our time resolution is never required to be better than $1$ second which would still produce adequate frequency resolution.
 	
 	The Gaussian first derivative filter is defined as 
 	$$- \frac{2 \hat{\lambda}}{\upsilon^2}  e^{-\frac{\hat{\lambda}^2}{\upsilon^2}} $$ where 
@@ -289,28 +302,36 @@ D_{i\ast}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{i\ast}^{1,\ldots,\tilde{M}}
 	C(f,t) = C(f,t)(t-f)$ (for $f+1 \le t-1$)
 	\begin{dmath*}
 		\tilde C(f,t) ~=~ \tilde C(f+1,t) + \tilde C(f,t-1) - \tilde C(f+1,t-1) + \hat S(f,t) + \hat S(t,f).
-	\end{dmath*} (having first pre-computed $C$ for each $1 \le f \le t \le T$). This can be better understood with the following illustration
+	\end{dmath*} (having first pre-computed $\tilde{C}$ for each $1 \le f \le t \le T$). This can be better understood with the following illustration (showing calculations of $\tilde{C}(f,t)$ in respect of the domain of $S$, where the middle cell $\Upsilon = \tilde{C}(f+1,t-1)$)
 	
 	\begin{center}
 		\begin{tikzpicture}
 		\draw[step=1cm,color=gray] (0,0) grid (3,3);
 		
-		\draw[fill=gray!50, fill opacity=0.3] (1,1) -- (1,2) -- (2,2) -- (2,1) -- (1,1);
-		\draw[fill=gray!10, fill opacity=0.3] (0,2) -- (0,3) -- (1,3) -- (1,2) -- (0,2);
-		\draw[fill=gray!10, fill opacity=0.3] (2,0) -- (3,0) -- (3,1) -- (2,1) -- (2,0);
+		\draw[fill=gray!90, fill opacity=0.8] (1,1) -- (1,2) -- (2,2) -- (2,1) -- (1,1);
+		\draw[fill=gray!10, fill opacity=1] (0,2) -- (0,3) -- (1,3) -- (1,2) -- (0,2);
+		\draw[fill=black!10, fill opacity=0.8] (2,0) -- (3,0) -- (3,1) -- (2,1) -- (2,0);
+		
+		
+	\draw [step=0.5cm, pattern=north east lines] (0,0) rectangle (2,2);
+	
 		
 		\node[color=black] at (0.5,2.5) {$\hat S_\Omega^{(f,t)}$};
 		\node[color=black] at (2.5,0.5) {$\hat S_\Omega^{(f,t)}$};
-		\node at (1.5,1.5) {C(f+1,t-1)};
+		
 		
 		\draw[color=black] (0,0) -- (0,2) -- (2,2) -- (2,0) -- (0,0);
 		\draw[color=black] (3,3) -- (1,3) -- (1,1) -- (3,1) -- (3,3);
 		
-		\node[color=black] at (1,0.5) {C(f,t-1)};
-		\node[color=black] at (2,2.5) {C(f+1,t)};
+		\node[color=black,fill=white, fill opacity=0.8] at (1,1) {$\tilde{C}(f,t-1)$};
+		\node[color=black,fill=white, fill opacity=0.8] at (2,2) {$\tilde{C}(f+1,t)$};
+		
+		\node[color=white] at (1.5,1.5) {$\Upsilon$};
 		
 		\end{tikzpicture}.
-	\end{center} The final cost matrix is normalized by width and incentive bias
+	\end{center} 
+	Clearly, the solutions of $\tilde{C}$ overlap in $S$.
+	The final cost matrix is normalized by width and incentive bias
 \[
 C = \hat N_\Omega \left( \frac{ \tilde C_{ft} }{ t-f+1 } \right)
 \] for all $t,f \in \tilde C$.
@@ -659,12 +680,12 @@ All the code presented in this paper with the small working test set is availabl
 
 \section{Results}\label{sec:results}
 
-Please see Table~\ref{tab:results} for the main table of results, Figure~\ref{fig:shifthistogram} for a histogram of predicted versus actual differences for experiment $10$. Figure~\ref{fig:overallconfs} shows a visualization of the confidences and relative performance in relation to show progression.
+Please see Table~\ref{tab:results} for the main table of results, Figure~\ref{fig:shifthistogram} for a histogram of predicted versus actual differences for experiment $10$. Figure~\ref{fig:overallconfs} shows a visualization of the confidences and relative performance in relation to show progression (which is a normalized quantity because shows are of variable length).
 
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.4\textwidth]{images/shift_histogram}
-		\caption{Histogram of the differences between reconstructed and human captured time indices on experiment 10. The slight bumps are misplacements of tracks. The humans are much more likely to place an index before a predicted index.  }
+		\caption{Histogram of the differences between reconstructed and human captured time indices on experiment 10. The slight bumps are uncertainty about track placement perhaps related to the $\approx 14.8$ second bar intervals in Trance Music. The humans are much more likely to place an index before a predicted index.  }
 		\label{fig:shifthistogram}
 	\end{figure} 
 
@@ -676,15 +697,15 @@ Please see Table~\ref{tab:results} for the main table of results, Figure~\ref{fi
 		\label{fig:overallconfs}
 	\end{figure*} 
 
-Our parameter search was slightly limited (we searched $2000$ random parameters), and should be done again more extensively. 
+Our parameter search was slightly limited (we searched $2000$ random parameters), and should be done again more extensively. However it was clear from the search that some asymptotic limit was reached. 
 
 Adding the Gaussian cost matrix in most cases improves performance because it regularises the track index estimates (see experiment $6$ and the improvement in $11$). Using the Gaussian cost matrix on its own makes a useful comparison to how our method in general improves on a potential naive approach to the problem. 
 
-The symmetry sum is the best performing single cost matrix with an even incentive bias with summation and evolution close behind. The gains from decreasing window size past $T=5$ asymptotically decay which leads us to believe we are approaching some kind of limit. More interesting is that when we perform a random parameter search we also hit a barrier when we would have expected further improved results. We estimate that we are now limited by the error variable associated with the human indices more so than our own method. 
+The symmetry sum is the best performing single cost matrix with an even incentive bias with summation and evolution close behind. The gains from decreasing window size past $T=5$ asymptotically decay which leads us to believe we are approaching some kind of limit. More interesting is that when we perform a random parameter search we also hit a barrier when we would have expected further improved results. We estimate that we are now limited by the error variable associated with the human indices. The `human disagreement' variable (see Section~\ref{human_acc}) has a standard deviation of $9.13$ seconds which we believe is limiting our progress. 
 
 On our previous work we were using a disincentive only summation matrix, and found that normalizing it on the square root of the width produced the best result. This would have been necessary to encourage placement of longer tracks as no incentive was present. So experiment $11$ is roughly comparable and indeed produces the same overall mean average to that previous experiment ($\approx 20$S). Note that we no longer discard any shows from evaluation which makes the result stronger. 
 
-Figure~\ref{fig:overallconfs} is interesting. It seems to suggest that with the summation matrix alone (and we suspect all of the matrices when used in isolation), we suffered significant loss in confidence and performance in the middle of the shows. This would imply that our method was failing to some extent, and to make matters worse; the magnitude of failure depended on the number of tracks. Apparently the mixture of cost functions removes this effect.
+Figure~\ref{fig:overallconfs} seems to suggest that with the summation matrix alone (and we suspect all of the matrices when used in isolation), we suffered significant loss in confidence and performance in the middle of the shows. This would imply that our method was failing to some extent, and to make matters worse; the magnitude of failure depended on the number of tracks. Apparently the mixture of cost functions removes this effect.
 
 \begin{table*}[t]
 	\centering
@@ -727,6 +748,8 @@ We believe our algorithm would be useful for segmenting DJ-mixed audio streams i
 The new cost matrices in combination improve robustness significantly over single matrices or regularised single matrices (as in our last paper). We are seeing about a 50\% improvement in overall mean accuracy over single cost matrices that are correctly normalized. The new cost matrices improve on many drawbacks of our previous work (mainly that it was vulnerable to dissimilar regions within tracks). 
 
 Our method still has one key drawback that we are aware of. This is the rare instance where there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements. In spite of this issue we suspect that our predictions are more accurate and more consistent than the human equivalents while not being as precise in situations when our index agrees with theirs.
+
+A more precise corpus where the DJ was also the cuesheet author would allow us to tune the parameters more succinctly and also the generation of an artificial dataset to test against. This work is forthcoming. 
 
 We would also like to implement some of the methods in the literature (which were mostly designed for scene analysis) to see if we outperform them. It would be tricky to get an exact comparison because we could not find an unsupervised deterministic algorithm which finds a fixed number of strictly contiguous clusters. We could however adapt existing algorithms to get a like for like comparison. We would like to evaluate the performance of J Theiler's contiguous K-means algorithm in particular \cite{theiler1997contiguity} and also similar algorithms. We have the property of being deterministic but probabilistic methods should be explored. Theiler's algorithm would require some modification to work in this scenario because we require strictly contiguous clusters, not just a contiguity bias. 
 

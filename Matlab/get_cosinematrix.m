@@ -20,7 +20,7 @@ function [C, W, tileWidthSecs, space] = get_cosinematrix(...
 
     tileindexes = (1:tileWidth);
 
-    for x=1:no_tiles
+for x=1:no_tiles
 
         dft = fft( audio_low( tileindexes+(x-1)*tileWidth ),nFFT);
         
@@ -32,7 +32,7 @@ function [C, W, tileWidthSecs, space] = get_cosinematrix(...
 
         assert((norm(Y)-1)<1e-6);
         fdata(x, : ) = Y;
-    end
+end
 
     space = (0:no_tiles-1) .* tileWidthSecs;
     %%

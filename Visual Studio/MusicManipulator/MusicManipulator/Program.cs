@@ -11,7 +11,21 @@ namespace MusicManipulator
 {
 	class Program
 	{
+		/// <summary>
+		/// purpose of this is to look for duplicates, generate a matlab script and sox
+		/// </summary>
+		/// <param name="args"></param>
 		static void Main(string[] args)
+		{
+			//MagicExtended();
+
+			//ASOT();
+
+			CreateSoxScript();
+			//TATW();
+		}
+
+		private static void MagicExtended()
 		{
 			string[] folders = new string[]{
 			@"C:\Users\tim_000\Google Drive\Dennis Music Dataset\Magic Island - Music for Balearic People",
@@ -59,11 +73,6 @@ namespace MusicManipulator
 			Console.WriteLine(count);
 
 			File.WriteAllText("magic_script_extended.m", String.Format("{0}{1}{2}", header, sb.ToString(), footer));
-
-			//ASOT();
-
-			//CreateSoxScript();
-			//TATW();
 		}
 
 		private static void ASOT()
@@ -189,7 +198,7 @@ namespace MusicManipulator
 			Console.BufferWidth = 400;
 
 			string[] paths = new string[] {
-				@"C:\Users\tim_000\Google Drive\Dennis Music Dataset\Trance Around The World\different filenaming"
+				@"E:\Music"
 			};
 
 			foreach ( string path in paths )
