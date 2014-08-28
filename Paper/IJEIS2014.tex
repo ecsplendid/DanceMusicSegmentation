@@ -42,7 +42,7 @@
 
 \hypersetup{
 	pdfauthor={Tim Scarfe, Wouter M. Koolen and Yuri Kalnishkan},
-	pdftitle={Segmenting electronic dance music streams based on self-similarity, symmetry, evolution and contiguity, symmetry, evolution and contiguity},
+	pdftitle={Contiguous segmentation of electronic dance music},
 	pdfkeywords={audio,stream,segmentation,dj,mixing},
 	pdfsubject={Artificial Intelligence},
 	pdfcreator={Tim Scarfe},
@@ -60,16 +60,18 @@
 % to remove in the final version!!
 
 
-\title{Segmenting electronic dance music streams based on self-similarity, symmetry, evolution and contiguity}
+\title{Contiguous segmentation of electronic dance music}
 \begin{document}
 	
 	\maketitle
 	
 	\begin{abstract}
 		
-		We describe an unsupervised, deterministic algorithm for segmenting DJ-mixed Electronic Dance Music (EDM) streams (for example; pod-casts, radio shows, live events) into their respective tracks. We attempt to reconstruct a fixed number of boundaries as close as possible to what a human domain expert would assign in respect of the same task. The goal of DJ-mixing is to render track boundaries effectively invisible from the standpoint of human perception which makes the problem difficult.
+		We consider the problem of segmenting DJ-mixed dance music recordings (pod-casts, radio shows, live events) into their original sequence of contiguous tracks. We present an algorithm to reconstruct a fixed number of segment boundaries as close as possible to what a human domain expert would create in respect of the same task. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. The goal of DJ-mixing is to render track boundaries  invisible from human perception.
 		
-		We optimally segment domain inspired cost matrices derived from a self-similarity matrix. Dynamic programming is used (which means solutions to a problem are described in terms of overlapping sub-solutions to achieve a significant improvement in time complexity and therefore execution time). The similarity matrix is based on the normalized cosines of a time series of transformed Fourier based features. Our method is applied to dance music radio shows. Its formulation incorporates long-term self-similarity over a variable (but limited) horizon and is quantitatively assessed on a large corpus of $304$, two hour long radio shows which have been hand-labelled by a domain expert.
+		Contiguous segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of self-similarity, symmetry, contiguity and evolution in respect of time. The method could be used on other contiguous segmentation tasks where the number of segments is known in advance, and the audio based features could be replaced with ones from another domain.
+		
+		Our work incorporates self-similarity over a soft time horizon with a fixed upper boundary and is quantitatively assessed on a large corpus of radio show recordings which have been hand-labelled by a domain expert.
 		\smallskip
 		
 		\noindent \textbf{Keywords.} \noindent music,~segmentation,~DJ,~mix,~dynamic programming
@@ -81,35 +83,58 @@
 	
 	\section{Introduction}
 	
-	Electronic Dance Music tracks are usually mixed by a disc jockey (DJ). For this reason EDM music streams are unique compared to other genres of music. Mixing is the \textit{modus operandi} in electronic music. We first transform the audio file into a time series of features discretized into adjacent tiles and transform them into a domain where pairs from the same track would be distinguishable by their cosine. Our features are based on a Fourier transformation with convolution filtering to accentuate prominent instruments and self-similarity within tracks. We create a similarity matrix from these cosines and then derive cost matrices showing the costs of fitting a track at a given time with a given length. We use Dynamic Programming to create the cost matrices and again to perform the most economical segmentation of the cost matrices to fit a predetermined number of tracks.
+	Electronic Dance Music tracks are usually mixed by a disc jockey (DJ). For this reason EDM music streams are unique compared to other genres of music. Mixing is the \textit{modus operandi} in electronic music. We first transform the audio file into a time series of features discretized into adjacent tiles and transform them into a domain where pairs from the same track would be distinguishable by their cosine. Our features are based on a Fourier transformation with convolution filtering to accentuate prominent instruments and self-similarity within tracks. We create a similarity matrix from these cosines and then derive cost matrices showing the costs of fitting a track at a given time with a given length. We use Dynamic Programming to create the cost matrices and again to perform the most economical segmentation of the cost matrices to fit a predetermined number of tracks. Dynamic programming means solutions to a problem are described in terms of overlapping sub-solutions to achieve a significant improvement in time complexity and therefore execution time. 
 	
-	A distinguishing feature of our algorithm is that it focuses on long term self-similarity of segments rather than transients or a novelty function. Dance music tracks have the property that they are made up of repeating regions, and the heads and tails are often self-similar. For this reason we believe that some techniques from structural analysis fail to perform as well for this segmentation task because we focus on the concept of self-similarity ranging over a configurable time horizon. Our method does not require any training or tenuous heuristics to perform well. 
+	The contiguous-segmentation differs from the standard clustering problem in that the clusters arrive sequentially and are homogeneous. Our work considers a contiguous-segmentation that is globally-optimised and based upon the self-similarity of segments, avoiding transient heuristics typically used in local search methods. Music and mixes of music have the property that they are made up of recursively repeating self-similar regions. Our method does not require any training or tenuous heuristics to perform well. The distinguishing feature of our problem domain is that the number of segments is known a priori but the segmentation boundaries are not known, or ambiguous and subjective. However, computing the best solution is desirable.
 	
-	The purpose of this algorithm is to reconstruct optimal boundaries given a fixed number of tracks known in advance (their names and order are known). This is relevant when one has recorded a show, downloaded a track list and needs to reconstruct the indices given a track list. The order of the indices reconstructed is critical so that we can align the correct track names with the reconstructed indices. If the track list were not known in advance the number of tracks could be estimated quite reliably as the variable of track lengths is Gaussian (see Figure~\ref{fig:tracklengths}).
+	The purpose of the algorithm is to reconstruct optimal boundaries given a fixed number of tracks known a priori (the track listing is usually published by the DJ). This is relevant when one has recorded a show, downloaded a track list and needs to reconstruct the indices given a track list. The order of the indices reconstructed is critical so that we can align the correct track names with the reconstructed indices. 
+	
+	If the track list were not known in advance, the number of tracks could be estimated as the variable of track lengths is Gaussian (see Figure~\ref{fig:tracklengths}). However the algorithm is optimised for knowing the number of tracks and may not perform as well as other contiguous-segmentation algorithms otherwise. It may be possible to infer from our results model if the correct number of tracks was used as a parameter. This would open up new applications, but is an area for future research. 
 	
 	One of the interesting features of audio is that you \textit{cannot scrub through it, and get an overview in the same way you can with video}. Audio has a reduced \textit{contextual continuum} when the user skips through it, perhaps due to the lack of redundant, persistent scene-setting information or indeed a psychological reason. Even in video applications, discovery, context and scrubbing are an active area of research \cite{Matejka:2013:SIO:2470654.2466149}. Time index meta-data would allow click through monetisation, and allow improved use-case scenarios (for example publishing track names to social networks, information discovery and retrieval). Capturing meta-data in audio is a time consuming and error-prone process. Tzanetakis \cite{tzanetakis1999framework} found that it took users on average $2$ hours to segment $10$ minutes of audio using standard tools. While not directly relevant we might glean from those findings that there is a strong motivation to automate this process.
 	
-	To mix tracks DJs always match the speed or \textit{BPM} (beats per minute) of each adjacent track during a transition and align the major percussive elements in the time domain. This is the central concept of removing any dissonance from overlapping tracks. Tracks can overlap by any amount. DJs increase adjacent track compatibility further by selecting adjacent pairs that are harmonically compatible and by applying spectral transformations (EQ).
+	DJs always match the speed or beats per minute (BPM) of each adjacent track during a transition and align the major percussive elements in the time domain. This is the central concept of removing any dissonance from overlapping tracks. Tracks can overlap by any amount. DJs increase adjacent track compatibility further by selecting adjacent pairs that are harmonically compatible and by applying spectral transformations (EQ).
 	
-	The main theme of the early literature was attempting to generate a novelty function to find points of change using distance-based metrics or statistical methods. Heuristic methods with hard decision boundaries were used to find the best peaks. 
+	\subsection{Literature Review}
 	
-	J.\ Foote et al \citep{foote1999visualizing,foote1997similarity,foote2000automatic,foote2003media,foote2001visualizing} have done a significant amount of work in this area and were the first to use similarity matrices. Foote evaluated a Gaussian tapered checker board kernel along the diagonal of a similarity matrix to create a 1-dimensional novelty function. One benefit to our approach is that our DP allows any range of long-term self-similarity (which relates to the fixed kernel size in Foote's work).
+	Audio segmentation in the literature is colloquially implemented in the context of structural analysis. Music structure denotes the organization of a composition by its melody, harmony, timbre and rhythm. Repetitions, transformations and evolutions of music structure also contribute to its identity and it is this semantic information that structural analysis algorithms aim to extract from music. An example structure for a song might be ``Common'' $\rightarrow$ ``Verse'' $\rightarrow$ ``Chorus'' $\rightarrow$ ``Common''. Speaker diarization is another example of structural analysis 
 	
-	Goodwin et al.\ also used DP for segmentation \citep{goodwin2003audio,goodwin2004dynamic}. Their intriguing supervised approach was to perform Linear Discriminant Analysis (LDA) on the features to transform them into a domain where segmentation boundaries would be emphasised and the feature weights normalized. They then reformulated the problem into a clustering DP to find an arbitrary number of clusters. We believe the frame of mind for this work was structural analysis, because it focuses on short term transients (mitigated slightly by the LDA) and would find segments between two regions of long term self-similarity. Goodwin was the first to discuss the shortcomings of novelty peak finding approaches. Goodwin's approach is not optimized to work for a predetermined number of segments and depends on the parametrization and training of the LDA transform. 
+	Segmentation in the context of structural analysis has been thus far been concerned with creating a novelty function to find points-of-change using distance-based metrics, rather than trying to find a fixed number of segments. Heuristics with hard decision boundaries have been used to find the best change points, for example Tzanetakis \cite{tzanetakis1999framework} used first-order derivatives of a time series of audio features. 
 	
-	Peeters et al \citep{peeters2002toward,peeters2004deriving} did some interesting work combining k-means and a transformation of the segmentation problem into Viterbi (a dynamic program).
+	The use of a similarity matrix to visualize and analyse local time dependencies (then called ``Recurrence Plots'') was first proposed by Eckmann\citep{eckmann1987recurrence}.
+	
+	J.\ Foote et al \citep{foote1999visualizing,foote1997similarity,foote2000automatic,foote2003media,foote2001visualizing} were the first to use self-similarity matrices to visualise and exploit time dependencies in music data. Foote evaluated a Gaussian `tapered' checker board kernel along the diagonal of a music self similarity matrix to create a 1-dimensional novelty function that had the notion of self-similarity over a fixed time horizon. The kernel was `tapered' down to zero on the top right and bottom left edges to reduce edge effects. The dynamic program in this paper allows any self-similarity time horizon up to a fixed limit (Foote's work had a fixed kernel size).
+	
+	Goodwin et al.\ used a dynamic program for segmentation \citep{goodwin2004dynamic}. Their intriguing supervised approach was to perform Linear Discriminant Analysis (LDA) on the features to transform them into a domain where segmentation boundaries would be emphasised and the feature weights normalized. Afterwards, Goodwin formulated the problem into one of finding the globally minimum cost path through a state graph (`cluster space trajectory') modelling local and transition costs. Goodwin already demonstrated in \citep{goodwin2003audio} that novelty peaks often exist within segments, not only on the boundary of segments and took the approach of modelling all possible sequential transitions between all possible clusters.
+	
+	A potential drawback of the approach by Goodwin and all other approaches in scene analysis segmentation that we are aware of; is that they are somewhat local methods that focus on points-of-change rather than optimizing for the best possible results for a fixed number of segments. 
+	
+	All contiguous segmentation algorithms that we looked at do not know a priori how many segments to find. In almost all applications, the number of known segments derives from knowledge of where boundaries are. This is the reason why the algorithm presented in this paper is unique.  
+	
+% no no no totally wrong, viterbi was for scene analysis 
+%they used some dumb pocmethod for segmentation	Peeters et al \citep{peeters2002toward,peeters2004deriving} did some %interesting work combining k-means and a transformation of the segmentation %problem into Viterbi (a dynamic program).
+	
+	\citep{hauptmann1998story}
 	
 	% ADD HERE THAT WE ALSO USE LINDMIKS DATASET, so its the true'er' index
 	A distinguishing feature of our approach is that we evaluate how well we are doing compared to humans in respect of the same task. We compare our reconstructed indices to the ones created by a human domain expert and the algorithm itself is optimised for the domain of mixed music. 
+	
+	% Our method is not specialised for the domain of music segmentation. It would work in other domains.. ?
 	
 	In the coming sections we describe the corpus (see Section~\ref{dataset}), human accuracy (see Section~\ref{human_acc}),  the evaluation criteria (see Section~\ref{eval_crit}), how we pre-process the data (see Section~\ref{proprocessing}), how we perform feature extraction (see Section~\ref{feat_ex}), designing the cost matrices using observed phenomena in the domain (see Section~\ref{costmatrix_sec}), computing the best segmentation (see Section~\ref{best_cost}), discussion of confidence intervals (see Section~\ref{sec:confidence-intervals}), our methodology (see Section~\ref{sec:methodology}), materials used (see Section~\ref{sec:materials}), results (see Section~\ref{sec:results}) and finally the summary (see Section~\ref{conclusions}).
 	
 	\section{Corpus}\label{dataset}
 	
-	We have been supplied with several broadcasts from three popular radio shows. These are: Magic Island, by Roger Shah ($106$ shows); A State of Trance with Armin Van Buuren ($110$ shows); and Trance Around The World with Above and Beyond ($88$ shows) (Total $304$ shows). The show genres are a mix of Progressive Trance, Uplifting Trance and Tech-Trance. We believe this corpus is the largest of its kind used \cite{peiszer2008automatic} in the literature.  
+	We have been supplied with several broadcasts from three popular radio shows. These are: Magic Island, by Roger Shah ($106$ shows); A State of Trance with Armin Van Buuren ($110$ shows); and Trance Around The World with Above and Beyond ($88$ shows) (Total $304$ shows). The show genres are a mix of Progressive Trance, Uplifting Trance and Tech-Trance. 
+	
 	The music is uninterrupted after the introduction (no silent gaps). 
 	The shows come in $44100$ samples per second, $16$ bit stereo MP3 files sampled at $192$Kbs. We resampled these to $4000$Hz $16$ bit mono (left+right channel) WAV files to allow us to process them faster. We have used the ``Sound eXchange''\footnote{\url{http://sox.sourceforge.net}}  program to do this. These shows are all $2$ hours long. The overall average track length is $5$ and a half minutes (slightly less for Magic Island (see Figure~\ref{fig:tracklengths})) and normally distributed. The average number of tracks is $23$ for ASOT and TATW, $19$ for Magic Island. There is a guest mix on the second half of each show. The guest mix DJs show off their skills with technically convoluted mixing, so it is fair to say that the boundary ``complexity'' increases during the guest mix and is at least not fixed throughout the shows.
 	
+	We believe this corpus is one of the largest of its kind used in the literature going on the comparative table of segmentation corpora listed by Peiszer et al in their literature review of audio segmentation \cite{peiszer2008automatic}. Peiszer used a corpus of $109$ songs by the Beatles. To date
+	
+	%TODO
+	foote2003media foote2000automatic 
+
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.45\textwidth]{images/tracklength.pdf}
@@ -164,7 +189,9 @@
 	
 	Note that our results will contain the mean average of these metrics (captured for each show) across the dataset being evaluated. 
 	
-	\section{Preprocessing}\label{proprocessing} % Fourier/xcorr
+	\section{Data Handling}
+	
+	\subsection{Preprocessing}\label{proprocessing} % Fourier/xcorr
 	
 	The dataset had some outliers that may have slightly distorted the analysis of our method. Many of the ``tracks'' in our data set (of indices) were in fact not tracks at all but rather introductions or voice-overs. Almost all of these outlier tracks were short in length. These are quite clearly visible on the distribution of track lengths on Figure~\ref{fig:tracklengths}. To ameliorate the situation we removed any tracks that were shorter than $180$ seconds. We also removed any end tracks that were shorter than $240$ seconds as very often the end tracks on a radio show contain strange elements (for example voice-overs, interviews, show-related `jingles'). This required some manipulation of the cue-sheets and audio files. The undesired segments of the audio files were chopped out, and the cue-sheets were re-flowed so that the time indices point to the correct location in the file. 
 	
@@ -172,7 +199,9 @@
 	
 	For those wishing to use this algorithm in practice with pre-recorded shows; the introductions at the start of the shows are often fixed length or at least predictable so error would be small on average.
 	
-	\section{Feature Extraction}\label{feat_ex} % Fourier/xcorr
+	\subsection{Feature Extraction}
+	
+	\subsubsection{Music}\label{feat_ex} % Fourier/xcorr
 	
 	We used SoX (see Sect.~\ref{dataset}) to downsample the shows to $4000$Hz. We are not particularly interested in frequencies above around and above $2000$Hz because instrument harmonics become less visible in the spectrum as the frequency increases. The Nyquist theorem \cite{nyquist1928certain} states that the highest representable frequency is half the sampling rate, so this explains our reason to use $4000$Hz. We will refer to the sample rate as $R$. Let $L$ be the length of the show in samples.
 	
@@ -202,7 +231,7 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 \]
  selecting the part of the spectrum between the high and low pass filters $h$ and $f$.  We take the absolute values of the complex result of $F(x_k)$ (defined as its distance in the complex plane from the origin using the Pythagorean theorem).
 	
-	To accentuate instrument harmonics we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution from having such large inputs into $F(t_i)$. For example with a tile size of $10$ seconds and a sample rate of $4000$ we have a frequency resolution of $\frac{1}{2}10 \cdot 4000 = 20$KHz. 
+	To accentuate instrument harmonics we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection/transient filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution from having such large inputs into $F(t_i)$. For example with a tile size of $10$ seconds and a sample rate of $4000$ we have a frequency resolution of $\frac{1}{2}10 \cdot 4000 = 20$KHz. 
 	
 	Typically a `short-time discrete Fourier transform' is used which has smaller sized inputs (windows) into $F(t_i)$ which are usually overlapping and are multiplied by a window function, attenuating the tails to reduce spectral leakage. Usually these window functions look similar to a Gaussian, for example;  
 	\[
@@ -219,12 +248,12 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 	
 	Let
 	\[
-	S_{T \times T} ~=~ 1-\left<~D_{i} \cdot D_{j}~\right>,
+	S_{ij} ~=~ 1-\left<~D_{i} \cdot D_{j}~\right>,
 	\] define the dissimilarity matrix.
 	
 	We center $S$ around its mean \[
 	S = S^{2 \cdot \frac{1}{T^2}\sum_{i=1}^T \sum_{j=1}^T S_{ij}},
-	\] then normalize it by $\hat c$ (an algorithm parameter), $S=S^{\hat c}$ and place it on a small interval around $0$. $S_{ij} = \left( 2 \cdot S_{ij} \right)-1$. It is necessary to have \textit{incentives} and \textit{disincentives} for meaningful track placement which is why we opted for this interval. The distribution of values in $S$ is normal with a raised section on left (negatives) representing the tracks we want to find. When $\hat c$ is $1$ there is no change, smaller values will shift the mean above $0$ and vice versa. This will become relevant when we discuss cost matrices as some of them depend on the sign of the value in $S$. 
+	\] then normalize it by $\hat c$ (an algorithm parameter), $S:=S^{\hat c}$ and place it on a small interval with mean $0$. Note that $\hat c \in [0.5,1.5]$. We then scale and translate $S$; $S_{ij} = \left( 2 \cdot S_{ij} \right)-1$. It is necessary to have \textit{incentives} and \textit{disincentives} for meaningful track placement which is why we opted for this interval. The distribution of values in $S$ is normal with a raised section on left (negatives) representing the tracks we want to find. When $\hat c$ is $1$ there is no change, smaller values will shift the mean above $0$ and vice versa. This will become relevant when we discuss cost matrices as some of them depend on the sign of the value in $S$. 
 	
 	See Figure~\ref{fig:simmatrix} for an illustration of $S$ and Figure~\ref{fig:cosine_norm} for an illustration of the cosine normalization.
 	
@@ -243,40 +272,19 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 		\label{fig:simmatrix}
 	\end{figure*} 
 	
-	\section{Cost Matrices}\label{costmatrix_sec} % dynamic recursion
+	\subsubsection{Self Similarity}\label{costmatrix_sec} % dynamic recursion
 	
 	We now have a similarity matrix $S(i,j)$ as described in Section~\ref{feat_ex}. 
 	
-	Let $w$ and $W$ denote the minimum and maximum track length in seconds, these will be parameters.
+	Let $w$ and $W$ denote the minimum and maximum track length in seconds, these will be parameters of the algorithm that improve the time complexity while not significantly harming the results. 
 	
 	We require a cost matrix $C(f,t)$ that describes the cost of placing a track of length $t-f+1$ at $f$. After analysing the data set, we have created $7$ cost matrices that exploit observed phenomena in $S$. We also provide an additional cost matrix which is just a Gaussian random function centred around the mean track length for all times which can be used to regularise the other $7$ matrices or used on its own as a comparator to a more naive method of placement. 
 	
-	The more sophisticated matrices exploit themes such as contiguity, symmetry, evolution and change as well as simple summation of $S$ as was presented in our last paper. In our previous work \cite{scarfe2013long} $S$ was on the interval $[0,1]$ and the summation method could only consider disincentives. All of the new matrices have a parameter to shift the consideration of incentive versus disincentive and will contain values on the interval $[-1,1]$.
+	The cost matrices exploit themes such as contiguity, symmetry, evolution and change as well as simple summation of $S$ as was presented in our last paper \citep{scarfe2013long}. In our previous work $S$ was on the interval $[0,1]$ and the summation method could only consider disincentives. The new cost matrices have a parameter to shift the consideration of incentive versus disincentive and values on the interval $[-1,1]$.
 	
-	Intuitively, most tiles within the same track are similar, while pairs of tiles that do not belong to the same track are significantly more dissimilar. However, often this is not the case and many tracks have dissimilar regions within them. 
+	On the whole, a significant number of tile pairs within one track are similar to each other. Pairs of tiles that do not belong to the same track are expected to be dissimilar, most of the time. However, tracks have contiguous regions within them that are dissimilar to each other. Transitions between songs may appear as a self-similar region but usually also similar to each adjacent track to varying degrees.  
 	
-	\subsection{Normalization}
-	
-	We define $N(C,\Omega)$ as a normalization function for cost matrix $C$ and incentive bias $\Omega$. It will return a $[-1,1]$ interval when $\Omega=0.5$, $[-1,0]$ when $\Omega=1$  and $[0, 1]$ when $\Omega=0$ and will produce a convex interpolation for other values.
-	
-	Let 
-	\begin{dmath*}
-		\hat N(C,\Omega) = \left( \frac{ C_{ij} - \min \left( C_{ij} \right) }{ \max \left( C_{ij} \right) - \min \left( C_{ij} \right) } \cdot \hat h  \right)-s
-	\end{dmath*}
-	for all $i,j \in C$ where $\hat h$ = $2-\left( 2\cdot|0.5-\Omega| \right)$ and 
-
-	    \begin{dmath*}
-	    	s= { \left\{
-	    		\begin{array}{ll}
-	    			1-2 \cdot |0.5-\Omega| & \mbox{~if~}\Omega > 0.5   \\
-	    			1 & \mbox{~otherwise~}.  \\
-	    		\end{array}
-	    		\right.}
-	    \end{dmath*}
-	
-	Note that to save space we will use the following notation $\hat N(C, \Omega)=\hat N_\Omega(C)$.
-
-	\subsection{Summation}
+	\paragraph{Summation}
 	
 	The most obvious strategy of all is to sum up all relevant tiles in $S$ for each candidate track from tile $f$ through tile $t$. We define $C(f,t)$, the cost of a candidate track from tile $f$ through tile $t$, to be the sum of the similarities between all pairs of tiles inside it, normalized on track length.
 	
@@ -288,7 +296,7 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 	\begin{dmath*}
 		\hat S_\Omega=	{ \left\{
 			\begin{array}{ll}
-				\Omega S_{ij}  & :  ~S_{ij} > 1   \\
+				\Omega S_{ij}  & :  ~S_{ij} > 0   \\
 				 \left( 1-\Omega \right) S_{ij} & : \mbox{~otherwise~}\\
 			\end{array}
 			\right.} 
@@ -339,7 +347,7 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 C = \hat N_\Omega \left( \frac{ \tilde C_{ft} }{ t-f+1 } \right)
 \] for all $t,f \in \tilde C$.
 	
-	\subsection{Symmetry}	
+	\paragraph{Symmetry}	
 	
 	A common feature on dance music tracks is partial mirror-symmetry.
 	
@@ -347,7 +355,7 @@ C = \hat N_\Omega \left( \frac{ \tilde C_{ft} }{ t-f+1 } \right)
 		\Lambda( f,t,d ) = \left\{~ 
 		S(f+d-1,f), S(f+d, f+1), S(f+d+1, f+2),\ldots, S(t, t-d-1)
 		~ \right\} 
-	\end{dmath*}take the diagonal $d$ from track 
+	\end{dmath*}be the diagonal $d$ from track 
 	
 	\[
 	\hat t= S(f,f+1,\ldots,t,f,f+1,\ldots,t).
@@ -370,8 +378,9 @@ C = \hat N_\Omega \left( \frac{ \tilde C_{ft} }{ t-f+1 } \right)
 	We will consider $3$ types of symmetry cost matrix. The \textit{standard symmetry} version where pair evaluator 
 		\begin{dmath*}\delta( p,q, \Omega ) = \left\{
 				\begin{array}{lr}
-					(\Omega) ( p \cdot q )  & : \max(\mathrm{sign}(p),\mathrm{sign}(q))=1,   \\
-					 (1-\Omega) ( p \cdot q ) & :~~~\mbox{~otherwise} \\
+					\Omega  p q   & : \mathrm{sign}(p) \ge 0 \text{~and~} \mathrm{sign}(q) \ge 0   \\
+					 (1-\Omega)  p q  & : \mathrm{sign}(p) < 0 \text{~and~} \mathrm{sign}(q) < 0 \\
+					 0 & :  \mbox{~otherwise.}
 				\end{array}
 				\right.
 		\end{dmath*}
@@ -379,16 +388,16 @@ C = \hat N_\Omega \left( \frac{ \tilde C_{ft} }{ t-f+1 } \right)
 		and \textit{symmetry summation} is
 		\begin{dmath*}\hat \delta( p,q, \Omega ) = \left\{
 			\begin{array}{lr}
-			(\Omega) \frac{1}{2} ( p + q )	  & :  \max(\mathrm{sign}(p),\mathrm{sign}(q))=1   \\
-			 (1-\Omega) \frac{1}{2} ( p + q ) & : \mbox{~otherwise.}	 \\
-
+			\Omega \frac{1}{2} ( p + q )	  & :  \mathrm{sign}(p) \ge 0 \text{~and~} \mathrm{sign}(q) \ge 0   \\
+			 (1-\Omega) \frac{1}{2} ( p + q ) & : 	\mathrm{sign}(p) < 0 \text{~and~} \mathrm{sign}(q) < 0 \\
+			 0 & :  \mbox{~otherwise.}
 			\end{array}
 			\right.
 	\end{dmath*}
 	
 	Finally, the symmetry change matrix is defined where $\hat \delta$ is the same as the \textit{symmetry summation}, the width normalization is removed and the inner sum of the definition becomes the first order differences. For the sake of brevity we have omitted the dynamic programming formulations which run in $O(TW^2)$ time but they have been implemented in code and are available on-line (see Section~\ref{sec:materials}). This is also the case for all the following cost matrices.
 	
-	\subsection{Static Contiguity}
+	\paragraph{Static Contiguity}
 	
 	Horizontal contiguous traces in $S$ indicate that the track is self-similar (low value $\le 0$) or self-dissimilar ($\ge 0$) due to repetition with the additional information that it is not evolving with respect of time either. If a given tile is the same as a set of contiguous tiles following it, we can assume that there is some static contiguous region. We define contiguity parameter $\rho$ to indicate how many contiguous tiles are required. Let 
 \begin{align*}
@@ -446,7 +455,7 @@ where
 
 	which traces past self-similarity from the end of the track being fitted.
 	
-	\subsection{Evolutionary Contiguity}
+	\paragraph{Evolutionary Contiguity}
 	
 	Any diagonal traces in $S$ that are parallel to the main diagonal are partial copies of the track in the future which evolve in respect of time. Evolutionary Contiguity is a cost matrix which compares all adjacent pairs on the diagonals in $\hat t$, using the comparator $\delta( p,q, \Omega )$ from the standard symmetry cost function and multiplies those values by the time horizon. All the values are summed and normalized by the track width squared. 
 	
@@ -458,12 +467,34 @@ where
 	}{(t-f+1)^2}\right)
 	\end{dmath*}  where  $\kappa_i=\Lambda( f,t,i )$. As before $\tilde C$ is normalized by track width and incentive bias.
 	
-	\subsection{Gaussian}
+	\paragraph{Gaussian}
 	Let \[
 	G( \varpi, N )_{tw} = e^{ - \frac{1}{2} \frac{\varpi n}{ \frac{1}{2} W}^2  }
 	\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularising the others and for use on its own for comparison against a `naive' competitor. Increasing values of $\varpi$ will tighten up the Gaussian although after experimentation we observed that $1$ was always the best value and stuck with that.
 	
-	\subsection{Mixing Cost Functions}
+	\paragraph{Normalization}
+	
+	We define $N(C,\Omega)$ as a normalization function for cost matrix $C$ and incentive bias $\Omega$. It will return a $[-1,1]$ interval when $\Omega=0.5$, $[-1,0]$ when $\Omega=1$  and $[0, 1]$ when $\Omega=0$ and will produce a convex interpolation for other values.
+	
+	Let 
+	\begin{dmath*}
+		\hat N(C,\Omega) = \left( \frac{ C_{ij} - \min \left( C_{ij} \right) }{ \max \left( C_{ij} \right) - \min \left( C_{ij} \right) } \cdot \hat h  \right)-s
+	\end{dmath*}
+	for all $i,j \in C$ where interval size $\hat h$ = $2-\left( 2\cdot|0.5-\Omega| \right)$ and 
+	
+	\begin{dmath*}
+		s= { \left\{
+			\begin{array}{ll}
+				1-2 \cdot |0.5-\Omega| & \mbox{~if~}\Omega < 0.5   \\
+				1 & \mbox{~otherwise~}.  \\
+			\end{array}
+			\right.}
+	\end{dmath*}
+	
+	Note that to save space we will use the following notation $\hat N(C, \Omega)=\hat N_\Omega(C)$.
+	
+	
+	\paragraph{Mixing Cost Functions}
 	
 	We mix cost matrices together by adding them. In our experiments we will have a parameter for each cost matrix $\in [0,1]$ to show its contribution to the mixture. The cost matrices will be multiplied by this number before being mixed. 
 	
