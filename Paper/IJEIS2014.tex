@@ -38,6 +38,8 @@
 \usepackage{array}
 \usepackage{colortbl}
 
+\newcommand{\sign}{\mathop{\mathrm{sign}}}
+
 \newlength\epaisLigne
 \newcommand\Mline[2]{\noalign{\global\epaisLigne\arrayrulewidth\global\arrayrulewidth#1pt}\cline{#2}\noalign{\global\arrayrulewidth\epaisLigne}}
 
@@ -141,7 +143,7 @@
 
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.45\textwidth]{images/tracklength.pdf}
+		\includegraphics[width=0.45\textwidth]{images/tracklength}
 		
 		\caption{The track length distribution for all three radio shows. The \textit{bump} of short tracks (less than $3$ minutes) is often introductions or otherwise extraneous.}
 		\label{fig:tracklengths}
@@ -252,14 +254,29 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 	
 	Let
 	\[
-	S_{ij} ~=~ 1-\left<~D_{i} \cdot D_{j}~\right>,
+	S_{ij} ~=~ 1-\langle D_{i}, D_{j}\rangle,
 	\] define the dissimilarity matrix.
 	
-	We center $S$ around its mean \[
-	S = S^{2 \cdot \frac{1}{T^2}\sum_{i=1}^T \sum_{j=1}^T S_{ij}},
-	\] then normalize it by $\hat c$ (an algorithm parameter), $S:=S^{\hat c}$ and place it on a small interval with mean $0$. Note that $\hat c \in [0.5,1.5]$. We then scale and translate $S$; $S_{ij} = \left( 2 \cdot S_{ij} \right)-1$. It is necessary to have \textit{incentives} and \textit{disincentives} for meaningful track placement which is why we opted for this interval. The distribution of values in $S$ is normal with a raised section on left (negatives) representing the tracks we want to find. When $\hat c$ is $1$ there is no change, smaller values will shift the mean above $0$ and vice versa. This will become relevant when we discuss cost matrices as some of them depend on the sign of the value in $S$. 
+Then we apply some normalizing transformations. First we center $S$
+around $0.5$ by raising each element to the power $2s$, where
+$s=\frac{1}{T^2}\sum_{i,j=1}^TS_{ij}$. Since for $x\in [0,1]$ and
+$y>0$ we have $x^y\le x$ if $y\ge 1$ and $x^y\ge x$ if $y\le 1$, the
+transformation $S_{ij}\to S_{ij}^{2s}$ increases the values $S_{ij}$
+whenever the mean value $s<0.5$ and decreases them whenever
+$s>0.5$. Note that the transformation keeps the values $S_{ij}$ in the
+interval $[0,1]$. We find this a convenient and gentle way to rescale
+$S$.
+
+Secondly we raise each value $S_{ij}$ to a power $\hat c \in
+[0.5,1.5]$ and then rescale and translate them to $[0,1]$ using
+$S_{i,j}\to 2S_{ij}-1$.  The parameter $\hat c$ is tuned so as to
+achieve the right balance between negative \textit{incentives} and
+positive \textit{disincentives} for meaningful track placement. The
+distribution of values in $S$ after the transformations will have a
+raised tail on left. This will become relevant when we discuss cost
+matrices as some of them depend on the sign of the value in $S$.
 	
-	See Figure~\ref{fig:simmatrix} for an illustration of $S$ and Figure~\ref{fig:cosine_norm} for an illustration of the cosine normalization.
+	See Figure~\ref{fig:simmatrix} for an illustration of $S$ and Figure~\ref{fig:cosine_norm} for an illustration of the  normalization.
 	
 		\begin{figure}
 			\centering
@@ -278,11 +295,18 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 	
 	\subsubsection{Self Similarity}\label{costmatrix_sec} % dynamic recursion
 	
-	We now have a similarity matrix $S(i,j)$ as described in Section~\ref{feat_ex}. 
+	We now have a similarity matrix $S_{ij}$ as described in Section~\ref{feat_ex}. 
 	
 	Let $w$ and $W$ denote the minimum and maximum track length in seconds, these will be parameters of the algorithm that improve the time complexity while not significantly harming the results. 
 	
-	We require a cost matrix $C(f,t)$ that describes the cost of placing a track of length $t-f+1$ at $f$. After analysing the data set, we have created $7$ cost matrices that exploit observed phenomena in $S$. We also provide an additional cost matrix which is just a Gaussian random function centred around the mean track length for all times which can be used to regularise the other $7$ matrices or used on its own as a comparator to a more naive method of placement. 
+We proceed to constructing a cost matrix $C(f,t)$ that describes the
+cost of placing a track starting at $f$ and finishing at $t$ (and
+having length $t-f+1$). After analysing the data set, we have created
+$7$ cost matrices that exploit observed phenomena in $S$. We also
+provide an additional cost matrix which is just a Gaussian random
+function centred around the mean track length for all times which can
+be used to regularise the other $7$ matrices or used on its own as a
+comparator to a more naive method of placement.
 	
 	The cost matrices exploit themes such as contiguity, symmetry, evolution and change as well as simple summation of $S$ as was presented in our last paper \citep{scarfe2013long}. In our previous work $S$ was on the interval $[0,1]$ and the summation method could only consider disincentives. The new cost matrices have a parameter to shift the consideration of incentive versus disincentive and values on the interval $[-1,1]$.
 	
@@ -290,34 +314,33 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 	
 	\paragraph{Summation}
 	
-	The most obvious strategy of all is to sum up all relevant tiles in $S$ for each candidate track from tile $f$ through tile $t$. We define $C(f,t)$, the cost of a candidate track from tile $f$ through tile $t$, to be the sum of the similarities between all pairs of tiles inside it, normalized on track length.
-	
+	The most obvious strategy of all is to sum up all relevant tiles in $S$ for each candidate track from tile $f$ through tile $t$. We define $C(f,t)$, the cost of a candidate track from tile $f$ through tile $t$, to be the sum of the similarities between all pairs of tiles inside it
+%it will be normalized at the end; it is easier to explain recursion without normalization
+
 	\begin{dmath*}
-		C(f,t, \Omega) ~=~ \frac{ \sum_{i=f}^{t} \sum_{j=f}^{t} \hat S_\Omega(i,j) }{ (t-f+1) }
+		\tilde C(f,t, \Omega) =  \sum_{i,j=f}^{t} \hat S_{ij}
 	\end{dmath*}
-	
-	where
+where
 	\begin{dmath*}
-		\hat S_\Omega=	{ \left\{
+		\hat S_{ij}=	{ \left\{
 			\begin{array}{ll}
-				\Omega S_{ij}  & :  ~S_{ij} > 0   \\
-				 \left( 1-\Omega \right) S_{ij} & : \mbox{~otherwise~}\\
+				\Omega S_{ij},  & \text{~if~}S_{ij} > 0   \\
+				 \left( 1-\Omega \right) S_{ij}, & \mbox{~otherwise~}\\
 			\end{array}
 			\right.} 
-	\end{dmath*} for all $i,j \in S.$ Direct computation using the definition takes $O(TW^3)$ time. We can improve this to $O(TW^2)$ using the recursive formulation for the unnormalized quantity 
-	\begin{dmath*} 
-		\begin{array}{ll}
-		\tilde C( t-(w+1),t+(w-1) ) = \\
-		 \tilde C( t-(w-1),t+(w-1) ) \\
-		\hspace{1em} +  \sum_{i=1}^{w} \tilde C(t-(w-1),t+(w-1)+i)
-		\end{array}
-	\end{dmath*} for all $t=1,\ldots, T$ and $w=1,\ldots,\min(w,t)$.
-	
-	$O(TW)$ is achievable using the following recursion for the unnormalized quantity $\tilde
-	C(f,t) = C(f,t)(t-f)$ (for $f+1 \le t-1$)
+	\end{dmath*} 
+for all $i,j \in S$ (the parameter $\Omega$ control the balance of
+positive and negative values). Direct computation using the definition
+takes $O(TW^3)$ time. We can improve this to
+$O(TW)$ by using the following recursion (assume that $f+1 \le t-1$):
 	\begin{dmath*}
-		\tilde C(f,t) ~=~ \tilde C(f+1,t) + \tilde C(f,t-1) - \tilde C(f+1,t-1) + \hat S(f,t) + \hat S(t,f).
-	\end{dmath*} (having first pre-computed $\tilde{C}$ for each $1 \le f \le t \le T$). This can be better understood with the following illustration (showing calculations of $\tilde{C}(f,t)$ in respect of the domain of $S$, where the middle cell $\Upsilon = \tilde{C}(f+1,t-1)$)
+		\tilde C(f,t) = \tilde C(f+1,t) + \tilde C(f,t-1) - \tilde C(f+1,t-1) + \hat S_{ft} + \hat S_{tf}.
+	\end{dmath*} 
+The recursion implies that the cost of a track of length $L=t-f+1$ can
+be calculated from the costs of shorter tracks using a constant number
+of operations. The following picture (where the middle cell
+corresponds to $\Upsilon = \tilde{C}(f+1,t-1)$) provides an
+illustration:
 	
 	\begin{center}
 		\begin{tikzpicture}
@@ -345,121 +368,125 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 		
 		\end{tikzpicture}.
 	\end{center} 
-	Clearly, the solutions of $\tilde{C}$ overlap in $S$.
-	The final cost matrix is normalized by width and incentive bias
-\[
-C = \hat N_\Omega \left( \frac{ \tilde C_{ft} }{ t-f+1 } \right)
-\] for all $t,f \in \tilde C$.
+
+%	The final cost matrix is normalized by width and incentive bias
+%\[
+%C(f,t) \leftarrow \hat N_\Omega \left( \frac{ C(f,t) }{ t-f+1 } \right)
+%\] for all $t,f \in \tilde C$.
 	
 	\paragraph{Symmetry}	
-	
-	A common feature on dance music tracks is partial mirror-symmetry.
-	
-	Let \begin{dmath*}
-		\Lambda( f,t,d ) = \left\{~ 
-		S(f+d-1,f), S(f+d, f+1), S(f+d+1, f+2),\ldots, S(t, t-d-1)
-		~ \right\} 
-	\end{dmath*}be the diagonal $d$ from track 
-	
-	\[
-	\hat t= S(f,f+1,\ldots,t,f,f+1,\ldots,t).
-	\] For each diagonal in one triangle/half of $\hat t$ (it is a symmetric matrix) we want to compare each element against its mirror counterpart. `Symmetric' pairs that contain the same sign are multiplied together. Pairs that have a different sign are set to $0$.
 
-	Let the symmetry cost matrix
-	\begin{dmath*} C = \frac{\hat N_\Omega(~ \tilde C(f, t, \Omega, \delta)~)}{(t-f+1)}\end{dmath*} using the following definition for $\tilde C$
-	\begin{dmath*}\tilde C=	\sum_{d=1}^{t-f+1} 
-		\sum_{i=1}^{|\Lambda( f,t,d )|} \tilde{s}(\Lambda( f,t,d )_i,\Lambda( f,t,d )_{ |\Lambda( f,t,d )|-i-1 })
-	\end{dmath*}  where
-\begin{dmath*}
-	\tilde{s}(p,q) = 
-	\left\{
-	\begin{array}{lr}
-		0  & : ~\mathrm{sign}( p ) \ne \mathrm{sign}( q )   \\
-		\delta( p, q, \Omega ) & : \mbox{~otherwise.}  \\
-	\end{array}
-	\right.
-\end{dmath*}
-	We will consider $3$ types of symmetry cost matrix. The \textit{standard symmetry} version where pair evaluator 
-		\begin{dmath*}\delta( p,q, \Omega ) = \left\{
-				\begin{array}{lr}
-					\Omega  p q   & : \mathrm{sign}(p) \ge 0 \text{~and~} \mathrm{sign}(q) \ge 0   \\
-					 (1-\Omega)  p q  & : \mathrm{sign}(p) < 0 \text{~and~} \mathrm{sign}(q) < 0 \\
-					 0 & :  \mbox{~otherwise.}
-				\end{array}
-				\right.
-		\end{dmath*}
-		
-		and \textit{symmetry summation} is
-		\begin{dmath*}\hat \delta( p,q, \Omega ) = \left\{
-			\begin{array}{lr}
-			\Omega \frac{1}{2} ( p + q )	  & :  \mathrm{sign}(p) \ge 0 \text{~and~} \mathrm{sign}(q) \ge 0   \\
-			 (1-\Omega) \frac{1}{2} ( p + q ) & : 	\mathrm{sign}(p) < 0 \text{~and~} \mathrm{sign}(q) < 0 \\
-			 0 & :  \mbox{~otherwise.}
-			\end{array}
-			\right.
-	\end{dmath*}
-	
-	Finally, the symmetry change matrix is defined where $\hat \delta$ is the same as the \textit{symmetry summation}, the width normalization is removed and the inner sum of the definition becomes the first order differences. For the sake of brevity we have omitted the dynamic programming formulations which run in $O(TW^2)$ time but they have been implemented in code and are available on-line (see Section~\ref{sec:materials}). This is also the case for all the following cost matrices.
-	
-	\paragraph{Static Contiguity}
-	
-	Horizontal contiguous traces in $S$ indicate that the track is self-similar (low value $\le 0$) or self-dissimilar ($\ge 0$) due to repetition with the additional information that it is not evolving with respect of time either. If a given tile is the same as a set of contiguous tiles following it, we can assume that there is some static contiguous region. We define contiguity parameter $\rho$ to indicate how many contiguous tiles are required. Let 
-\begin{align*}
-\begin{array}{ll}
-\Gamma( f,t,h ) &= S(~ f + h - 1,~ \tilde{i}(f, t, h) ~)
-\end{array}
-\end{align*} define the future self-similarity trace for track between $f$ and $f+t-1$ and from time horizon $h$ where 
-\begin{dmath*}
-\tilde{i}(~f,t,h~) =\\ \{~ f + h - 1, f + h, \ldots, t-h-1 ~ \}.
-\end{dmath*}
-We define the future contiguity quantity $C$
-	
-\begin{dmath*}  C(f, t)  =  
-\hat N_\Omega \left( \frac{ \tilde	\sum_{h=1}^{t-f+1} 
-	\sum_{i=\rho}^{|\Gamma( f,t,h )|} \tilde{x}\left( \Gamma( f,t,i )_{\tilde{h}} \right) }{t-f+1}  \right)
-\end{dmath*}  where  
 
+	
+A common feature on dance music tracks is partial mirror-symmetry. We build a cost matrix to capture that.
+	
+Let $\Lambda(f,t,d)$ be the diagonal parallel to the minor diagonal
+of $S$ and at the `distance' $d$ from it. We represent it as an ordered set
 \begin{dmath*}
-\tilde{h} = \{i-\rho,i-\rho+1, \ldots,i \},
-\end{dmath*}
+\Lambda(f,t,d)
+ = \langle S_{f+d,f}, S_{f+d+1, f+1}, S_{f+d+2, f+2},\ldots, S_{t, t-d}\rangle.
+	\end{dmath*} 
+For each such diagonal in one triangle/half of $S$ we want to compare
+each element against its mirror counterpart. For an ordered set
+$\Lambda$ we define its cost as
 \begin{dmath*}
-\tilde{x}(v) = { \left\{ 
-	\begin{array}{lr}
-		  \tilde \delta( v, \Omega ) & : \mathrm{range}( \tilde{n}(v) ) = 0  \\
-		0 & : \mbox{~otherwise,} \\
-	\end{array}
-	\right.}
+\bar C(f,t,\Omega)(\Lambda)=\sum_{i=1}^{|\Lambda|}\delta(\Lambda_i,\Lambda_{|\Lambda|-i+1},\Omega)
 \end{dmath*}
-\begin{dmath*}
-	\tilde{n}(v) = \{~ sign(v_1), sign(v_2),\ldots, sign(v_{|v|}) ~\},
-\end{dmath*}
-\begin{dmath*}\tilde \delta( v, \Omega ) = \frac{1}{|v|} \sum^{|v|}_{x=1}
-		\tilde{f}(\Omega, v) 
-\end{dmath*}	
-	and
-	\begin{dmath*}
-	\tilde{f}(\Omega, v) = \left\{ 
-	\begin{array}{lr}
-		\Omega \cdot v_x &:  ~\mathrm{sign}(v_1)=1 \\
-		(1-\Omega) \cdot v_x &: \mbox{~otherwise.}    \\
-	\end{array}
-	\right.
-\end{dmath*}
-	We will also create a past contiguity cost matrix where we replace $\Gamma( f,t,h )$ with a version 
-
-\begin{align*}
-\begin{array}{ll}
-\hat{\Gamma}( f,t,h ) &= S(~\hat{i}(f, t, h), f + h - 1~),\\
-\end{array}
-\end{align*}
 where
 \begin{dmath*}
-	\hat{i}(~f, t, h~) =\\ \{~ t - h - 1, t - h, \ldots, f+h-1 ) ~\}
+\delta(p,q,\Omega) = 
+\left\{\begin{array}{ll}
+0,  & \text{if~}\sign( p ) \ne \sign( q ),\\
+\Omega pq,   & \text{if~}  \sign(p) \ge 0 \text{~and~} \sign(q) \ge 0 ,  \\
+(1-\Omega)pq,  & \text{if~} \sign(p) < 0 \text{~and~} \sign(q) < 0, \\
+\end{array}\right.
+\end{dmath*}
+i.e., `symmetric' pairs that have the same sign make positive
+contributions and pairs that have a different sign contribute $0$ to
+the cost. We define the cost matrix as
+\begin{dmath*}
+\tilde C(f,t,\Omega) = \sum_{d=1}^{t-f+1}\bar C(\Lambda(f,t,d,\Omega))
+\end{dmath*}
+Clearly, one can reuse the cost for shorter intervals to calculate the
+cost of longer ones, namely, $\tilde C_{f+1,t-1}$ can be used to
+calculate $\tilde C_{ft}$ this saving computation time.
+
+	
+%	Finally, the symmetry change matrix is defined where $\hat \delta$ is the same as the \textit{symmetry summation}, the width normalization is removed and the inner sum of the definition becomes the first order differences. For the sake of brevity we have omitted the dynamic programming formulations which run in $O(TW^2)$ time but they have been implemented in code and are available on-line (see Section~\ref{sec:materials}). This is also the case for all the following cost matrices.
+	
+	\paragraph{Static Contiguity}
+
+% check my writing; I am not sure I understood you correctly
+	
+Horizontal contiguous traces in $S$ indicate that the track is
+self-similar (negative values) or self-dissimilar (positive values)
+due to repetition. If a given tile is the same as a set of contiguous
+tiles following it, then there is some static contiguous region in the
+show.
+
+Let $\Gamma(f,t,h)$ be the horizontal segment in the matrix $S$
+showing the similarity of tile $f+h-1$ to `future' tiles $f+h,
+f+h+1,\ldots, t$. We represent is as an ordered set
+\begin{dmath*}
+\Gamma(f,t,h) =  \langle S_{f+h-1,f+h-1}, S_{f+h-1,f+h}, S_{f+h-1,f+h+1},\ldots,\\
+S_{f+h-1,t}\rangle.
+\end{dmath*} 
+We define the cost of an ordered set $\Gamma=\langle
+\Gamma_1,\Gamma_2,\ldots,\Gamma_{|\Gamma|}\rangle$ as
+$$
+\bar C(\Gamma,\Omega)=\sum_{i=\rho}^{|\Gamma|}\hat C(\Gamma^i,\Omega),
+$$ 
+where $\rho$ is a parameter indicating the minimum number of
+contiguous tiles required, $\Gamma^i=\langle
+\Gamma_1,\Gamma_2,\ldots,\Gamma_i\rangle$ and
+\begin{dmath*}
+\hat C(\Gamma^i,\Omega)=\\ \left\{
+\begin{array}{ll}
+\frac{1}{i}\sum_{j=1}^i\tilde{f}(\Gamma_j,\Omega),&
+ \text{~if the numbers~} \\
+& ~\sign{G_1},\ldots,\sign{G_i}\\
+& \text{~are the same},\\
+0, & \text{~otherwise},
+\end{array}
+\right.
+\end{dmath*}
+where
+\begin{dmath*}
+\tilde{f}(v,\Omega) = \left\{ 
+	\begin{array}{lr}
+		\Omega v, & \text{~if~} \sign v=1 \\
+		(1-\Omega) v, & \mbox{~otherwise.}    \\
+	\end{array}
+	\right.
+\end{dmath*}
+The cost of an interval is defined as
+\begin{dmath*}
+\tilde C(f,t,\Omega) = \sum_{h=1}^{t-f}\bar C(f,t,\Omega)\enspace.
 \end{dmath*}
 
-	which traces past self-similarity from the end of the track being fitted.
+
+
+%	We will also create a past contiguity cost matrix where we replace $\Gamma( f,t,h )$ with a version 
+
+%\begin{align*}
+%\begin{array}{ll}
+%\hat{\Gamma}( f,t,h ) &= S(~\hat{i}(f, t, h), f + h - 1~),\\
+%\end{array}
+%\end{align*}
+%where
+%\begin{dmath*}
+%	\hat{i}(~f, t, h~) =\\ \{~ t - h - 1, t - h, \ldots, f+h-1 ) ~\}
+%\end{dmath*}
+
+%	which traces past self-similarity from the end of the track being fitted.
+
+Again it is possible to reuse values $\tilde C(f,t,\Omega)$ from
+shorter intervals to save calculation time for longer intervals.
+
 	
 	\paragraph{Evolutionary Contiguity}
+
+% rewrite this along the lines of what I said before.
 	
 	Any diagonal traces in $S$ that are parallel to the main diagonal are partial copies of the track in the future which evolve in respect of time. Evolutionary Contiguity is a cost matrix which compares all adjacent pairs on the diagonals in $\hat t$, using the comparator $\delta( p,q, \Omega )$ from the standard symmetry cost function and multiplies those values by the time horizon. All the values are summed and normalized by the track width squared. 
 	
@@ -470,32 +497,49 @@ where
 		\sum_{i=2}^{|\Lambda( f,t,d )|}  \delta( \kappa_{i}, \kappa_{i-1}, \Omega ) \cdot d
 	}{(t-f+1)^2}\right)
 	\end{dmath*}  where  $\kappa_i=\Lambda( f,t,i )$. As before $\tilde C$ is normalized by track width and incentive bias.
-	
+
+%This formula does not make sense to me: what is raised to power 2??
+
 	\paragraph{Gaussian}
 	Let \[
 	G( \varpi, N )_{tw} = e^{ - \frac{1}{2} \frac{\varpi n}{ \frac{1}{2} W}^2  }
 	\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularising the others and for use on its own for comparison against a `naive' competitor. Increasing values of $\varpi$ will tighten up the Gaussian although after experimentation we observed that $1$ was always the best value and stuck with that.
 	
 	\paragraph{Normalization}
-	
-	We define $N(C,\Omega)$ as a normalization function for cost matrix $C$ and incentive bias $\Omega$. It will return a $[-1,1]$ interval when $\Omega=0.5$, $[-1,0]$ when $\Omega=1$  and $[0, 1]$ when $\Omega=0$ and will produce a convex interpolation for other values.
-	
-	Let 
+
+All cost matrices are normalized in the following manner. First we
+divide $\tilde C(f,t,\Omega)$ by the track length,
+$$
+\tilde C(f,t,\Omega)\leftarrow \frac{\tilde C(f,t,\Omega)}{t-f+1}.
+$$ 
+
+Then we scale and shift $C$ according to the value of $\Omega$. If
+$\Omega=0$, we want the resulting values to fill the interval $[0,1]$,
+if $\Omega=0.5$ we want the resulting values to fill the interval $[-1,1]$,
+and if $\Omega=1$ we want the resulting values to fill the interval $[-1,0]$.
+For intermediate values of $\Omega$ we want a linear combination.
+
+This is achieved by applying the normalization function to each element:
 	\begin{dmath*}
-		\hat N(C,\Omega) = \left( \frac{ C_{ij} - \min \left( C_{ij} \right) }{ \max \left( C_{ij} \right) - \min \left( C_{ij} \right) } \cdot \hat h  \right)-s
+		\hat N(x,\Omega) = \frac{ x - \min_{ft}C(f,t,\Omega) }{ \max_{ft} C(f,t,\Omega) - \min_{ft} C(f,t,\Omega)} \hat h_\Omega -s_\Omega,
 	\end{dmath*}
-	for all $i,j \in C$ where interval size $\hat h$ = $2-\left( 2\cdot|0.5-\Omega| \right)$ and 
-	
+where $\hat h_w$ = $2-2|0.5-\Omega|$ and
 	\begin{dmath*}
-		s= { \left\{
+		s_\Omega= { \left\{
 			\begin{array}{ll}
-				1-2 \cdot |0.5-\Omega| & \mbox{~if~}\Omega < 0.5   \\
+				1-2(0.5-\Omega) & \mbox{~if~}\Omega < 0.5,   \\
 				1 & \mbox{~otherwise~}.  \\
 			\end{array}
 			\right.}
-	\end{dmath*}
+\end{dmath*}
+We let
+\begin{dmath*}
+C(f,t,\Omega)=N(\tilde C(f,t,\Omega),\Omega)
+\end{dmath*}
+for all $f$ and $t$.
+
 	
-	Note that to save space we will use the following notation $\hat N(C, \Omega)=\hat N_\Omega(C)$.
+%	Note that to save space we will use the following notation $\hat N(C, \Omega)=\hat N_\Omega(C)$.
 	
 	
 	\paragraph{Mixing Cost Functions}

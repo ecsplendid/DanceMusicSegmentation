@@ -35,27 +35,17 @@ J.~Foote and M.~Cooper, ``Visualizing musical structure and rhythm via
   self-similarity,'' in {\em Proceedings of the 2001 International Computer
   Music Conference}, pp.~419--422, 2001.
 
-\bibitem{goodwin2003audio}
-M.~M. Goodwin and J.~Laroche, ``Audio segmentation by feature-space clustering
-  using linear discriminant analysis and dynamic programming,'' in {\em
-  Applications of Signal Processing to Audio and Acoustics, 2003 IEEE Workshop
-  on.}, pp.~131--134, IEEE, 2003.
-
 \bibitem{goodwin2004dynamic}
 M.~M. Goodwin and J.~Laroche, ``A dynamic programming approach to audio
   segmentation and speech/music discrimination,'' in {\em Acoustics, Speech,
   and Signal Processing, 2004. Proceedings.(ICASSP'04). IEEE International
   Conference on}, vol.~4, pp.~iv--309, IEEE, 2004.
 
-\bibitem{peeters2002toward}
-G.~Peeters, A.~La~Burthe, and X.~Rodet, ``Toward automatic music audio summary
-  generation from signal analysis,'' in {\em Proc. of ISMIR}, pp.~94--100,
-  2002.
-
-\bibitem{peeters2004deriving}
-G.~Peeters, ``Deriving musical structures from signal analysis for music audio
-  summary generation:“sequence” and “state” approach,'' {\em Computer
-  Music Modeling and Retrieval}, pp.~169--185, 2004.
+\bibitem{goodwin2003audio}
+M.~M. Goodwin and J.~Laroche, ``Audio segmentation by feature-space clustering
+  using linear discriminant analysis and dynamic programming,'' in {\em
+  Applications of Signal Processing to Audio and Acoustics, 2003 IEEE Workshop
+  on.}, pp.~131--134, IEEE, 2003.
 
 \bibitem{peiszer2008automatic}
 E.~Peiszer, T.~Lidy, and A.~Rauber, ``Automatic audio segmentation: Segment

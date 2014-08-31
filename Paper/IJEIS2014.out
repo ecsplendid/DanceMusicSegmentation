@@ -1,25 +1,21 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Corpus}{}% 2
-\BOOKMARK [1][-]{section.3}{Human Accuracy}{}% 3
-\BOOKMARK [1][-]{section.4}{Evaluation Criteria}{}% 4
-\BOOKMARK [1][-]{section.5}{Preprocessing}{}% 5
-\BOOKMARK [1][-]{section.6}{Feature Extraction}{}% 6
-\BOOKMARK [1][-]{section.7}{Cost Matrices}{}% 7
-\BOOKMARK [2][-]{subsection.7.1}{Normalization}{section.7}% 8
-\BOOKMARK [2][-]{subsection.7.2}{Summation}{section.7}% 9
-\BOOKMARK [2][-]{subsection.7.3}{Symmetry}{section.7}% 10
-\BOOKMARK [2][-]{subsection.7.4}{Static Contiguity}{section.7}% 11
-\BOOKMARK [2][-]{subsection.7.5}{Evolutionary Contiguity}{section.7}% 12
-\BOOKMARK [2][-]{subsection.7.6}{Gaussian}{section.7}% 13
-\BOOKMARK [2][-]{subsection.7.7}{Mixing Cost Functions}{section.7}% 14
-\BOOKMARK [1][-]{section.8}{Computing Best Segmentation}{}% 15
-\BOOKMARK [1][-]{section.9}{Confidence Intervals}{}% 16
-\BOOKMARK [2][-]{subsection.9.1}{Posterior Marginal of Song Boundary}{section.9}% 17
-\BOOKMARK [2][-]{subsection.9.2}{Posterior Marginal of Song Position}{section.9}% 18
-\BOOKMARK [2][-]{subsection.9.3}{Track Index Confidence}{section.9}% 19
-\BOOKMARK [2][-]{subsection.9.4}{Track Time Confidence}{section.9}% 20
-\BOOKMARK [1][-]{section.10}{Methodology}{}% 21
-\BOOKMARK [1][-]{section.11}{Materials}{}% 22
-\BOOKMARK [1][-]{section.12}{Results}{}% 23
-\BOOKMARK [1][-]{section.13}{Summary}{}% 24
-\BOOKMARK [1][-]{section.14}{Acknowledgements}{}% 25
+\BOOKMARK [2][-]{subsection.1.1}{Literature Review}{section.1}% 2
+\BOOKMARK [1][-]{section.2}{Corpus}{}% 3
+\BOOKMARK [1][-]{section.3}{Human Accuracy}{}% 4
+\BOOKMARK [1][-]{section.4}{Evaluation Criteria}{}% 5
+\BOOKMARK [1][-]{section.5}{Data Handling}{}% 6
+\BOOKMARK [2][-]{subsection.5.1}{Preprocessing}{section.5}% 7
+\BOOKMARK [2][-]{subsection.5.2}{Feature Extraction}{section.5}% 8
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Music}{subsection.5.2}% 9
+\BOOKMARK [3][-]{subsubsection.5.2.2}{Self Similarity}{subsection.5.2}% 10
+\BOOKMARK [1][-]{section.6}{Computing Best Segmentation}{}% 11
+\BOOKMARK [1][-]{section.7}{Confidence Intervals}{}% 12
+\BOOKMARK [2][-]{subsection.7.1}{Posterior Marginal of Song Boundary}{section.7}% 13
+\BOOKMARK [2][-]{subsection.7.2}{Posterior Marginal of Song Position}{section.7}% 14
+\BOOKMARK [2][-]{subsection.7.3}{Track Index Confidence}{section.7}% 15
+\BOOKMARK [2][-]{subsection.7.4}{Track Time Confidence}{section.7}% 16
+\BOOKMARK [1][-]{section.8}{Methodology}{}% 17
+\BOOKMARK [1][-]{section.9}{Materials}{}% 18
+\BOOKMARK [1][-]{section.10}{Results}{}% 19
+\BOOKMARK [1][-]{section.11}{Summary}{}% 20
+\BOOKMARK [1][-]{section.12}{Acknowledgements}{}% 21

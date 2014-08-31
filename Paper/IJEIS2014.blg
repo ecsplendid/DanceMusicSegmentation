@@ -1,11 +1,6 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: IJEIS2014.aux
 The style file: ieeetr.bst
 Database file #1: bib/references.bib
-I was expecting a `,' or a `}'---line 45 of file bib/references.bib
- :      
- :      % NOTE = ""
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
 Database file #2: bib/refs.bib
 Repeated entry---line 4 of file bib/refs.bib
  : @inproceedings{tzanetakis1999framework
@@ -55,16 +50,10 @@ Repeated entry---line 172 of file bib/refs.bib
  : @inproceedings{goodwin2003audio
  :                                ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 202 of file bib/refs.bib
- : @article{peeters2004deriving
- :                             ,
-I'm skipping whatever remains of this entry
 Repeated entry---line 258 of file bib/refs.bib
  : @article{peiszer2008automatic
  :                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 384 of file bib/refs.bib
- : @inproceedings{peeters2002toward
- :                                 ,
-I'm skipping whatever remains of this entry
-(There were 16 error messages)
+Warning--I didn't find a database entry for "eckmann1987recurrence"
+Warning--I didn't find a database entry for "hauptmann1998story"
+(There were 13 error messages)
