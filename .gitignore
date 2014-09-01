@@ -220,3 +220,6 @@ Matlab/results/results_cleaned
 Matlab/results/mars_results/results.txt
 Matlab/normalize_contigtemp.m
 *.cue
+Paper/IJEIS2014.aux
+Paper/IJEIS2014.aux
+*.gz

@@ -1,5 +1,5 @@
 function [SC] = getcost_contigdiag1 ( ...
-    C, W, min_w, costdags_incentivebalance) 
+    T,C, W, min_w, costdags_incentivebalance) 
 %getcost_contigdiag1 "Evolving self-similarity" dynamic programming
 %implementation of getcost_contigdiag
 

@@ -1,5 +1,5 @@
 function [SC] = getcost_contigstatic(...
-    C, W, min_w, ...
+    T, C, W, min_w, ...
     costcontig_incentivebalance, window_size, future ) 
  %getcost_contigstatic uses a copy of the dynamic programming
  %implementation used in getcost_sum3. What this does is almost identical 
@@ -13,10 +13,8 @@ function [SC] = getcost_contigstatic(...
 
 %%
 
-T = size( C, 1 );
-
 SS = getmatrix_selfsim( C, W, future );
-CF = inf( T, W-window_size-1 );
+CF = ones( T, W-window_size-1 );
 
 % transform the self similarity matrix with the contiguity information
 for t = 1:T
@@ -34,16 +32,20 @@ for t = 1:T
         same_sign = range( sign( vals ) ) == 0;
         
         if( ~same_sign )
+           
             score = 0;
+            
         elseif ( sign( vals(end) ) == -1)
 
            % score =  vals(end) / length(vals);
-           score =  mean(vals);
-            
+           %score =  mean(vals);
+           score = mean(vals);
+           
             score = score * (1-costcontig_incentivebalance);
         else
            %score =  vals(end) / length(vals);
-            score =  mean(vals);
+           % score =  mean(vals);
+            score = mean(vals);
             
             score = score * (costcontig_incentivebalance);
         end
@@ -78,12 +80,13 @@ for t=1:T
         
         score = score + sum( CF( c_ind, window_size:w ) );
         
-        SC( t_ind, w+window_size+1 ) = score / w;
+        SC( t_ind, w ) = score/w;
     end
 end
 
-
 SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
+
+SC(isinf(SC)) = max(max((~isinf(SC))));
 
 SC(:,1:min_w-1 )=inf;
 

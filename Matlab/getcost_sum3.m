@@ -1,9 +1,9 @@
-function [SC] = getcost_sum3( C, W, min_w, costsum_incentivebalance ) 
+function [SC] = getcost_sum3( T, C, W, min_w, costsum_incentivebalance ) 
 % getcost_sum3 dynamic programming implementation of getcost_sum2 which
 % runs in O(TW)
 
 %%
-T = size( C, 1 );
+
 SC = inf( T, W );
 
 SF = getmatrix_selfsim( C, W, 1 );

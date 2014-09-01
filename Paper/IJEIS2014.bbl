@@ -10,6 +10,10 @@ G.~Tzanetakis and F.~Cook, ``A framework for audio analysis based on
   classification and temporal segmentation,'' in {\em EUROMICRO Conference,
   1999. Proceedings. 25th}, vol.~2, pp.~61--67, IEEE, 1999.
 
+\bibitem{eckmann1987recurrence}
+J.-P. Eckmann, S.~O. Kamphorst, and D.~Ruelle, ``Recurrence plots of dynamical
+  systems,'' {\em EPL (Europhysics Letters)}, vol.~4, no.~9, p.~973, 1987.
+
 \bibitem{foote1999visualizing}
 J.~Foote, ``Visualizing music and audio using self-similarity,'' in {\em
   Proceedings of the seventh ACM international conference on Multimedia (Part

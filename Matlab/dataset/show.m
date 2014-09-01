@@ -18,7 +18,7 @@ classdef show
         function sw = show(varargin)
           sw.file = varargin{1};
           sw.indfile = varargin{2};
-          sw.indfile
+          sw.indfile;
           sw.indexes = dlmread(varargin{2});
           
           if nargin>2

@@ -11,6 +11,8 @@ function [SC] = getcost_contigstatic2(...
  %runs in O(2T(1/2(W^2)))
  % future=1 use future self similarity, 0 means use past self similarity
 
+ %%% trs,310814, use getcost_contigstatic for now, this one is out of date
+ 
 %%
 
 T = size( C, 1 );

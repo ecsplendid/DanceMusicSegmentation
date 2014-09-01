@@ -1,9 +1,9 @@
-function [L best_begin] = find_tracks( M, SC )
+function [L, best_begin] = find_tracks( M, SC )
 
 % number of tracks we want to find
 % cost matrix(t,j) cost of song width j starting at time t
 
-[T W] = size(SC);
+[T, W] = size(SC);
 
 V = -inf( M, T );
 P = nan( M, T ); % points to end of previous song in best partition
@@ -20,7 +20,7 @@ for m=2:M
        %s is the end of the previous track (m-1)
        s = max( m-1, t-W ):t-1;
        
-       [V(m,t) ind] = min( V(m-1,s) + SC((t-s-1)*T+s+1) );
+       [V(m,t), ind] = min( V(m-1,s) + SC((t-s-1)*T+s+1) );
        P(m,t) = s(ind);
    end
    

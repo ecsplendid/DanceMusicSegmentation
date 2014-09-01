@@ -1,38 +1,13 @@
 
 if( exist('execute_config') && execute_config ), config_settings, end;
 
-show = shows{which_shows(s)};
+global secondsPerTile;
 
-indexes = show.indexes; 
-chops = show.chops;
-tic;
-
-audio_low = audioread( show.file );
-
-global showname;
-
-showname = strrep(show.file, '_', ' ');
-showname = strrep(showname, 'examples/', '');
-showname = strrep(showname, '.wav', '');
-
-fprintf( 'Current Show: %s\n', show.file );
-
-chopper =  true( size( audio_low ) ) ;
-
-    % chop out the intros from the show
-    for ch=1:size( chops, 1 )
-
-        %get from and to in samples (stored in minutes)
-        from = max(1,ceil(chops(ch,1)*sampleRate));
-        to = ceil(chops(ch,2)*sampleRate);
-
-        chopper( from:to ) = 0;
-    end
-
-    audio_low = audio_low(chopper);
-    clear chopper;
+[show, indexes, audio_low, showname] = get_show(s);
     
-    M = length(indexes);
+config_settings;
+
+M = length(indexes);
 
     %SC == song cost matrix, C = 1-cosine matrix, W=max trach width in
     %tiles w=min track width in tiles
