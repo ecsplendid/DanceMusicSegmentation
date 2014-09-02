@@ -2,6 +2,9 @@ function [c] = config_getdefaultsegcalculation()
 
 c = segmentation_configuration();
 
+% 1== github, 2==denis, 3==lindmik
+c.dataset = 2;
+
 % config_optimdrive this function will get a configuration
 % which has been optimized to calculate the best number of 
 % segments for a given radio show

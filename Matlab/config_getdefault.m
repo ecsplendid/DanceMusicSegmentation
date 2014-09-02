@@ -2,6 +2,9 @@ function [c] = config_getdefault()
 
 c = segmentation_configuration();
 
+% 1== github, 2==denis, 3==lindmik
+c.dataset = 2;
+
 % Feature Extraction Parameters
 
 c.sampleRate = 4000;
