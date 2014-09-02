@@ -1,36 +1,26 @@
-function [heuristic_score, mean_score, predictions_timespace, ...
-    predictions, ...
-    matched_tracks, avg_shift] = compute_trackplacement( ...
-    SC, space, indexes, config, showname, T, C2, tileWidthSecs ) 
+function results = compute_trackplacement( ...
+    config, show, results  ) 
 
     % compute the placement of the tracks and evaulate our performance
+    [~, best_begin] = find_tracks( length(show.indexes)+1, show.CostMatrix );
 
-    [~, best_begin] = find_tracks( length(indexes)+1, SC );
-
-    predictions = best_begin( 2:end );
-
-    predictions_timespace = space( predictions );
+    results.predictions = best_begin( 2:end );
+    results.predictions_timespace = show.space( results.predictions );
 
     % we shift the solutions in time space
-    predictions_timespace = predictions_timespace + config.solution_shift;
+    results.predictions_timespace = results.predictions_timespace + ...
+        config.solution_shift;
 
-    [matched_tracks] = evaluate_performance( ...
-                        indexes, predictions_timespace);
-    avg_shift = median((predictions_timespace-indexes'));
+    results.matched_tracks = evaluate_performance( ...
+                        show.indexes, results.predictions_timespace);
+    results.avg_shift = median((results.predictions_timespace-show.indexes'));
     
-    mean_score = mean(abs(predictions_timespace - indexes'));
-    heuristic_score = get_heuristicaccuracy( ...
-                        indexes, predictions_timespace );
+    results.mean_score = mean(abs(results.predictions_timespace - show.indexes'));
+    results.heuristic_score = get_heuristicaccuracy( ...
+                       show.indexes, results.predictions_timespace );
     
     if( config.drawSimMat==1 )
        
-        visualize_costmatrix( ...
-            T, config, showname, indexes, predictions, ...
-            space, SC, ...
-            mean_score, heuristic_score, avg_shift, C2, ...
-            tileWidthSecs );
-        
+        visualize_costmatrix( show, config, results );
     end
-    
-    
 end

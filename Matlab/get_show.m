@@ -1,4 +1,4 @@
-function [indexes, audio_low, showname] = get_show(s, sampleRate)
+function [this_show] = get_show(s, sampleRate)
 
     % note, shows is initialised from calling /data=set/local_testset.m
     % execute that before everything else. I'm sorry it has to be like this
@@ -7,19 +7,30 @@ function [indexes, audio_low, showname] = get_show(s, sampleRate)
     shows = get_allshows();
     
     this_show = shows{s};
+    this_show.number = s;
 
-    indexes = this_show.indexes; 
     chops = this_show.chops;
 
     tic;
 
-    audio_low = audioread( this_show.file );
+    this_show.audio = audioread( this_show.file );
 
+    % some sanitization of the github test set file names
     showname = strrep(this_show.file, '_', ' ');
     showname = strrep(showname, 'examples/', '');
     showname = strrep(showname, '.wav', '');
-
-    chopper =  true( size( audio_low ) ) ;
+    showname = strrep(showname, '01-', '');
+    showname = strrep(showname, 'armin van buuren - ', '');
+    showname = strrep(showname, ' - music for balearic people', '');
+    showname = strrep(showname, 'Above and Beyond - ', '');
+    showname = strrep(showname, ' (di.fm)', '');
+    showname = strrep(showname, '-tt', '');
+    showname = strrep(showname, '22-04-2010', '');
+    showname = strrep(showname, '26-03-2010', '');
+    
+    this_show.showname = showname;
+    
+    chopper =  true( size( this_show.audio ) ) ;
 
     % chop out the intros from the show
     for ch=1:size( chops, 1 )
@@ -31,6 +42,6 @@ function [indexes, audio_low, showname] = get_show(s, sampleRate)
         chopper( from:to ) = 0;
     end
 
-    audio_low = audio_low(chopper);
+    this_show.audio = this_show.audio(chopper);
     clear chopper;
 end

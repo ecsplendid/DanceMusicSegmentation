@@ -1,12 +1,15 @@
 function [SC] = getcost_symmetry3 (...
-    T,C, W, min_w, ...
-    incentivebalance ) 
+    show, config ) 
  % getcost_symmetry3 dynamic programming implementation of getcost_symmetry
  
 %%
 
-T = size( C, 1 );
-SC = inf( T, W );
+T = show.T;
+W = show.W;
+SC = inf( show.T, W );
+C = show.CosineMatrix;
+
+incentivebalance = config.costsymmetry_incentivebalance;
 
 % evens
 for t = 1:T
@@ -86,7 +89,6 @@ for t = 1:T
  
     end
 end
-
 
 % now we have to build up the triangle 1:W iteratively
 for i=1:2:W-1
@@ -175,6 +177,6 @@ for i=1:2:W-1
 end
 
 SC = normalize_byincentivebias(SC, incentivebalance);
-SC(:,1:min_w-1 )=inf;
+SC(:,1:show.w-1 )=inf;
 
 end

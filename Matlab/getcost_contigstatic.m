@@ -1,6 +1,5 @@
 function [SC] = getcost_contigstatic(...
-    T, C, W, min_w, ...
-    costcontig_incentivebalance, window_size, future ) 
+    show, config, future ) 
  %getcost_contigstatic uses a copy of the dynamic programming
  %implementation used in getcost_sum3. What this does is almost identical 
  %other than that it only considers contigous tiles that are <0 or >0
@@ -12,6 +11,17 @@ function [SC] = getcost_contigstatic(...
  % future=1 use future self similarity, 0 means use past self similarity
 
 %%
+
+C = show.CosineMatrix;
+T = show.T;
+W = show.W;
+window_size = config.contig_windowsize;
+
+if(future == 1)
+    costcontig_incentivebalance = config.costcontigfuture_incentivebalance;
+else
+    costcontig_incentivebalance = config.costcontigpast_incentivebalance;
+end
 
 SS = getmatrix_selfsim( C, W, future );
 CF = ones( T, W-window_size-1 );
@@ -88,7 +98,7 @@ SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
 
 SC(isinf(SC)) = max(max((~isinf(SC))));
 
-SC(:,1:min_w-1 )=inf;
+SC(:,1:show.w-1 )=inf;
 
 
 end

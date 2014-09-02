@@ -34,8 +34,8 @@ function [rs] = config_optimdrivebounds_lowerbounds()
     rs(15) = -3;
     % 16: minTrackLength /in {80,121,...,180}
     rs(16) = 80;
-    % 17: maxExpectedTrackWidth /in {8*60,...,15*60}
-    rs(17) = 8*60;
+    % 17: maxExpectedTrackWidth /in {10*60,...,15*60}
+    rs(17) = 10*60;
     % 18: bandwidth /in {1,2,...,15}
     rs(18) = 1;
     % 19: lowPassFilter /in {800,...,1950}

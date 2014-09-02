@@ -1,12 +1,9 @@
 function visualize_costmatrix( ...
-    T, cfg, showname, indexes, predictions, ...
-            space, SC, ...
-            mean_score, heuristic_score, avg_shift, C, ...
-            tileWidthSecs )
+    show, cfg, results )
 
 figure( 2 );
 
-imagesc(SC);
+imagesc(show.CostMatrix);
 title(sprintf('Cost Matrix @ T=%.2fs [SY:%.1f@i%.1f CP:%.1f@i%.1f CF:%.1f@i%.1f SU:%.1f@i%.1f GA:%.1f@i%.1f CE:%.1f@i%.1f] CONT%d \n%s\nmean=%.1f heuristic=%.1f meandiff=%.1f shift=%.1f\nWhite=ACTUAL Black=PREDICTED',...
     cfg.secondsPerTile,  ...
     cfg.use_costsymmetry, cfg.costsymmetry_incentivebalance, ...
@@ -16,24 +13,26 @@ title(sprintf('Cost Matrix @ T=%.2fs [SY:%.1f@i%.1f CP:%.1f@i%.1f CF:%.1f@i%.1f 
     cfg.use_costgaussian, cfg.costgauss_incentivebalance, ...
     cfg.use_costcontigevolution, cfg.costevolution_incentivebalance, ...
     cfg.contig_windowsize, ...
-   showname, mean_score, heuristic_score, avg_shift, cfg.solution_shift ));
+   show.showname, results.mean_score, ...
+   results.heuristic_score, results.avg_shift, cfg.solution_shift ));
 xlabel('Tiles');
 ylabel('Tiles');
 colorbar;
-draw_scindexes(predictions, indexes./ tileWidthSecs, cfg.minTrackLength, T);
+draw_scindexes(results.predictions, show.indexes./ show.tileWidthSecs,...
+    cfg.minTrackLength, show.T);
 
 figure(3);
-hist(C(1:T^2),50)
+hist(show.CosineMatrix(1:show.T^2),50)
 title( sprintf('%s\nCosine Matrix Histogram (Cosine Normalization=%.1f, %d Tiles)', ...
-    showname, cfg.cosine_normalization, T));
+    show.showname, cfg.cosine_normalization, show.T));
 
 figure(1)
 
 % in tile space
-imagesc(C);daspect([1 1 1]);colorbar;colorbar;axis xy;
-draw_rectangles( [predictions T .* tileWidthSecs], 'k' );
-draw_indexes(indexes ./ tileWidthSecs);
+imagesc(show.CosineMatrix);daspect([1 1 1]);colorbar;colorbar;axis xy;
+draw_rectangles( [results.predictions show.T .* show.tileWidthSecs], 'k' );
+draw_indexes(show.indexes ./ show.tileWidthSecs);
 title(sprintf('1-Cosine Matrix\n%s\nCosine Matrix Histogram (Cosine Normalization=%.1f, %d Tiles)',...
-    showname,cfg.cosine_normalization, T));
+    show.showname,cfg.cosine_normalization, show.T));
 xlabel('Tiles');
 ylabel('Tiles');

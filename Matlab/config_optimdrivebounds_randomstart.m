@@ -34,8 +34,8 @@ function [rs] = config_optimdrivebounds_randomstart()
     rs(15) = ceil(rand * 6)-3;
     % 16: minTrackLength /in {120,121,...,220}
     rs(16) = ceil(rand * (180-80))+80;
-    % 17: maxExpectedTrackWidth /in {8*60,...,15*60}
-    rs(17) = ceil(rand * ((15*60)-(8*60)))+(8*60);
+    % 17: maxExpectedTrackWidth /in {10*60,...,15*60}
+    rs(17) = ceil(rand * ((15*60)-(10*60)))+(10*60);
     % 18: bandwidth /in {1,2,...,15}
     rs(18) = ceil(rand * 16)+1;
     % 19: lowPassFilter /in {800,...,1950}

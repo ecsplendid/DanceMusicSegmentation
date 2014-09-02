@@ -1,14 +1,18 @@
 function [SC] = getcost_contigdiag1 ( ...
-    T,C, W, min_w, costdags_incentivebalance) 
+    show, config) 
 %getcost_contigdiag1 "Evolving self-similarity" dynamic programming
 %implementation of getcost_contigdiag
 
 %%
-T = size(C,1);
-SC = inf( T, W );
+T = show.T;
+SC = inf( T, show.W );
 
-C_dags = getmatrix_indiagonals( C, 1, W );
+W = show.W;
+
+C_dags = getmatrix_indiagonals( show.CosineMatrix, 1, W );
 C_dags = C_dags( 1:W, : )';
+
+costdags_incentivebalance = config.costevolution_incentivebalance;
 
 for t = 1:T
     
@@ -31,6 +35,6 @@ end
 
 SC = normalize_byincentivebias(SC, costdags_incentivebalance);
 
-SC(:,1:min_w-1 )=inf;
+SC(:,1:show.w-1 )=inf;
 
 end

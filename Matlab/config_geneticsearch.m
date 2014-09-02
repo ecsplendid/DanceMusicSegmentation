@@ -2,8 +2,8 @@
 
 options = gaoptimset;
 
-options = gaoptimset(options,'PopulationSize', 50);
-options = gaoptimset(options,'EliteCount', 10);
+options = gaoptimset(options,'PopulationSize', 80);
+options = gaoptimset(options,'EliteCount', 15);
 options = gaoptimset(options,'Generations', 20);
 options = gaoptimset(options,'StallGenLimit', 5);
 options = gaoptimset(options,'Display', 'iter');
@@ -14,7 +14,7 @@ options = gaoptimset(options,'UseParallel', 1 );
 
 %% for estimating the number of segments
 
-segs = ga( @optimise_tracknumberestimate, ...
+cfg_nosegs = ga( @optimise_tracknumberestimate, ...
     22, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds_lowerbounds, ...
@@ -27,7 +27,7 @@ savefig('optimise_tracknumberestimate.fig');
 
 %% for finding best segmentation
 
-x = ga( @optimise_trackplacement, ...
+cfg_trkplace = ga( @optimise_trackplacement, ...
     22, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds_lowerbounds, ...
@@ -37,3 +37,5 @@ x = ga( @optimise_trackplacement, ...
     options );
 
 savefig('optimise_trackplacement.fig');
+
+save 'ws'
