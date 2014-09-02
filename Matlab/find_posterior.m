@@ -1,13 +1,15 @@
-function [mean_indexplacementconfidence, worst_indexplacementconfidence, track_indexconfidences, track_placementconfidence, track_placementconfidenceavg] =  ...
-    find_posterior( SC, M, eta, draw_figs, output_width, showname )
+function results =  ...
+    find_posterior( show, config, output_width, results )
 
-%M = 22; % how many tracks to find
-[T,W] = size(SC); % tiles and maximum track width
+% how many tracks to find
+M = length(show.indexes)+1;
+T = show.T;
+W = show.W;
+SC = show.CostMatrix;
 
-%eta = 1e2; %learning rate
+eta = config.eta;
 
 %% to calculate TL and H we need a slightly different cost matrix
-
 
 HT_SC = SC;
 
@@ -18,7 +20,7 @@ HT_SC = SC;
 HT_SC = exp(-eta * SC );
 
 %%
-% cost of one track accross all times
+% cost of one track across all times
 
 H = zeros( M, T );
 H( 1, 1:W ) = HT_SC(1,:); 
@@ -88,12 +90,14 @@ end
 % PB is normalised *by definition*
 %assert(all(abs(sum(PB,2) - 1) < 1e-6));
 
-if( draw_figs == 1) 
+if( config.draw_confs == 1) 
     figure(15);
     imagesc(log(PB));
     title('probability distribution');
     colorbar;
 end
+
+results.posterior = PB;
 
 %% calculate the posterior for song position (hard to visualize probably wont for paper)
 
@@ -193,20 +197,19 @@ relative_uncertainty = relative_uncertainty .^ uncertainty_factor;
 
 confidence = 1 - relative_uncertainty;
 
-if( draw_figs == 1) 
+if( config.draw_confs == 1) 
     figure(7)
     bar( confidence );
-    title(sprintf('Track Alignment Confidence Level\n%s',showname));
+    title(sprintf('Track Alignment Confidence Level\n%s', show.showname));
     xlabel('Track Number');
     ylabel('Confidence Level');
 end
 
-mean_indexplacementconfidence = mean(confidence);
-worst_indexplacementconfidence = min(confidence);
-track_indexconfidences = resample_vector( confidence, output_width);
+results.mean_indexplacementconfidence = mean(confidence);
+results.worst_indexplacementconfidence = min(confidence);
+results.track_indexconfidences = resample_vector( confidence, output_width);
 
 %% new uncertainty calculation (of correct track TIME)
-% thinking out loud, should include peak height and distance (nearest?)
 
 track_placementconf = nan( M, 1 );
 track_placementconf(1) = 1;
@@ -219,9 +222,6 @@ for m=2:M
 
     [vals, ix] = sort( pks,'descend' );
 
-    %take first 2
-    %locs( ix(1) )
-
     if length( vals ) == 1
         track_placementconf(m) = 1;
     else
@@ -229,20 +229,20 @@ for m=2:M
     end
 end
 
-if( draw_figs == 1) 
+if( config.draw_confs == 1) 
     figure(9)
     bar( track_placementconf );
-    title(sprintf('Track Time Placement Confidence\n%s',showname));
+    title(sprintf('Track Time Placement Confidence\n%s',show.showname));
     ylabel ( 'Confidence Level' );
     xlabel( 'Track Number' );
 end
 
-track_placementconfidenceavg = mean(track_placementconf);
-track_placementconfidence = resample_vector(track_placementconf, output_width);
+results.track_placementconfidenceavg = mean(track_placementconf);
+results.track_placementconfidence = resample_vector(track_placementconf, output_width);
 
 %% how close is our posterior probability distribution?
 
-if( draw_figs == 1) 
+if( config.draw_confs == 1) 
 
     figure(15);
 
@@ -253,7 +253,7 @@ if( draw_figs == 1)
     end
     hold off;
 
-    title(sprintf('Posterior with the "best" tracks overlaid\n%s',showname));
+    title(sprintf('Posterior with the "best" tracks overlaid\n%s',show.showname));
     xlabel('Tiles');
     ylabel('Track Number');
     colorbar;

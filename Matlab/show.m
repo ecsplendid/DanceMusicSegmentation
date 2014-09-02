@@ -14,7 +14,6 @@ classdef show
         CostMatrix
         space % tiles->seconds mapping
         T
-        tileWidthSecs
         W % max track length in tiles
         w % min track length in tiles
     end

@@ -15,8 +15,8 @@ c.gaussian_filterdegree = 2; % for the convolution filter on FFT result
 
 % figure drawing parameters
 c.drawSimMat = 1;
-c.compute_confs = 0;
-c.draw_confs = 0;
+c.compute_confs = 1;
+c.draw_confs = 1;
 
 % save precomputed cosine matrices in memory for speed
 % useful for repetition experiments

@@ -1,10 +1,12 @@
-function [this_show] = get_show(s, sampleRate)
+function [this_show] = get_show(s, config)
 
     % note, shows is initialised from calling /data=set/local_testset.m
     % execute that before everything else. I'm sorry it has to be like this
     % for some reason executing it twice fails
 
-    shows = get_allshows();
+    sampleRate = config.sampleRate;
+    
+    shows = get_allshows(config);
     
     this_show = shows{s};
     this_show.number = s;
@@ -16,17 +18,11 @@ function [this_show] = get_show(s, sampleRate)
     this_show.audio = audioread( this_show.file );
 
     % some sanitization of the github test set file names
-    showname = strrep(this_show.file, '_', ' ');
-    showname = strrep(showname, 'examples/', '');
-    showname = strrep(showname, '.wav', '');
-    showname = strrep(showname, '01-', '');
-    showname = strrep(showname, 'armin van buuren - ', '');
-    showname = strrep(showname, ' - music for balearic people', '');
-    showname = strrep(showname, 'Above and Beyond - ', '');
-    showname = strrep(showname, ' (di.fm)', '');
-    showname = strrep(showname, '-tt', '');
-    showname = strrep(showname, '22-04-2010', '');
-    showname = strrep(showname, '26-03-2010', '');
+    showname = this_show.file;
+    repl = '\d{2}-\d{2}-\d{4}|-tt|\.wav|01-|-|_|Above and Beyond|(di.fm)|music for balearic people|armin van buuren|roger shah';
+    showname = regexprep(showname,'.+\\(?=[^\\]+$)','');
+    showname = regexprep(showname, repl,'');
+    showname = lower(showname);
     
     this_show.showname = showname;
     

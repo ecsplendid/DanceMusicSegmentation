@@ -21,7 +21,7 @@ function [results] = estimate_numbertracks( ...
         plot(length(show.indexes)+1, best_results(length(show.indexes)+1),'*k');
         plot(index, best_results(index),'+k');
         hold off;
-        title(strcat(show.showname,'...'));
+        title(strcat(show.showname,''));
         xlabel('Number Of Tracks')
         ylabel('Sum cost normalized by number tracks');
         axis square;
@@ -29,8 +29,10 @@ function [results] = estimate_numbertracks( ...
         legend('cost curve', ...
             sprintf('actual (%d)', length(show.indexes)+1), ...
             sprintf('minima (%d)', index ))
-        exportfig(gcf,sprintf('%d_tracks.eps', show.number) );
+       % exportfig(gcf,sprintf('%d_tracks.eps', show.number) );
     end
 
     results.track_estimate = index;
+    results.track_estimate_error = abs(results.track_estimate ...
+        - (length(show.indexes)+1) );
 end

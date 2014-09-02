@@ -4,10 +4,9 @@ function [show] = get_cosinematrix(...
     no_tiles = ceil((length(show.audio)/cfg.sampleRate)/cfg.secondsPerTile);
     tileWidth = floor(length(show.audio)/no_tiles); % we discard the last partial tile
     nFFT = 2^nextpow2( tileWidth );
-    show.tileWidthSecs = tileWidth/cfg.sampleRate;
     %max track width in seconds
     
-    show.W =  ceil((cfg.maxExpectedTrackWidth)/show.tileWidthSecs); 
+    show.W =  ceil((cfg.maxExpectedTrackWidth)/cfg.secondsPerTile); 
     lowPassFilterSamples = ceil(cfg.lowPassFilter * (nFFT/cfg.sampleRate))+1;
     highPassFilterSamples = ceil(cfg.highPassFilter * (nFFT/cfg.sampleRate))+1;
     assert( lowPassFilterSamples < nFFT/2 );
@@ -18,7 +17,7 @@ function [show] = get_cosinematrix(...
         gaussParams.^cfg.gaussian_filterdegree/bandw_fftSpace^2) ...
                             .* (2*gaussParams/bandw_fftSpace^2);
 
-    show.w = floor((cfg.minTrackLength) / show.tileWidthSecs);
+    show.w = floor((cfg.minTrackLength) / cfg.secondsPerTile);
                         
     tileindexes = (1:tileWidth);
 
@@ -36,7 +35,7 @@ for x=1:no_tiles
         fdata(x, : ) = Y;
 end
  
-    show.space = (0:no_tiles-1) .* show.tileWidthSecs;
+    show.space = (0:no_tiles-1) .* cfg.secondsPerTile;
     %%
     %thrown an abs in there in case of any numerical error on the low costs
     C = (abs((1-(fdata * fdata'))));

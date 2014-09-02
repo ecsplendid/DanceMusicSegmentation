@@ -8,6 +8,7 @@
 \usepackage{hyperref}
 \usepackage{rotating}
 \usepackage{pseudocode}
+\usepackage{pdfpages}
 
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
@@ -44,7 +45,7 @@
 
 \hypersetup{
 	pdfauthor={Tim Scarfe, Wouter M. Koolen and Yuri Kalnishkan},
-	pdftitle={Contiguous segmentation of electronic dance music},
+	pdftitle={Homogeneous segmentation of electronic dance music},
 	pdfkeywords={audio,stream,segmentation,dj,mixing},
 	pdfsubject={Artificial Intelligence},
 	pdfcreator={Tim Scarfe},
@@ -62,7 +63,7 @@
 % to remove in the final version!!
 
 
-\title{Contiguous segmentation of electronic dance music}
+\title{Homogeneous segmentation of electronic dance music}
 \begin{document}
 	
 	\maketitle
@@ -71,7 +72,7 @@
 		
 		We consider the problem of segmenting DJ-mixed dance music recordings (pod-casts, radio shows, live events) into their original sequence of contiguous tracks. We present an algorithm to reconstruct a fixed number of segment boundaries as close as possible to what a human domain expert would create in respect of the same task. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. The goal of DJ-mixing is to render track boundaries  invisible from human perception.
 		
-		Contiguous segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of self-similarity, symmetry, contiguity and evolution in respect of time. The method could be used on other contiguous segmentation tasks where the number of segments is known in advance, and the audio based features could be replaced with ones from another domain.
+		Homogeneous segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of self-similarity, symmetry, contiguity and evolution in respect of time. The method could be used on other contiguous segmentation tasks where the number of segments is known in advance, and the audio based features could be replaced with ones from another domain.
 		
 		Our work incorporates self-similarity over a soft time horizon with a fixed upper boundary and is quantitatively assessed on a large corpus of radio show recordings which have been hand-labelled by a domain expert.
 		\smallskip
@@ -745,13 +746,45 @@ Let
 
 See Figure~\ref{fig:overallconfs} for an illustration of $\tilde I( j )$ and $I( j )$.
 
-\section{Methodology}\label{sec:methodology}
+\section{Experimental Methodology}\label{sec:methodology}
 
-We selected $6$ shows at random (two of each show type) to use to develop the cost matrices and to find an optimal set of parameters using a random search. These shows were A State of Trance $453$ and $462$, Magic Island $98$ and $112$ and Trance Around The World $364$ and $372$.  
+We selected $6$ shows at random (two of each show type)  to create a training set, which we will refer to as the \textit{GitHub training set}. We have made the set available on-line (see Section~\ref{best_cost}).
 
-In our experiments we decided to fix the tile size at $5$ seconds for the sake of speed. A lower tile size does increase accuracy but not significantly. Higher tile sizes can perform more robustly (fewer catastrophic misalignments) but progressively lose out on accuracy.
+We used the GitHub training set to develop the cost matrices from first principles and to find robust parameters using a genetic algorithm search. Please see Table~\ref{table:githubset} to see the shows we selected.
 
-In our results we will perform some obvious combinations of cost matrices. We also performed a random search of cost matrix contributions and parameters. This has also been provided in the results (see $\dagger$, experiment $12$ in the results). We selected the best set of parameters based on the lowest cost sum of heuristic precision and mean average precision $\sum \hat A(P,A) + \hat H(P,A) \rightarrow \min_i$ for all shows. 
+In our experiments we decided to fix the tile size at $5$ seconds for the sake of speed. A lower tile size does increase accuracy but only marginally. Higher tile sizes can perform more robustly (fewer catastrophic misalignments) but progressively lose out on accuracy.
+
+\begin{table*}[t]
+	
+		\centering
+		\caption{The shows randomly selected for inclusion in the \textit{GitHub training set}.}
+		\label{table:githubset}
+		
+	\begin{tabular}{llll}
+		\#         & \textbf{Show Name}          & \textbf{Artist}  & \textbf{Date Broadcast} \\
+		\textbf{1} & A State Of Trance 453       & Armin Van Buuren & April 2010              \\
+		\textbf{2} & A State Of Trance 462       & Armin Van Buuren & June 2010               \\
+		\textbf{3} & Magic Island 098            & Roger Shah       & March 2010              \\
+		\textbf{4} & Magic Island 112            & Roger Shah       & July 2010               \\
+		\textbf{5} & Trance Around The World 364 & Above \& Beyond  & March 2011              \\
+		\textbf{6} & Trance Around The World 372 & Above \& Beyond  & May 2011               
+	\end{tabular}
+		
+\end{table*}
+
+% GENETIC ALGORITHM DESCRIPTION
+\section{Estimating Segment Count}\label{sec:trackcount}
+
+The original goal of our work was providing the best possible segmentation given a fixed number of tracks $m$. Little consideration was given to the problem of estimating the number of segments. The problem domain described in this work appears reasonably unique, given that the number of segments is known a priori but the configuration of the segmentation is unknown or subjective. 
+
+However. To enable comparison of our work with other methods in the literature, we propose the following way of adapting our framework to estimate the number of homogeneous segments in a data stream. 
+
+	\begin{figure*}
+		\centering
+		\includegraphics[width=0.9\textwidth]{track_estimation}
+		\caption{Number of tracks estimated correctly for all six shows in the GitHub training set after a genetics algorithm was run to select a new set of configuration parameters.}
+		\label{fig:github_trackestimation}
+	\end{figure*}
 
 \section{Materials}\label{sec:materials}
 
@@ -822,15 +855,20 @@ $12$ &	$\dagger$	&\begin{sideways}$0.4_{\Omega^{0.4}}$\end{sideways}&\begin{side
 
 \section{Summary}\label{conclusions}
 
-We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. It would be excellent if Spotify\footnote{\url{http://spotify.com}} for example started to do something similar. Spotify is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to reliably segment the shows, and they could display an interactive segmentation in the music player. 
+We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. It would be excellent if Sound Cloud\footnote{\url{http://www.soundcloud.com}} for example started to do something similar. Sound Cloud is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to reliably segment the shows, and they could display an interactive segmentation in the music player. 
 
 The new cost matrices in combination improve robustness significantly over single matrices or regularised single matrices (as in our last paper). We are seeing about a 50\% improvement in overall mean accuracy over single cost matrices that are correctly normalized. The new cost matrices improve on many drawbacks of our previous work (mainly that it was vulnerable to dissimilar regions within tracks). 
 
+%bit weak
 Our method still has one key drawback that we are aware of. This is the rare instance where there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements. In spite of this issue we suspect that our predictions are more accurate and more consistent than the human equivalents while not being as precise in situations when our index agrees with theirs.
 
 A more precise corpus where the DJ was also the cuesheet author would allow us to tune the parameters more succinctly and also the generation of an artificial dataset to test against. This work is forthcoming. 
 
-We would also like to implement some of the methods in the literature (which were mostly designed for scene analysis) to see if we outperform them. It would be tricky to get an exact comparison because we could not find an unsupervised deterministic algorithm which finds a fixed number of strictly contiguous clusters. We could however adapt existing algorithms to get a like for like comparison. We would like to evaluate the performance of J Theiler's contiguous K-means algorithm in particular \cite{theiler1997contiguity} and also similar algorithms. We have the property of being deterministic but probabilistic methods should be explored. Theiler's algorithm would require some modification to work in this scenario because we require strictly contiguous clusters, not just a contiguity bias. 
+%TODO
+We would also like to implement some of the methods in the literature (which were mostly designed for scene analysis) to see if we outperform them. It would be tricky to get an exact comparison because we could not find an unsupervised deterministic algorithm which finds a fixed number of strictly contiguous clusters. We could however adapt existing algorithms to get a like for like comparison. 
+
+%TODO
+We would like to evaluate the performance of J Theiler's contiguous K-means algorithm in particular \cite{theiler1997contiguity} and also similar algorithms. We have the property of being deterministic but probabilistic methods should be explored. Theiler's algorithm would require some modification to work in this scenario because we require strictly contiguous clusters, not just a contiguity bias. 
 
 \section{Acknowledgements}\label{sec:acknowledgements}
 

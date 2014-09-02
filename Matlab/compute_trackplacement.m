@@ -13,6 +13,9 @@ function results = compute_trackplacement( ...
 
     results.matched_tracks = evaluate_performance( ...
                         show.indexes, results.predictions_timespace);
+    
+    results.shifts = (results.predictions_timespace-show.indexes');
+                    
     results.avg_shift = median((results.predictions_timespace-show.indexes'));
     
     results.mean_score = mean(abs(results.predictions_timespace - show.indexes'));

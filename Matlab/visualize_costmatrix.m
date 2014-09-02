@@ -18,7 +18,7 @@ title(sprintf('Cost Matrix @ T=%.2fs [SY:%.1f@i%.1f CP:%.1f@i%.1f CF:%.1f@i%.1f 
 xlabel('Tiles');
 ylabel('Tiles');
 colorbar;
-draw_scindexes(results.predictions, show.indexes./ show.tileWidthSecs,...
+draw_scindexes(results.predictions, show.indexes./ cfg.secondsPerTile,...
     cfg.minTrackLength, show.T);
 
 figure(3);
@@ -30,8 +30,8 @@ figure(1)
 
 % in tile space
 imagesc(show.CosineMatrix);daspect([1 1 1]);colorbar;colorbar;axis xy;
-draw_rectangles( [results.predictions show.T .* show.tileWidthSecs], 'k' );
-draw_indexes(show.indexes ./ show.tileWidthSecs);
+draw_rectangles( [results.predictions show.T .* cfg.secondsPerTile], 'k' );
+draw_indexes(show.indexes ./ cfg.secondsPerTile);
 title(sprintf('1-Cosine Matrix\n%s\nCosine Matrix Histogram (Cosine Normalization=%.1f, %d Tiles)',...
     show.showname,cfg.cosine_normalization, show.T));
 xlabel('Tiles');

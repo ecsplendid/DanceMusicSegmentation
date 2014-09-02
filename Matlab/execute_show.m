@@ -1,5 +1,9 @@
-function [ results ] = ...
+function [ results, show ] = ...
     execute_show( s, config )
+
+if( nargin < 2 )
+    config = config_getdefault;
+end
 
 % execute a given show, read the file, extract the features,
 % generate the cosine (similarity) matrix, generate the cost
@@ -10,7 +14,7 @@ function [ results ] = ...
 
     results = show_results();
 
-    show = get_show(s, config.sampleRate);
+    show = get_show(s, config);
     
     show = get_cosinematrix( show, config );
     
@@ -43,5 +47,14 @@ function [ results ] = ...
     
     results = compute_trackplacement( config, show, results );
     results = estimate_numbertracks( show, results, config );
+    
+    if( config.compute_confs )
+        
+        output_width = 200;
+        
+        results = ...
+            find_posterior( show, config, output_width, results );
+
+    end
          
 end

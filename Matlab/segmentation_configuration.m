@@ -4,6 +4,7 @@ classdef segmentation_configuration
     % to resort to global variables
     
     properties
+        dataset = 1 % 1==github, 2==denis full, 3==lindmik
         sampleRate
         secondsPerTile
         minTrackLength

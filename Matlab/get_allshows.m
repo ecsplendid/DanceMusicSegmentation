@@ -1,6 +1,8 @@
-function [shows] = get_allshows()
+function [shows] = get_allshows(config)
 
-    % shows = shows_allshows();
-    shows = shows_githubtestset();
-   
+    if( config.dataset == 1 )
+        shows = shows_githubtestset();
+    else
+        shows = shows_allshows();
+    end
 end

@@ -5,26 +5,21 @@ function [score] = optimise_tracknumberestimate( ibev )
     
     score = 0;
     
-    % ibev = config_optimdrivebounds_randomstart;
-     config = config_getdefaultsegcalculation;
-   % config = config_optimdrive(ibev)
+    config = config_optimdrive(ibev)
     
     tic
     for s=1:length( get_allshows() ); 
        
-        [ ~, ~,  ~, ~, ~, track_estimate, indexes, showname ] = ...
+        [ results, show ] = ...
             execute_show(s, config);
         
-        this_score = abs(track_estimate - (length(indexes)+1));
-        
-        score = score + this_score;
+        score = score + results.mean_score;
 
-        sprintf( 'out by %d: %s...', this_score, showname )
-
+        sprintf( 'out by %d: %s', ...
+            results.track_estimate_error, ...
+            show.showname )
     end
     toc
     
-    pause
- 
 end
 
