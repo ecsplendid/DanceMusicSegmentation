@@ -1,6 +1,6 @@
 function [ matched_tracks ] = evaluate_performance( indexes, best_begin )
 
-% automatically calculate perf for [70,60,30,10] seconds
+% computes the "thresholds" metric of performance
 
 thresholds = [60,30,20,10,5,3,1];
 

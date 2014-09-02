@@ -1,16 +1,17 @@
-function [index] = estimate_numbertracks( draw_fig, SC, showname, indexes )
+function [index] = estimate_numbertracks( ...
+    SC, showname, indexes, config )
 
     how_many = 30;
     results = nan(how_many,1);
 
-    for i=10:30
+    for i=14:30
 
         [F, ~] = find_tracks( i, SC );
 
         results(i) = F;
     end
 
-    if draw_fig
+    if config.drawSimMat==1
         figure(6)
         plot(results,'k:');
         hold on;

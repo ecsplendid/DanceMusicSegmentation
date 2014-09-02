@@ -5,13 +5,13 @@ c = segmentation_configuration();
 % Feature Extraction Parameters
 
 c.sampleRate = 4000;
-c.secondsPerTile = 25;
-c.minTrackLength = 180;
-c.maxExpectedTrackWidth = 370*2;   % (magicisland=380*2 others 350*2)
+c.secondsPerTile = 10;
+c.minTrackLength = 142;
+c.maxExpectedTrackWidth = 613;   % (magicisland=380*2 others 350*2)
 c.bandwidth = 5; % bandwith for the width of the convolution filter
-c.lowPassFilter = 1662; %Hz
-c.highPassFilter = 80; %Hz
-c.gaussian_filterdegree = 1; % for the convolution filter on FFT result
+c.lowPassFilter = 872; %Hz
+c.highPassFilter = 168; %Hz
+c.gaussian_filterdegree = 2; % for the convolution filter on FFT result
 
 % figure drawing parameters
 c.drawSimMat = 1;
@@ -35,19 +35,19 @@ c.use_costgaussianwidth = 1;
 % not entirely normal, they are represented by a section on the left of the
 % distribution, I would guess a value slightly greater than 1 is optimal for
 % the symmetry and contig cost matrices. >1 shifts mean higher
-c.cosine_normalization = 0.4;
+c.cosine_normalization = 0.8479;
 % contig_windowsize in tiles
-c.contig_windowsize = 4;
+c.contig_windowsize = 3;
 
 % which cost functions to use and how much weight do they have (>0)
 
 % USE THESE>>>
-c.use_costsymmetry        = 0.493;       c.costsymmetry_incentivebalance = 0.711;
-c.use_costcontigpast      = 0.971;     c.costcontigpast_incentivebalance = 0.625;
-c.use_costcontigfuture    = 0.521;   c.costcontigfuture_incentivebalance = 0.327;
-c.use_costsum             = 0.88;             c.costsum_incentivebalance = 0.691;
-c.use_costgaussian        = 1.67;           c.costgauss_incentivebalance = 0.482;
-c.use_costcontigevolution = 0.823;      c.costevolution_incentivebalance = 0.629;
+c.use_costsymmetry        = 0.8408;       c.costsymmetry_incentivebalance = 0.1238;
+c.use_costcontigpast      = 0.1569;     c.costcontigpast_incentivebalance = 0.4183;
+c.use_costcontigfuture    = 1.5653;   c.costcontigfuture_incentivebalance = 0.8478;
+c.use_costsum             = 0.8714;             c.costsum_incentivebalance = 0.0402;
+c.use_costgaussian        = 1.8943;           c.costgauss_incentivebalance = 0.4116;
+c.use_costcontigevolution = 1.3128;      c.costevolution_incentivebalance = 0.2736;
 
 end
 
