@@ -1,6 +1,6 @@
 function [rs] = config_optimdrivebounds_lowerbounds()
 
-    rs = nan(1,21);
+    rs = nan(1,22);
 
     % 1: sumIB /in [0,1]
     rs(1) = 0;
@@ -45,5 +45,5 @@ function [rs] = config_optimdrivebounds_lowerbounds()
     % 21: gaussian_filterdegree /in /in {1,2}
     rs(21) = 1; 
     % 22: secondsPerTile /in {5,6,...,20}
-   % rs(22) = 5;
+    rs(22) = 5;
 end

@@ -28,7 +28,7 @@ function [c] = config_optimdrive(ibev)
     % 19: lowPassFilter /in {800,...,1950}
     % 20: highPassFilter /in {50,...,500}
     % 21: gaussian_filterdegree /in {1,2,3,4,5,6}
-    % 22: secondsPerTile /in {5,6,...,40} <SNIP>
+    % 22: secondsPerTile /in {5,6,...,40} 
     
     % see config_optimdrivebounds for bounds and random start driver
     
@@ -41,7 +41,7 @@ function [c] = config_optimdrive(ibev)
 % Feature Extraction Parameters
 
 c.sampleRate = 4000;
-c.secondsPerTile = 20; %round(ibev(16));
+c.secondsPerTile = round(ibev(22));
 c.minTrackLength = round(ibev(16));
 c.maxExpectedTrackWidth = round(ibev(17));   % (magicisland=380*2 others 350*2)
 c.bandwidth = round(ibev(18)); % bandwith for the width of the convolution filter
@@ -78,10 +78,10 @@ c.contig_windowsize = round(ibev(14));
 % which cost functions to use and how much linear weight do they have (>0)
 
 % /in [0,] ............................|....../in [0,1]
-c.use_costsymmetry        = ibev(4);       c.costsymmetry_incentivebalance = ibev(3);
-c.use_costcontigpast      = ibev(8);     c.costcontigpast_incentivebalance = ibev(7);
+c.use_costsymmetry        = ibev(4);    c.costsymmetry_incentivebalance = ibev(3);
+c.use_costcontigpast      = ibev(8);    c.costcontigpast_incentivebalance = ibev(7);
 c.use_costcontigfuture    = ibev(10);   c.costcontigfuture_incentivebalance = ibev(9);
-c.use_costsum             = ibev(2);      c.costsum_incentivebalance = ibev(1);
+c.use_costsum             = ibev(2);    c.costsum_incentivebalance = ibev(1);
 c.use_costgaussian        = ibev(12);   c.costgauss_incentivebalance = ibev(11);
 c.use_costcontigevolution = ibev(6);    c.costevolution_incentivebalance = ibev(5);
 

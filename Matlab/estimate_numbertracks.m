@@ -8,15 +8,16 @@ function [index] = estimate_numbertracks( ...
 
         [F, ~] = find_tracks( i, SC );
 
-        results(i) = F;
+        results(i) = F/i;
     end
 
+    [~, index] = min(results);
+    
     if config.drawSimMat==1
         figure(6)
         plot(results,'k:');
         hold on;
 
-        [~, index] = min(results);
         plot(length(indexes)+1, results(length(indexes)+1),'*r');
         plot(index, results(index),'+b');
         hold off;

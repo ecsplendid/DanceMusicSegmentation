@@ -1,3 +1,4 @@
+%% options setup
 
 options = gaoptimset;
 
@@ -10,11 +11,29 @@ options = gaoptimset(options,'PlotFcns', {  @gaplotbestf @gaplotbestindiv @gaplo
 options = gaoptimset(options,'Vectorized', 'off');
 options = gaoptimset(options,'UseParallel', 1 );
 
-x = ga( @optimise_function, ...
-    21, ... % num constraints
+
+%% for estimating the number of segments
+
+segs = ga( @optimise_tracknumberestimate, ...
+    22, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds_lowerbounds, ...
     config_optimdrivebounds_upperbounds, ...
     [], ...
-    [14,15,16,17,18,19,20,21], ... % int constraints
+    [14,15,16,17,18,19,20,21,22], ... % int constraints
     options );
+
+savefig('optimise_tracknumberestimate.fig');
+
+%% for finding best segmentation
+
+x = ga( @optimise_trackplacement, ...
+    22, ... % num constraints
+    [],[],[],[], ...
+    config_optimdrivebounds_lowerbounds, ...
+    config_optimdrivebounds_upperbounds, ...
+    [], ...
+    [14,15,16,17,18,19,20,21,22], ... % int constraints
+    options );
+
+savefig('optimise_trackplacement.fig');

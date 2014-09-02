@@ -1,6 +1,6 @@
 function [rs] = config_optimdrivebounds_randomstart()
 
-    rs = nan(1,21);
+    rs = nan(1,22);
 
     % 1: sumIB /in [0,1]
     rs(1) = rand;
@@ -45,5 +45,5 @@ function [rs] = config_optimdrivebounds_randomstart()
     % 21: gaussian_filterdegree /in {1,2}
     rs(21) = ceil(rand*2); 
     % 22: secondsPerTile /in {5,6,...,20}
-    %rs(22) = ceil(rand * 15)+5;
+    rs(22) = ceil(rand * 15)+5;
 end
