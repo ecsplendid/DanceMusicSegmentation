@@ -10,7 +10,7 @@ c.dataset = 1;
 % try driving this with 
 % config_optimdrive(config_optimdrivebounds_randomstart())
 
-% 1: sumIB /in [0,1]
+% 1: sumIB /in [0,1]    
 % 2: sum_contribution /in [0,2]
 % 3: symIB /in [0,1]
 % 4: sym contr /in [0,1]
