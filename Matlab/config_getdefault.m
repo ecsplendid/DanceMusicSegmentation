@@ -3,7 +3,7 @@ function [c] = config_getdefault()
 c = segmentation_configuration();
 
 % 1== github, 2==denis, 3==lindmik
-c.dataset = 2;
+c.dataset = 1;
 
 % Feature Extraction Parameters
 

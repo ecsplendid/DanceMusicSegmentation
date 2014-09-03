@@ -39,10 +39,12 @@ function [agg_results] = get_aggregateresults( results, config )
                     r.mean_indexplacementconfidence ];  
 
             agg_results.track_placementconfidence_sum = ...
-                agg_results.track_placementconfidence_sum + r.track_placementconfidence;
+                agg_results.track_placementconfidence_sum + ...
+                r.track_placementconfidence;
 
             agg_results.track_indexconfidences_sum = ...
-                agg_results.track_indexconfidences_sum + r.track_indexconfidences;
+                agg_results.track_indexconfidences_sum + ...
+                r.track_indexconfidences;
 
         end
     end
