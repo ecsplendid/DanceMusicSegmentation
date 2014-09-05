@@ -83,7 +83,7 @@ cfg_trkplace_meanheur = ga( @optimise_trackplacementheuristicandmean, ...
     [14,15,16,17,18,19,20,21,22], ... % int constraints
     options );
 
-savefig('results/optimise_trackplacement_evogauss.fig');
+savefig('results/optimise_trackplacement_meanheur.fig');
 
 % run the full experiment
 ag6 = run_experiments( config_optimdrive(cfg_trkplace_meanheur, 2) );
