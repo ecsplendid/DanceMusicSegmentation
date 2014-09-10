@@ -1,39 +1,56 @@
 function [show] = get_cosinematrix(...
     show, cfg )
 
+tic;
     no_tiles = ceil((length(show.audio)/cfg.sampleRate)/cfg.secondsPerTile);
     tileWidth = floor(length(show.audio)/no_tiles); % we discard the last partial tile
     nFFT = 2^nextpow2( tileWidth );
     %max track width in seconds
     
+    downsample = 5000;
+    
     show.W =  ceil((cfg.maxExpectedTrackWidth)/cfg.secondsPerTile); 
     lowPassFilterSamples = ceil(cfg.lowPassFilter * (nFFT/cfg.sampleRate))+1;
     highPassFilterSamples = ceil(cfg.highPassFilter * (nFFT/cfg.sampleRate))+1;
     assert( lowPassFilterSamples < nFFT/2 );
-    fdata = nan( no_tiles, (lowPassFilterSamples-highPassFilterSamples)+1  );
+    fdata = nan( no_tiles, downsample  );
+  
     bandw_fftSpace = ( cfg.bandwidth * (nFFT/cfg.sampleRate) ); % in FFT steps
-    gaussParams=-ceil(2*bandw_fftSpace):ceil(2*bandw_fftSpace);
-    gaussFirstDerivative = -exp(- ...
-        gaussParams.^cfg.gaussian_filterdegree/bandw_fftSpace^2) ...
-                            .* (2*gaussParams/bandw_fftSpace^2);
-
+  
     show.w = floor((cfg.minTrackLength) / cfg.secondsPerTile);
                         
     tileindexes = (1:tileWidth);
 
+    % gaussian function
+    gauss = @(x, sigma)exp(-x.^2/(2*sigma.^2)) / (sigma*sqrt(2*pi));
+    %first order derivative of Gaussian
+    dgauss = @(x, sigma)-x .* gauss(x,sigma) / sigma.^2;
+    dgfilter = dgauss(-(bandw_fftSpace+10):(bandw_fftSpace+10), bandw_fftSpace );
+    
 for x=1:no_tiles
 
-        dft = fft( show.audio( tileindexes+(x-1)*tileWidth ),nFFT);
+        dft = fft( show.audio( tileindexes+(x-1)*tileWidth ), nFFT );
         
-        Y = abs(dft);
-        Y = Y( highPassFilterSamples:lowPassFilterSamples );
-        Y = abs(conv(  Y, gaussFirstDerivative,'same' ));
+        Y = dft( highPassFilterSamples:lowPassFilterSamples );
+        Y = abs(Y);
+        
+        Y = resample_vector( Y, downsample );
+        
+        Y = (conv( Y, dgfilter,'same' ));
+        
         %normalize (unit length) vec, so dot below gives cosines;
         Y = Y./norm(Y); 
 
-        assert((norm(Y)-1)<1e-6);
+       % assert((norm(Y)-1)<1e-6);
         fdata(x, : ) = Y;
 end
+
+%imagesc((abs((1-(fdata * fdata')))))
+
+%%
+
+
+ %%
  
     show.space = (0:no_tiles-1) .* cfg.secondsPerTile;
     %%
@@ -58,5 +75,5 @@ end
     show.CosineMatrix = (show.CosineMatrix.*2)-1; 
     
     show.T = size(C,1);
-    
+    toc;
 end

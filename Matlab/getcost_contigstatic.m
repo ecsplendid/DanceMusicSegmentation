@@ -39,7 +39,10 @@ for t = 1:T
         
         vals = SS( t, (x-window_size+1):x );
         
-        same_sign = range( sign( vals ) ) == 0;
+        sgns = sign( vals );
+        
+        
+        same_sign = all( sgns==sgns(1) );
         
         if( ~same_sign )
            
@@ -47,15 +50,15 @@ for t = 1:T
             
         elseif ( sign( vals(end) ) == -1)
 
-           % score =  vals(end) / length(vals);
+            score =  vals(end) / window_size;
            %score =  mean(vals);
-           score = mean(vals);
+           %score = mean(vals);
            
             score = score * (1-costcontig_incentivebalance);
         else
-           %score =  vals(end) / length(vals);
+           score =  vals(end) / window_size;
            % score =  mean(vals);
-            score = mean(vals);
+            %score = mean(vals);
             
             score = score * (costcontig_incentivebalance);
         end

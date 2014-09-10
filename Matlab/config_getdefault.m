@@ -8,18 +8,18 @@ c.dataset = 1;
 % Feature Extraction Parameters
 
 c.sampleRate = 4000;
-c.secondsPerTile = 10;
+c.secondsPerTile = 5;
 c.minTrackLength = 142;
 c.maxExpectedTrackWidth = 613;   % (magicisland=380*2 others 350*2)
-c.bandwidth = 5; % bandwith for the width of the convolution filter
+c.bandwidth = 3; % bandwith for the width of the convolution filter
 c.lowPassFilter = 872; %Hz
 c.highPassFilter = 168; %Hz
 c.gaussian_filterdegree = 2; % for the convolution filter on FFT result
 
 % figure drawing parameters
 c.drawSimMat = 1;
-c.compute_confs = 1;
-c.draw_confs = 1;
+c.compute_confs = 0;
+c.draw_confs = 0;
 
 % save precomputed cosine matrices in memory for speed
 % useful for repetition experiments
