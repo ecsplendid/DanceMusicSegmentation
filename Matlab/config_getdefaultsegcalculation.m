@@ -32,8 +32,8 @@ c.dataset = 2;
 % 18: bandwidth /in {1,2,...,15}
 % 19: lowPassFilter /in {800,...,1950}
 % 20: highPassFilter /in {50,...,500}
-% 21: gaussian_filterdegree /in {1,2,3,4,5,6}
-% 22: secondsPerTile /in {5,6,...,40} 
+% 21: secondsPerTile /in {5,6,...,40} 
+% 22: contig penalty /in {0.05,...,5}
     
 % Feature Extraction Parameters
 
@@ -44,17 +44,12 @@ c.maxExpectedTrackWidth = 719;   % (magicisland=380*2 others 350*2)
 c.bandwidth = 5; % bandwith for the width of the convolution filter
 c.lowPassFilter = 1551; %Hz
 c.highPassFilter = 453; %Hz
-c.gaussian_filterdegree = 1; % for the convolution filter on FFT result
+
 
 % figure drawing parameters
 c.drawSimMat = 1;
 c.compute_confs = 0;
 c.draw_confs = 0;
-
-% save precomputed cosine matrices in memory for speed
-% useful for repetition experiments
-% note that the conv and dft get faster with decreasing tile size
-c.use_cosinecache = 1;
 
 % learning rate for posterior
 c.eta = 10;
@@ -71,6 +66,7 @@ c.use_costgaussianwidth = 1;
 c.cosine_normalization = 0.519;
 % contig_windowsize in tiles
 c.contig_windowsize = 3;
+c.contig_penalty = 0.5;
 
 % which cost functions to use and how much linear weight do they have (>0)
 

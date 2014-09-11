@@ -39,5 +39,4 @@ function [this_show] = get_show(s, config)
     end
 
     this_show.audio = this_show.audio(chopper);
-    clear chopper;
 end

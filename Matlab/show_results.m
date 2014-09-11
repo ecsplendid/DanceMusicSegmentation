@@ -2,6 +2,8 @@ classdef show_results
     % results for executing a show
     
     properties
+        config
+        show
         posterior
         predictions
         predictions_timespace
@@ -17,5 +19,17 @@ classdef show_results
         mean_indexplacementconfidence
         worst_indexplacementconfidence
         track_placementconfidence
+        execution_time
+    end
+    
+    methods
+        function vis(results, fig_num)
+            if( nargin > 1 )
+                visualize_costmatrix( results, fig_num )
+            else
+                visualize_costmatrix( results );
+            end
+           
+        end
     end
 end     

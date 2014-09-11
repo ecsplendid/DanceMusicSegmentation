@@ -1,17 +1,17 @@
-function [rs] = config_optimdrivebounds_onlysum( upper )
-  
-rs = nan(1,21);
+function [rs] = config_optimdrivebounds_onlysym( upper )
+
+    rs = nan(1,21);
 
     if( upper )
     
         % 1: sumIB /in [0,1]
-        rs(1) = 1;
+        rs(1) = 0;
         % 2: sum_contribution /in [0,1]
-        rs(2) = 1;
+        rs(2) = 0;
         % 3: symIB /in [0,1]
-        rs(3) = 0;
+        rs(3) = 1;
         % 4: sym contr /in [0,1]
-        rs(4) = 0;
+        rs(4) = 1;
         % 5: evolution IB /in [0,1]
         rs(5) = 0;
         % 6: evolution contr /in [0,1]

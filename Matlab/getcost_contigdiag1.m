@@ -5,9 +5,14 @@ function [SC] = getcost_contigdiag1 ( ...
 
 %%
 T = show.T;
-SC = inf( T, show.W );
-
 W = show.W;
+
+if config.use_costcontigevolution == 0
+   SC = zeros( T, W ); 
+   return;
+end
+
+SC = inf( T, show.W );
 
 C_dags = getmatrix_indiagonals( show.CosineMatrix, 1, W );
 C_dags = C_dags( 1:W, : )';
@@ -36,5 +41,7 @@ end
 SC = normalize_byincentivebias(SC, costdags_incentivebalance);
 
 SC(:,1:show.w-1 )=inf;
+
+SC = SC .* config.use_costcontigevolution;
 
 end

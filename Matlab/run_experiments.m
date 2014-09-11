@@ -1,6 +1,8 @@
 function [ agg_results ] = ...
     run_experiments( config )
 
+tic;
+
 if( nargin == 0 )
     config = config_getdefault;
 end
@@ -14,5 +16,7 @@ parfor s=1:length(shows)
 end
 
 agg_results = get_aggregateresults(experiment_results, config);
+
+agg_results.execution_time = toc;
 
 end

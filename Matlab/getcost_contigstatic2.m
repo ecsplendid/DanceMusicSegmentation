@@ -1,64 +1,85 @@
 function [SC] = getcost_contigstatic2(...
-    C, W, min_w, ...
-    costcontig_incentivebalance, window_size, future ) 
- %getcost_contigstatic uses a copy of the dynamic programming
- %implementation used in getcost_sum3. What this does is almost identical 
- %other than that it only considers contigous tiles that are <0 or >0
- %the intuative explanation for this cost matrix is that it only considers
- %contigous self similar regions that do not evolve with time i.e. it
- %captures how much the track stays the same/static and how far into the
- %future/past
- %runs in O(2T(1/2(W^2)))
- % future=1 use future self similarity, 0 means use past self similarity
-
- %%% trs,310814, use getcost_contigstatic for now, this one is out of date
+    show, config ) 
+ %getcost_contigstatic2 110914 
+ % re-hash of contigous cost matrix concept
+ % now the idea is we modify the cosine matrix in-place
+ % we set the non-used half to zero
+ % we work on two conceptualizations, "past" and "future"
+ % past means we trace downwards from main diag, future accross
+ % then we conv a hamming window up and down the matrix for each one
+ % and then do a cumsum on both to give a basic increased score for contig
+ % then we build other matrices to punish non-contiguity, this is created
+ % from first order differences of smoothed matrices, cumsumed, scaled and
+ % factored out
+ % parameters are 1) blur window in seconds, 2) penalty scaling exponent
  
 %%
 
-T = size( C, 1 );
+T = show.T;
+W = show.W;
+C = show.CosineMatrix;
+ibp = config.costcontigpast_incentivebalance;
+ibf = config.costcontigfuture_incentivebalance;
 
-SS = getmatrix_selfsim( C, W, future );
-
-%%
-SC = inf( T, W );
-
-% generate SC using the dynamic program from getcost_sum3
-for t=1:T
-    
-    score = 0;
-    
-     limit = T-t;
-     t_ind = t;
-     
-     if(future)
-         limit = t;
-     end
-
-    for w=window_size:min(W-window_size-1, limit)
-        
-        c_ind = t+(w-1);
-       
-        if(future)
-            c_ind = t-(w-1);
-            t_ind = (t-w)+1;
-        end 
-        
-        same_sign = range( sign( SS( t_ind, (w-window_size+1):w ) ) ) == 0;
-        
-        score = score + sum( SS( c_ind, window_size:w ) );
-      
-        if( same_sign )
-            score = score + sum( ( SS( t_ind, (w-window_size+2):w ) ) );
-        end
-        
-        SC( t_ind, w+window_size+1 ) = score / w;
-    end
+if config.use_costcontigpast == 0 ...
+        && config.use_costcontigfuture == 0
+   SC = zeros( T, W ); 
+   return;
 end
 
+for t=1:T
+    C( t, 1:t ) = 0;
+end
 
-SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
+C2=C;
 
-SC(:,1:min_w-1 )=inf;
+C2 = normalize_byincentivebias(C2, 0.5);
+C2(C2>0) = 1;
+C2(C2<=0) = -1;
 
+normalize = @(sc)(sc - min(min(sc))) ./ ...
+    max( max( sc(~isinf(sc)) ) - min( min( sc ) ) );
+
+
+%% future
+
+fut_penalty = diff( C2' )';
+fut_penalty = fut_penalty>0;
+fut_penalty = cumsum(fut_penalty')';
+fut_penalty = (normalize(fut_penalty));
+fut_penalty = fut_penalty.^config.contig_penalty;  % how quickly to penalize non contiguity
+fut_penalty = [zeros(T,1) fut_penalty];
+fut_penalty = 1-fut_penalty;
+
+
+%% past
+
+pas_penalty = diff( C2 );
+pas_penalty = pas_penalty>0;
+pas_penalty = flipud(cumsum(flipud(pas_penalty)'));
+pas_penalty = (normalize(pas_penalty));
+pas_penalty = pas_penalty.^config.contig_penalty;  % how quickly to penalize non contiguity
+pas_penalty = 1-pas_penalty;
+pas_penalty = [zeros(T,1) pas_penalty];
+
+%%
+Cpast = (flipud(cumsum(flipud(pas_penalty.*C)))')';
+Cfuture = (cumsum((fut_penalty.*C)')');
+
+SC = zeros( T, show.W );
+
+if config.use_costcontigpast > 0
+    show.CosineMatrix = Cpast;
+    SCP = getcost_sum( show, config, config.use_costcontigpast, ibp );
+    SC = SC + SCP;
+end
+
+if config.use_costcontigfuture > 0
+    show.CosineMatrix = Cfuture;
+    SCF = getcost_sum( show, config, config.use_costcontigfuture, ibf );
+    SC = SC + SCF;
+end
+
+SC(:,1:show.w-1 )=inf;
 
 end

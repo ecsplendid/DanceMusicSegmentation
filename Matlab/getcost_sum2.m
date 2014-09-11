@@ -1,4 +1,4 @@
-function [SC] = getcost_sum2( C, W, min_w, costcontig_incentivebalance ) 
+function [SC] = getcost_sum2( show, config ) 
 % getcost_sum2 this produces the same result as getcost_sum but uses a
 % different strategy to achieve the result, it takes a future self
 % similarity matrix from getmatrix_selfsim( C, W, 1 ) and then fits
@@ -8,8 +8,12 @@ function [SC] = getcost_sum2( C, W, min_w, costcontig_incentivebalance )
 % the contiguity cost matrices in this fashion
  
 %%
-T = size( C, 1 );
-SC = inf( T, W );
+
+SC = inf( show.T, show.W );
+T = show.T;
+W = show.W;
+C = show.CosineMatrix;
+costsum_incentivebalance = config.costsum_incentivebalance;
 
 SF = getmatrix_selfsim( C, W, 1 );
 
@@ -21,19 +25,14 @@ for width=2:W
     % now shift this triangle along to T-w+1
     for t=1:(T-(width))+1
         
-        new_score = 0;
-        
         TF = SF( t:(t+width-1), 1:width );
         TF = triu( flipud( TF )' );
         
         blue = sum(sum(abs(TF(TF<0))));
         red = sum(sum(abs(TF(TF>=0))));
         
-        blue = blue ;
-        red = red ;
-        
-        blue = blue .* (costcontig_incentivebalance);
-        red = red .* (1-costcontig_incentivebalance);
+        blue = blue .* (costsum_incentivebalance);
+        red = red .* (1-costsum_incentivebalance);
         
         blue = blue / width;
         red = red / width;
@@ -49,8 +48,7 @@ for width=2:W
 end
 
 
-SC = normalize_byincentivebias(SC, costcontig_incentivebalance);
-
-SC(:,1:min_w-1 )=inf;
+SC = normalize_byincentivebias(SC, costsum_incentivebalance);
+SC(:,1:show.w-1 )=inf;
 
 end

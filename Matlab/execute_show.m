@@ -1,4 +1,4 @@
-function [ results, show ] = ...
+function [ results ] = ...
     execute_show( s, config )
 
 if( nargin < 2 )
@@ -12,38 +12,25 @@ end
 % hint: try running me with execute_show(3, config_getdefault)
 % s is show number, there are 6 in the github test set
 
+    tic;
+    
     results = show_results();
 
     show = get_show(s, config);
     
     show = get_cosinematrix( show, config );
     
-    clear show.audio;
+    show.audio = nan;
         
-    CN = getcost_sum3( show, config ...
-            ) .* config.use_costsum;  
-        
-    CS = getcost_symmetry3( show, config ...
-        ) .* config.use_costsymmetry;  
+    CN = getcost_sum( show, config, ...
+        config.use_costsum, config.costsum_incentivebalance  ); 
     
-    CDG = getcost_contigdiag1( show, config ...
-        ) .* config.use_costcontigevolution;  
-
-    future = 1;
-    past = 0;
+    CS = getcost_symmetry3( show, config );  
+    CDG = getcost_contigdiag1( show, config );  
+    SCS = getcost_contigstatic2( show, config );  
+    SCG = getcost_gaussian( show, config );
     
-    SCS = getcost_contigstatic( ...
-        show, config, past ... 
-        ) .* config.use_costcontigpast;  
-    
-    SCSF = getcost_contigstatic( ...
-        show, config, future ...
-        ) .* config.use_costcontigfuture; 
-    
-    SCG = getcost_gaussian( show, config ) ...
-        .* config.use_costgaussian;
-    
-    show.CostMatrix = CN+CS+CDG+SCS+SCSF+SCG;
+    show.CostMatrix = CN+CS+CDG+SCS+SCG;
     
     results = compute_trackplacement( config, show, results );
     results = estimate_numbertracks( show, results, config );
@@ -55,6 +42,21 @@ end
         results = ...
             find_posterior( show, config, output_width, results );
 
+    end
+    
+    results.config = config;
+    results.show = show;
+    results.execution_time = toc;
+    
+    if config.drawSimMat == 1 
+       
+        results.vis();
+    end
+    
+    if config.memory_efficient == 1
+        
+        results.show.CosineMatrix=nan;
+        results.show.CostMatrix=nan;
     end
          
 end

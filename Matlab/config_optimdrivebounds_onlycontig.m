@@ -1,13 +1,13 @@
-function [rs] = config_optimdrivebounds_onlysum( upper )
-  
-rs = nan(1,21);
+function [rs] = config_optimdrivebounds_onlycontig( upper )
+
+    rs = nan(1,21);
 
     if( upper )
     
         % 1: sumIB /in [0,1]
-        rs(1) = 1;
+        rs(1) = 0;
         % 2: sum_contribution /in [0,1]
-        rs(2) = 1;
+        rs(2) = 0;
         % 3: symIB /in [0,1]
         rs(3) = 0;
         % 4: sym contr /in [0,1]
@@ -17,13 +17,13 @@ rs = nan(1,21);
         % 6: evolution contr /in [0,1]
         rs(6) = 0;
         % 7: contigpast IB /in [0,1]
-        rs(7) = 0;
+        rs(7) = 1;
         % 8: contigpast contr /in [0,1]
-        rs(8) = 0;
+        rs(8) = 1;
         % 9: contigfut IB /in [0,1]
-        rs(9) = 0;
+        rs(9) = 1;
         % 10: contigfut contr /in [0,1]
-        rs(10) = 0;
+        rs(10) = 1;
         % 11: gauss IB /in [0,1]
         rs(11) = 1;
         % 12: gauss cont /in [0,1]

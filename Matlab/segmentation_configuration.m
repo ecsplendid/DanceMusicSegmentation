@@ -4,6 +4,7 @@ classdef segmentation_configuration
     % to resort to global variables
     
     properties
+        memory_efficient = 1; % wipe CosineMatrix and CostMatrix after run
         dataset = 1 % 1==github, 2==denis full, 3==lindmik
         sampleRate
         secondsPerTile
@@ -12,16 +13,14 @@ classdef segmentation_configuration
         bandwidth
         lowPassFilter
         highPassFilter
-        gaussian_filterdegree
         drawSimMat
         compute_confs
         draw_confs
-        use_cosinecache
         eta
         solution_shift
         use_costgaussianwidth
         cosine_normalization
-        contig_windowsize
+        contig_penalty = 0.2
         use_costsymmetry
         costsymmetry_incentivebalance
         use_costcontigpast
@@ -34,6 +33,7 @@ classdef segmentation_configuration
         costgauss_incentivebalance
         use_costcontigevolution
         costevolution_incentivebalance
+        
     end
     
 end

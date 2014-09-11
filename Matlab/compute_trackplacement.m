@@ -21,9 +21,4 @@ function results = compute_trackplacement( ...
     results.mean_score = mean(abs(results.predictions_timespace - show.indexes'));
     results.heuristic_score = get_heuristicaccuracy( ...
                        show.indexes, results.predictions_timespace );
-    
-    if( config.drawSimMat==1 )
-       
-        visualize_costmatrix( show, config, results );
-    end
 end

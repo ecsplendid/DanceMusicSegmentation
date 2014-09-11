@@ -1,21 +1,25 @@
 function [show] = get_cosinematrix(...
     show, cfg )
 
-tic;
+
     no_tiles = ceil((length(show.audio)/cfg.sampleRate)/cfg.secondsPerTile);
-    tileWidth = floor(length(show.audio)/no_tiles); % we discard the last partial tile
+    % we discard the last partial tile
+    tileWidth = floor(length(show.audio)/no_tiles);
     nFFT = 2^nextpow2( tileWidth );
     %max track width in seconds
     
     downsample = 5000;
     
-    show.W =  ceil((cfg.maxExpectedTrackWidth)/cfg.secondsPerTile); 
-    lowPassFilterSamples = ceil(cfg.lowPassFilter * (nFFT/cfg.sampleRate))+1;
-    highPassFilterSamples = ceil(cfg.highPassFilter * (nFFT/cfg.sampleRate))+1;
+    show.W =  ceil( cfg.maxExpectedTrackWidth /cfg.secondsPerTile ); 
+    lowPassFilterSamples = ceil(cfg.lowPassFilter * ...
+        (nFFT/cfg.sampleRate))+1;
+    highPassFilterSamples = ceil(cfg.highPassFilter * ...
+        (nFFT/cfg.sampleRate))+1;
     assert( lowPassFilterSamples < nFFT/2 );
     fdata = nan( no_tiles, downsample  );
-  
-    bandw_fftSpace = ( cfg.bandwidth * (nFFT/cfg.sampleRate) ); % in FFT steps
+    
+	% in FFT steps
+    bandw_fftSpace = ( cfg.bandwidth * (nFFT/cfg.sampleRate) ); 
   
     show.w = floor((cfg.minTrackLength) / cfg.secondsPerTile);
                         
@@ -25,7 +29,8 @@ tic;
     gauss = @(x, sigma)exp(-x.^2/(2*sigma.^2)) / (sigma*sqrt(2*pi));
     %first order derivative of Gaussian
     dgauss = @(x, sigma)-x .* gauss(x,sigma) / sigma.^2;
-    dgfilter = dgauss(-(bandw_fftSpace+10):(bandw_fftSpace+10), bandw_fftSpace );
+    dgfilter = dgauss(-(bandw_fftSpace+10):(bandw_fftSpace+10), ...
+        bandw_fftSpace );
     
 for x=1:no_tiles
 
@@ -41,17 +46,11 @@ for x=1:no_tiles
         %normalize (unit length) vec, so dot below gives cosines;
         Y = Y./norm(Y); 
 
-       % assert((norm(Y)-1)<1e-6);
+        assert((norm(Y)-1)<1e-6);
         fdata(x, : ) = Y;
 end
 
-%imagesc((abs((1-(fdata * fdata')))))
 
-%%
-
-
- %%
- 
     show.space = (0:no_tiles-1) .* cfg.secondsPerTile;
     %%
     %thrown an abs in there in case of any numerical error on the low costs
@@ -75,5 +74,5 @@ end
     show.CosineMatrix = (show.CosineMatrix.*2)-1; 
     
     show.T = size(C,1);
-    toc;
+
 end

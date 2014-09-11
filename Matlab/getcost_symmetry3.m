@@ -11,6 +11,11 @@ C = show.CosineMatrix;
 
 incentivebalance = config.costsymmetry_incentivebalance;
 
+if config.use_costsymmetry == 0
+   SC = zeros( T, W ); 
+   return;
+end
+
 % evens
 for t = 1:T
 
@@ -178,5 +183,6 @@ end
 
 SC = normalize_byincentivebias(SC, incentivebalance);
 SC(:,1:show.w-1 )=inf;
+SC = SC .* config.use_costsymmetry;
 
 end

@@ -6,6 +6,10 @@ function [c] = config_optimdrive(ibev, dataset)
     
     if( nargin > 1 )
         c.dataset = dataset;
+        
+        if c.dataset > 1 % cant store all the cosines/cost matrices
+            c.memory_efficient = 1;
+        end
     end
 
     % config_optimdrive this function will get a configuration
@@ -28,15 +32,14 @@ function [c] = config_optimdrive(ibev, dataset)
     % 11: gauss IB /in [0,1]
     % 12: gauss cont /in [0,2]
     % 13: cosine norm /in [0.4,1.4]
-    % 14: contig window /in {1,2,...,5}
-    % 15: solution_shift /in {-3,-2,-1,0,1,2,3}
-    % 16: minTrackLength /in {120,121,...,220}
-    % 17: maxExpectedTrackWidth /in {6*60,...,15*60}
-    % 18: bandwidth /in {1,2,...,15}
-    % 19: lowPassFilter /in {800,...,1950}
-    % 20: highPassFilter /in {50,...,500}
-    % 21: gaussian_filterdegree /in {1,2,3,4,5,6}
-    % 22: secondsPerTile /in {5,6,...,40} 
+    % 14: solution_shift /in {-3,-2,-1,0,1,2,3}
+    % 15: minTrackLength /in {120,121,...,220}
+    % 16: maxExpectedTrackWidth /in {6*60,...,15*60}
+    % 17: bandwidth /in {1,2,...,15}
+    % 18: lowPassFilter /in {800,...,1950}
+    % 19: highPassFilter /in {50,...,500}
+    % 20: secondsPerTile /in {5,6,...,40} 
+    % 21: contig penalty /in {0.05,...,5}
     
     % see config_optimdrivebounds for bounds and random start driver
     
@@ -49,29 +52,23 @@ function [c] = config_optimdrive(ibev, dataset)
 % Feature Extraction Parameters
 
 c.sampleRate = 4000;
-c.secondsPerTile = round(ibev(22));
-c.minTrackLength = round(ibev(16));
-c.maxExpectedTrackWidth = round(ibev(17));   % (magicisland=380*2 others 350*2)
-c.bandwidth = round(ibev(18)); % bandwith for the width of the convolution filter
-c.lowPassFilter = round(ibev(19)); %Hz
-c.highPassFilter = round(ibev(20)); %Hz
-c.gaussian_filterdegree = round(ibev(21)); % for the convolution filter on FFT result
+c.secondsPerTile = round(ibev(20));
+c.minTrackLength = round(ibev(15));
+c.maxExpectedTrackWidth = round(ibev(16));   % (magicisland=380*2 others 350*2)
+c.bandwidth = round(ibev(17)); % bandwith for the width of the convolution filter
+c.lowPassFilter = round(ibev(18)); %Hz
+c.highPassFilter = round(ibev(19)); %Hz
 
 % figure drawing parameters
-c.drawSimMat = 0;
+c.drawSimMat = 1;
 c.compute_confs = 0;
 c.draw_confs = 0;
-
-% save precomputed cosine matrices in memory for speed
-% useful for repetition experiments
-% note that the conv and dft get faster with decreasing tile size
-c.use_cosinecache = 1;
 
 % learning rate for posterior
 c.eta = 10;
 
 % shift the solutions by x seconds, seems useless
-c.solution_shift = round(ibev(15));
+c.solution_shift = round(ibev(14));
 % gaussian width (>1) higher values pinch the gaussian
 c.use_costgaussianwidth = 1;
 % suggested: [0.5,1.5], shift the mean of the (gaussian) distribution of
@@ -80,8 +77,8 @@ c.use_costgaussianwidth = 1;
 % distribution, I would guess a value slightly greater than 1 is optimal for
 % the symmetry and contig cost matrices. >1 shifts mean higher
 c.cosine_normalization = ibev(13);
-% contig_windowsize in tiles
-c.contig_windowsize = round(ibev(14));
+
+c.contig_penalty = ibev(21);
 
 % which cost functions to use and how much linear weight do they have (>0)
 

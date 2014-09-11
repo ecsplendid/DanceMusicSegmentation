@@ -19,5 +19,6 @@ classdef aggregate_results
         mean_indexplacementconfidence_all
         track_placementconfidenceavg_mean
         mean_indexplacementconfidence_mean
+        execution_time
     end
 end     

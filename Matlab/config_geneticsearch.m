@@ -11,16 +11,15 @@ options = gaoptimset(options,'PlotFcns', {  @gaplotbestf @gaplotbestindiv @gaplo
 options = gaoptimset(options,'Vectorized', 'off');
 options = gaoptimset(options,'UseParallel', 1 );
 
-
-%% for finding best optimise_trackplacementmean
+%% mean for finding best optimise_trackplacementmean
 
 cfg_trkplacemean = ga( @optimise_trackplacementmean, ...
-    22, ... % num constraints
+    21, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds(0), ...
     config_optimdrivebounds(1), ...
     [], ...
-    [14,15,16,17,18,19,20,21,22], ... % int constraints
+    [14,15,16,17,18,19,20,21], ... % int constraints
     options );
 
 savefig('results/optimise_trackplacementmean.fig');
@@ -30,96 +29,132 @@ ag1 = run_experiments( config_optimdrive(cfg_trkplacemean, 2) );
 ag1.description = 'best mean';
 save results/cfg_trkplacemean.mat ag1;
 
-%% for finding best optimise_trackplacementheuristic
+pack
 
-cfg_trkplaceheur = ga( @optimise_trackplacementheuristic, ...
-    22, ... % num constraints
+
+%% only sum+gauss cost matrix
+
+cfg_trkplace_sumgauss = ga( @optimise_trackplacementmean, ...
+    21, ... % num constraints
     [],[],[],[], ...
-    config_optimdrivebounds(0), ...
-    config_optimdrivebounds(1), ...
+    config_optimdrivebounds_onlysum(0), ...
+    config_optimdrivebounds_onlysum(1), ...
     [], ...
-    [14,15,16,17,18,19,20,21,22], ... % int constraints
+    [14,15,16,17,18,19,20,21], ... % int constraints
     options );
 
-savefig('results/optimise_trackplacementheuristic.fig');
+savefig('results/cfg_trkplace_sumgauss.fig');
 
 % run the full experiment
-ag2 = run_experiments( config_optimdrive(cfg_trkplaceheur, 2) );
-ag1.description = 'best heuristic';
-save results/cfg_trkplaceheur.mat ag2;
+ag12 = run_experiments( config_optimdrive(cfg_trkplace_sumgauss, 2) );
+ag12.description = 'sum + gauss';
+save results/cfg_trkplace_sumgauss.mat ag12;
 
-%% for finding best optimise_trackplacementstd
+pack
 
-cfg_trkplacestd = ga( @optimise_trackplacementstd, ...
-    22, ... % num constraints
+%% only contig+gauss cost matrix
+
+cfg_trkplace_contiggauss = ga( @optimise_trackplacementmean, ...
+    21, ... % num constraints
     [],[],[],[], ...
-    config_optimdrivebounds(0), ...
-    config_optimdrivebounds(1), ...
+    config_optimdrivebounds_onlycontig(0), ...
+    config_optimdrivebounds_onlycontig(1), ...
     [], ...
-    [14,15,16,17,18,19,20,21,22], ... % int constraints
+    [14,15,16,17,18,19,20,21], ... % int constraints
     options );
 
-savefig('results/optimise_trackplacementstd.fig');
+savefig('results/cfg_trkplace_contiggauss.fig');
 
 % run the full experiment
-ag3 = run_experiments( config_optimdrive(cfg_trkplacestd, 2) );
-ag1.description = 'best std';
-save results/cfg_trkplacestd.mat ag3;
+ag10 = run_experiments( config_optimdrive(cfg_trkplace_contiggauss, 2) );
+ag10.description = 'evolution + gauss';
+save results/cfg_trkplace_contiggauss.mat ag10;
 
-%% run a totally random one for comparison
-
-ag4 = run_experiments( config_optimdrive(config_optimdrivebounds_randomstart, 2) );
-ag1.description = 'totally random';
-save results/cfg_random.mat ag4;
-
-%% mean+heur
-
-cfg_trkplace_meanheur = ga( @optimise_trackplacementheuristicandmean, ...
-    22, ... % num constraints
-    [],[],[],[], ...
-    config_optimdrivebounds(0), ...
-    config_optimdrivebounds(1), ...
-    [], ...
-    [14,15,16,17,18,19,20,21,22], ... % int constraints
-    options );
-
-savefig('results/optimise_trackplacement_meanheur.fig');
-
-% run the full experiment
-ag6 = run_experiments( config_optimdrive(cfg_trkplace_meanheur, 2) );
-ag1.description = 'cfg_trkplace_meanheur';
-save results/cfg_trkplace_meanheur.mat ag6;
+pack
 
 %% only evolution+gauss cost matrix
 
-cfg_trkplace_evogauss = ga( @optimise_trackplacementheuristicandmean, ...
-    22, ... % num constraints
+cfg_trkplace_evogauss = ga( @optimise_trackplacementmean, ...
+    21, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds_onlyevolution(0), ...
     config_optimdrivebounds_onlyevolution(1), ...
     [], ...
-    [14,15,16,17,18,19,20,21,22], ... % int constraints
+    [14,15,16,17,18,19,20,21], ... % int constraints
     options );
 
 savefig('results/optimise_trackplacement_evogauss.fig');
 
 % run the full experiment
 ag5 = run_experiments( config_optimdrive(cfg_trkplace_evogauss, 2) );
-ag1.description = 'evolution + gauss';
+ag5.description = 'evolution + gauss';
 save results/cfg_trkplace_evogauss.mat ag5;
 
+pack
+
+%% only sym+gauss cost matrix
+
+cfg_trkplace_symgauss = ga( @optimise_trackplacementmean, ...
+    21, ... % num constraints
+    [],[],[],[], ...
+    config_optimdrivebounds_onlysym(0), ...
+    config_optimdrivebounds_onlysym(1), ...
+    [], ...
+    [14,15,16,17,18,19,20,21], ... % int constraints
+    options );
+
+savefig('results/optimise_trackplacement_symgauss.fig');
+
+% run the full experiment
+ag11 = run_experiments( config_optimdrive(cfg_trkplace_symgauss, 2) );
+ag11.description = 'sym + gauss';
+save results/cfg_trkplace_symgauss.mat ag11;
+
+pack
 
 %% for estimating the number of segments
 
 cfg_evolution = ga( @optimise_tracknumberestimate, ...
-    22, ... % num constraints
+    21, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds_lowerbounds, ...
     config_optimdrivebounds_upperbounds, ...
     [], ...
-    [14,15,16,17,18,19,20,21,22], ... % int constraints
+    [14,15,16,17,18,19,20,21], ... % int constraints
     options );
 
 savefig('results/optimise_tracknumberestimate.fig');
 
 save results/cfg_nosegs.mat cfg_nosegs
+
+pack
+
+
+
+%% for finding best optimise_trackplacementheuristic
+
+cfg_trkplaceheur = ga( @optimise_trackplacementheuristic, ...
+    21, ... % num constraints
+    [],[],[],[], ...
+    config_optimdrivebounds(0), ...
+    config_optimdrivebounds(1), ...
+    [], ...
+    [14,15,16,17,18,19,20,21], ... % int constraints
+    options );
+
+savefig('results/optimise_trackplacementheuristic.fig');
+
+% run the full experiment
+ag2 = run_experiments( config_optimdrive(cfg_trkplaceheur, 2) );
+ag2.description = 'best heuristic';
+save results/cfg_trkplaceheur.mat ag2;
+
+pack
+
+
+
+%% run a totally random one for comparison
+
+ag4 = run_experiments( config_optimdrive(config_optimdrivebounds_randomstart, 2) );
+ag4.description = 'totally random';
+save results/cfg_random.mat ag4;
