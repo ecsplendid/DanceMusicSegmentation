@@ -1,7 +1,7 @@
 function [SC] = getcost_symmetry3 (...
     show, config ) 
  % getcost_symmetry3 dynamic programming implementation of getcost_symmetry
- 
+ % runs in O(2T2W^2)?
 %%
 
 T = show.T;

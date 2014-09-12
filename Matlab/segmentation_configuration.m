@@ -37,6 +37,7 @@ classdef segmentation_configuration
         costsum_normalization
         costcontig_normalization
         costsym_normalization
+        estimate_tracks = 0;
     end
     
 end

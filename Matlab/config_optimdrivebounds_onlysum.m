@@ -46,13 +46,13 @@ rs = nan(1,25);
         rs(20) = 20;
         % 21: contig penalty /in {0.05,...,5}
         rs(21) = 5;
-        % 22: costevolution_normalization /in {0.1,...,4}
+        % 22: costevolution_normalization /in {0.1,...,3}
         rs(22) = 0;
-        % 23: costsum_normalization /in {0.1,...,4}
+        % 23: costsum_normalization /in {0.1,...,3}
         rs(23) = 4;
-        % 24: costcontig_normalization /in {0.1,...,4}
+        % 24: costcontig_normalization /in {0.1,...,3}
         rs(24) = 0;
-        % 25: costsym_normalization /in {0.1,...,4}
+        % 25: costsym_normalization /in {0.1,...,3}
         rs(25) = 0;
     
     else
@@ -99,13 +99,13 @@ rs = nan(1,25);
         rs(20) = 3;
         % 21: contig penalty /in {0.05,...,5}
         rs(21) = 0.05;
-        % 22: costevolution_normalization /in {0.1,...,4}
+        % 22: costevolution_normalization /in {0.01,...,3}
         rs(22) = 0;
-        % 23: costsum_normalization /in {0.1,...,4}
-        rs(23) = 0.1;
-        % 24: costcontig_normalization /in {0.1,...,4}
+        % 23: costsum_normalization /in {0.01,...,3}
+        rs(23) = 0.01;
+        % 24: costcontig_normalization /in {0.01,...,3}
         rs(24) = 0;
-        % 25: costsym_normalization /in {0.1,...,4}
+        % 25: costsym_normalization /in {0.01,...,3}
         rs(25) = 0;
     end
 end

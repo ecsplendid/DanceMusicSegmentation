@@ -44,12 +44,12 @@ function [rs] = config_optimdrivebounds_randomstart()
     rs(20) = ceil(rand * 15)+5;
     % 21: contig penalty /in {0.05,...,5}
     rs(21) = ((rand+0.05)*(5+0.05));
-    % 22: costevolution_normalization /in {0.1,...,4}
-    rs(22) = 0.1+((rand*4)-0.1);
-    % 23: costsum_normalization /in {0.1,...,4}
-    rs(23) = 0.1+((rand*4)-0.1);
-    % 24: costcontig_normalization /in {0.1,...,4}
-    rs(24) = 0.1+((rand*4)-0.1);
-    % 25: costsym_normalization /in {0.1,...,4}
-    rs(25) = 0.1+((rand*4)-0.1);
+    % 22: costevolution_normalization /in {0.01,...,3}
+    rs(22) = 0.01+((rand*3)-0.01);
+    % 23: costsum_normalization /in {0.01,...,3}
+    rs(23) = 0.01+((rand*3)-0.01);
+    % 24: costcontig_normalization /in {0.01,...,3}
+    rs(24) = 0.01+((rand*3)-0.01);
+    % 25: costsym_normalization /in {0.01,...,3}
+    rs(25) = 0.01+((rand*3)-0.01);
 end

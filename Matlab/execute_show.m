@@ -35,7 +35,10 @@ end
     show.CostMatrix = CN+CS+CDG+SCS+SCG;
     
     results = compute_trackplacement( config, show, results );
-    results = estimate_numbertracks( show, results, config );
+    
+    if config.estimate_tracks
+        results = estimate_numbertracks( show, results, config );
+    end
     
     if( config.compute_confs )
         
