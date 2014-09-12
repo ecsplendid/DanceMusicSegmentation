@@ -90,4 +90,11 @@ c.use_costsum             = ibev(2);    c.costsum_incentivebalance = ibev(1);
 c.use_costgaussian        = ibev(12);   c.costgauss_incentivebalance = ibev(11);
 c.use_costcontigevolution = ibev(6);    c.costevolution_incentivebalance = ibev(5);
 
+
+c.costevolution_normalization = ibev(22);
+c.costsum_normalization= ibev(23);
+c.costcontig_normalization= ibev(24);
+c.costsym_normalization= ibev(25);
+
+
 end

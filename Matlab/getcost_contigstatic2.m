@@ -70,13 +70,15 @@ SC = zeros( T, show.W );
 
 if config.use_costcontigpast > 0
     show.CosineMatrix = Cpast;
-    SCP = getcost_sum( show, config, config.use_costcontigpast, ibp );
+    SCP = getcost_sum( show, config, config.use_costcontigpast, ibp, ...
+        config.costcontig_normalization );
     SC = SC + SCP;
 end
 
 if config.use_costcontigfuture > 0
     show.CosineMatrix = Cfuture;
-    SCF = getcost_sum( show, config, config.use_costcontigfuture, ibf );
+    SCF = getcost_sum( show, config, config.use_costcontigfuture, ibf, ...
+        config.costcontig_normalization );
     SC = SC + SCF;
 end
 

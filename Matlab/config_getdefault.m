@@ -9,7 +9,7 @@ c.dataset = 1;
 
 % Feature Extraction Parameters
 c.sampleRate = 4000;
-c.secondsPerTile = 5;
+c.secondsPerTile = 2;
 c.minTrackLength = 142;
 c.maxExpectedTrackWidth = 613;   % (magicisland=380*2 others 350*2)
 c.bandwidth = 3; % bandwith for the width of the convolution filter
@@ -40,12 +40,17 @@ c.contig_penalty = 0.01;
 % which cost functions to use and how much weight do they have (>0)
 
 % USE THESE>>>
-c.use_costsymmetry        = 1;       c.costsymmetry_incentivebalance = 0.1238;
-c.use_costcontigpast      = 1;     c.costcontigpast_incentivebalance = 0.2;
-c.use_costcontigfuture    = 1;   c.costcontigfuture_incentivebalance = 0.5478;
+c.use_costsymmetry        = 0;       c.costsymmetry_incentivebalance = 0.1238;
+c.use_costcontigpast      = 0;     c.costcontigpast_incentivebalance = 0.2;
+c.use_costcontigfuture    = 0;   c.costcontigfuture_incentivebalance = 0.5478;
 c.use_costsum             = 1;             c.costsum_incentivebalance = .5478;
-c.use_costgaussian        = 1;           c.costgauss_incentivebalance = 0.4116;
-c.use_costcontigevolution = 1;      c.costevolution_incentivebalance = 0.2736;
+c.use_costgaussian        = 0;           c.costgauss_incentivebalance = 0.4116;
+c.use_costcontigevolution = 0;      c.costevolution_incentivebalance = 0.2736;
+
+c.costevolution_normalization = 1;
+c.costsum_normalization = 0.4;
+c.costcontig_normalization = 1;
+c.costsym_normalization = 1;
 
 end
 

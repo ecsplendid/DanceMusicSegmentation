@@ -52,7 +52,7 @@ for t = 1:T
         
         odd_score = odd_score + new_score ;
         
-        SC( ct, wi ) = odd_score / wi;
+        SC( ct, wi ) = odd_score / wi ^ config.costsym_normalization;
  
     end
     
@@ -90,7 +90,7 @@ for t = 1:T
         
         score = score + new_score ;
         
-        SC( ct, wi ) = score / wi;
+        SC( ct, wi ) = score / wi ^ config.costsym_normalization;
  
     end
 end
@@ -136,7 +136,7 @@ for i=1:2:W-1
 
         score = score + new_score;
 
-        SC( ct, ws(w) ) = score / wi;
+        SC( ct, ws(w) ) = score / wi ^ config.costsym_normalization;
 
     end
 
@@ -176,7 +176,7 @@ for i=1:2:W-1
 
         score = score + new_score;
 
-        SC( ct, ws(w) ) = score / wi;
+        SC( ct, ws(w) ) = score / wi ^ config.costsym_normalization;
 
     end
 end

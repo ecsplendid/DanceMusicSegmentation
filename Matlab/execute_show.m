@@ -23,7 +23,9 @@ end
     show.audio = nan;
         
     CN = getcost_sum( show, config, ...
-        config.use_costsum, config.costsum_incentivebalance  ); 
+        config.use_costsum, ...
+        config.costsum_incentivebalance, ...
+        config.costsum_normalization ); 
     
     CS = getcost_symmetry3( show, config );  
     CDG = getcost_contigdiag1( show, config );  

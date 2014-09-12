@@ -14,7 +14,7 @@ options = gaoptimset(options,'UseParallel', 1 );
 %% mean for finding best optimise_trackplacementmean
 
 cfg_trkplacemean = ga( @optimise_trackplacementmean, ...
-    21, ... % num constraints
+    25, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds(0), ...
     config_optimdrivebounds(1), ...
@@ -29,33 +29,33 @@ ag1 = run_experiments( config_optimdrive(cfg_trkplacemean, 2) );
 ag1.description = 'best mean';
 save results/cfg_trkplacemean.mat ag1;
 
-pack
-
-
 %% only sum+gauss cost matrix
 
+gauss = 1;
+
 cfg_trkplace_sumgauss = ga( @optimise_trackplacementmean, ...
-    21, ... % num constraints
+    25, ... % num constraints
     [],[],[],[], ...
-    config_optimdrivebounds_onlysum(0), ...
-    config_optimdrivebounds_onlysum(1), ...
+    config_optimdrivebounds_onlysum(0, gauss), ...
+    config_optimdrivebounds_onlysum(1, gauss), ...
     [], ...
     [14,15,16,17,18,19,20,21], ... % int constraints
     options );
 
 savefig('results/cfg_trkplace_sumgauss.fig');
 
-% run the full experiment
-ag12 = run_experiments( config_optimdrive(cfg_trkplace_sumgauss, 2) );
-ag12.description = 'sum + gauss';
-save results/cfg_trkplace_sumgauss.mat ag12;
+save results/cfg_trkplace_sumgauss_onlyconfig.mat cfg_trkplace_sumgauss;
 
-pack
+% run the full experiment
+sum_gauss = run_experiments( config_optimdrive(cfg_trkplace_sumgauss, 2) );
+sum_gauss.description = 'sum + gauss';
+save results/cfg_trkplace_sumgauss.mat sum_gauss;
+
 
 %% only contig+gauss cost matrix
 
 cfg_trkplace_contiggauss = ga( @optimise_trackplacementmean, ...
-    21, ... % num constraints
+    25, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds_onlycontig(0), ...
     config_optimdrivebounds_onlycontig(1), ...
@@ -70,12 +70,10 @@ ag10 = run_experiments( config_optimdrive(cfg_trkplace_contiggauss, 2) );
 ag10.description = 'evolution + gauss';
 save results/cfg_trkplace_contiggauss.mat ag10;
 
-pack
-
 %% only evolution+gauss cost matrix
 
 cfg_trkplace_evogauss = ga( @optimise_trackplacementmean, ...
-    21, ... % num constraints
+    25, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds_onlyevolution(0), ...
     config_optimdrivebounds_onlyevolution(1), ...
@@ -90,12 +88,10 @@ ag5 = run_experiments( config_optimdrive(cfg_trkplace_evogauss, 2) );
 ag5.description = 'evolution + gauss';
 save results/cfg_trkplace_evogauss.mat ag5;
 
-pack
-
 %% only sym+gauss cost matrix
 
 cfg_trkplace_symgauss = ga( @optimise_trackplacementmean, ...
-    21, ... % num constraints
+    25, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds_onlysym(0), ...
     config_optimdrivebounds_onlysym(1), ...
@@ -110,12 +106,10 @@ ag11 = run_experiments( config_optimdrive(cfg_trkplace_symgauss, 2) );
 ag11.description = 'sym + gauss';
 save results/cfg_trkplace_symgauss.mat ag11;
 
-pack
-
 %% for estimating the number of segments
 
 cfg_evolution = ga( @optimise_tracknumberestimate, ...
-    21, ... % num constraints
+    25, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds_lowerbounds, ...
     config_optimdrivebounds_upperbounds, ...
@@ -127,14 +121,10 @@ savefig('results/optimise_tracknumberestimate.fig');
 
 save results/cfg_nosegs.mat cfg_nosegs
 
-pack
-
-
-
 %% for finding best optimise_trackplacementheuristic
 
 cfg_trkplaceheur = ga( @optimise_trackplacementheuristic, ...
-    21, ... % num constraints
+    25, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds(0), ...
     config_optimdrivebounds(1), ...
@@ -148,10 +138,6 @@ savefig('results/optimise_trackplacementheuristic.fig');
 ag2 = run_experiments( config_optimdrive(cfg_trkplaceheur, 2) );
 ag2.description = 'best heuristic';
 save results/cfg_trkplaceheur.mat ag2;
-
-pack
-
-
 
 %% run a totally random one for comparison
 

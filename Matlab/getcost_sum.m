@@ -1,7 +1,7 @@
-function [ SC ] = getcost_sum( show, config, scale, ib )
+function [ SC ] = getcost_sum( show, config, scale, ib, normalization )
 %   getcost_sum 
 %   builds the sum cost matrix calling the dynamic program get_summationfast
-%   which is described in detail in the first paper. Runs in O(TW)
+%   which is described in detail in the first paper. Runs in O(2TW)
 
 if nargin < 3
     % this function is used in the context of contig too
@@ -32,8 +32,8 @@ C_RED = abs(C_RED);
 SC_BLUE = get_summationfast( C_BLUE, W, show.w );
 SC_RED = get_summationfast( C_RED, W, show.w );
 
-SC_BLUE = SC_BLUE ./ repmat( (1:W).^2, size(SC_BLUE,1), 1 );
-SC_RED = SC_RED ./ repmat( (1:W).^2, size(SC_RED,1), 1 );
+SC_BLUE = SC_BLUE ./ repmat( (1:W).^normalization, size(SC_BLUE,1), 1 );
+SC_RED = SC_RED ./ repmat( (1:W).^normalization, size(SC_RED,1), 1 );
 
 SC_BLUE = SC_BLUE .* ib;
 SC_RED = SC_RED .* (1-ib);

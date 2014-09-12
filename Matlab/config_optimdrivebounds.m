@@ -1,6 +1,6 @@
 function [rs] = config_optimdrivebounds( upper )
 
-    rs = nan(1,21);
+    rs = nan(1,25);
 
     if( upper )
     
@@ -46,6 +46,14 @@ function [rs] = config_optimdrivebounds( upper )
         rs(20) = 20;
         % 21: contig penalty /in {0.05,...,5}
         rs(21) = 5;
+        % 22: costevolution_normalization /in {0.1,...,4}
+        rs(22) = 4;
+        % 23: costsum_normalization /in {0.1,...,4}
+        rs(23) = 4;
+        % 24: costcontig_normalization /in {0.1,...,4}
+        rs(24) = 4;
+        % 25: costsym_normalization /in {0.1,...,4}
+        rs(25) = 4;
     
     else
         
@@ -91,5 +99,13 @@ function [rs] = config_optimdrivebounds( upper )
         rs(20) = 5;
         % 21: contig penalty /in {0.05,...,5}
         rs(21) = 0.05;
+        % 22: costevolution_normalization /in {0.1,...,4}
+        rs(22) = 0.1;
+        % 23: costsum_normalization /in {0.1,...,4}
+        rs(23) = 0.1;
+        % 24: costcontig_normalization /in {0.1,...,4}
+        rs(24) = 0.1;
+        % 25: costsym_normalization /in {0.1,...,4}
+        rs(25) = 0.1;
     end
 end
