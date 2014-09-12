@@ -40,12 +40,12 @@ c.contig_penalty = 0.01;
 % which cost functions to use and how much weight do they have (>0)
 
 % USE THESE>>>
-c.use_costsymmetry        = 0;       c.costsymmetry_incentivebalance = 0.1238;
+c.use_costsymmetry        = 1;       c.costsymmetry_incentivebalance = 0.1238;
 c.use_costcontigpast      = 1;     c.costcontigpast_incentivebalance = 0.2;
 c.use_costcontigfuture    = 1;   c.costcontigfuture_incentivebalance = 0.5478;
-c.use_costsum             = 0;             c.costsum_incentivebalance = .5478;
+c.use_costsum             = 1;             c.costsum_incentivebalance = .5478;
 c.use_costgaussian        = 1;           c.costgauss_incentivebalance = 0.4116;
-c.use_costcontigevolution = 0;      c.costevolution_incentivebalance = 0.2736;
+c.use_costcontigevolution = 1;      c.costevolution_incentivebalance = 0.2736;
 
 end
 
