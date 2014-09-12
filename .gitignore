@@ -214,7 +214,6 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 *.asv
-*.mat
 Matlab/chain.m
 Matlab/results/results_cleaned
 Matlab/results/mars_results/results.txt
