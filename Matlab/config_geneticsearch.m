@@ -1,13 +1,12 @@
 %% options setup
 
 options = gaoptimset;
-options = gaoptimset(options,'PopulationSize', [100 100] );
+options = gaoptimset(options,'PopulationSize', [50 50] );
 options = gaoptimset(options,'MigrationDirection', 'both');
 options = gaoptimset(options,'MigrationInterval', 3);
-options = gaoptimset(options,'MigrationFraction', 0.2);
-options = gaoptimset(options,'CreationFcn', @gacreationlinearfeasible);
-options = gaoptimset(options,'EliteCount', 20);
-options = gaoptimset(options,'CrossoverFraction', 0.7);
+options = gaoptimset(options,'MigrationFraction', 0.3);
+options = gaoptimset(options,'EliteCount', 10);
+options = gaoptimset(options,'CrossoverFraction', 0.5);
 options = gaoptimset(options,'Generations', 20);
 options = gaoptimset(options,'StallGenLimit', 4);
 options = gaoptimset(options,'Display', 'iter');
@@ -22,24 +21,6 @@ options = gaoptimset(options,'InitialPopulation', ...
     config_optimdrivebounds_randomstart() );
 
 gauss = 1;
-
-%% mean for finding best optimise_trackplacementmean
-
-cfg_trkplacemean = ga( @optimise_trackplacementmean, ...
-    25, ... % num constraints
-    [],[],[],[], ...
-    config_optimdrivebounds(0, gauss), ...
-    config_optimdrivebounds(1, gauss), ...
-    [], ...
-    [14,15,16,17,18,19,20,21], ... % int constraints
-    options );
-
-savefig('results/optimise_trackplacementmean.fig');
-
-% run the full experiment
-all = run_experiments( config_optimdrive(cfg_trkplacemean, 2) );
-all.description = 'best mean';
-save results/cfg_trkplacemean.mat all;
 
 %% only sum+gauss cost matrix
 
@@ -61,6 +42,23 @@ sum_gauss = run_experiments( config_optimdrive(cfg_trkplace_sumgauss, 2) );
 sum_gauss.description = 'sum + gauss';
 save results/cfg_trkplace_sumgauss.mat sum_gauss;
 
+%% mean for finding best optimise_trackplacementmean
+
+cfg_trkplacemean = ga( @optimise_trackplacementmean, ...
+    25, ... % num constraints
+    [],[],[],[], ...
+    config_optimdrivebounds(0, gauss), ...
+    config_optimdrivebounds(1, gauss), ...
+    [], ...
+    [14,15,16,17,18,19,20,21], ... % int constraints
+    options );
+
+savefig('results/optimise_trackplacementmean.fig');
+
+% run the full experiment
+all = run_experiments( config_optimdrive(cfg_trkplacemean, 2) );
+all.description = 'best mean';
+save results/cfg_trkplacemean.mat all;
 
 %% only contig+gauss cost matrix
 
