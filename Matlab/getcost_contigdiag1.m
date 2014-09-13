@@ -34,7 +34,7 @@ for t = 1:T
         
         score = score +  new_score;
         
-        SC( (t-w)+1, w ) = score / w^2;
+        SC( (t-w)+1, w ) = score / w^config.costevolution_normalization;
     end
 end
 

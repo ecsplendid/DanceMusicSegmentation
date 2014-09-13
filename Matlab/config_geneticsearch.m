@@ -21,14 +21,15 @@ options = gaoptimset(options,'UseParallel', 1 );
 options = gaoptimset(options,'InitialPopulation', ...
     config_optimdrivebounds_randomstart() );
 
+gauss = 1;
 
 %% mean for finding best optimise_trackplacementmean
 
 cfg_trkplacemean = ga( @optimise_trackplacementmean, ...
     25, ... % num constraints
     [],[],[],[], ...
-    config_optimdrivebounds(0), ...
-    config_optimdrivebounds(1), ...
+    config_optimdrivebounds(0, gauss), ...
+    config_optimdrivebounds(1, gauss), ...
     [], ...
     [14,15,16,17,18,19,20,21], ... % int constraints
     options );
@@ -36,13 +37,11 @@ cfg_trkplacemean = ga( @optimise_trackplacementmean, ...
 savefig('results/optimise_trackplacementmean.fig');
 
 % run the full experiment
-ag1 = run_experiments( config_optimdrive(cfg_trkplacemean, 2) );
-ag1.description = 'best mean';
-save results/cfg_trkplacemean.mat ag1;
+all = run_experiments( config_optimdrive(cfg_trkplacemean, 2) );
+all.description = 'best mean';
+save results/cfg_trkplacemean.mat all;
 
 %% only sum+gauss cost matrix
-
-gauss = 1;
 
 cfg_trkplace_sumgauss = ga( @optimise_trackplacementmean, ...
     25, ... % num constraints

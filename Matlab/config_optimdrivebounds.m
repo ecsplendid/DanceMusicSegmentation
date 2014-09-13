@@ -1,4 +1,4 @@
-function [rs] = config_optimdrivebounds( upper )
+function [rs] = config_optimdrivebounds( upper, gauss )
 
     rs = nan(1,25);
 
@@ -25,9 +25,9 @@ function [rs] = config_optimdrivebounds( upper )
         % 10: contigfut contr /in [0,1]
         rs(10) = 1;
         % 11: gauss IB /in [0,1]
-        rs(11) = 1;
+        rs(11) = gauss;
         % 12: gauss cont /in [0,1]
-        rs(12) = 1;
+        rs(12) = gauss;
         % 13: cosine norm /in [0.4,1.4]
         rs(13) = 1.4;
         % 14: solution_shift /in {-3,-2,-1,0,1,2,3}

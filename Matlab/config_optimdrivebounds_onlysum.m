@@ -49,7 +49,7 @@ rs = nan(1,25);
         % 22: costevolution_normalization /in {0.1,...,3}
         rs(22) = 0;
         % 23: costsum_normalization /in {0.1,...,3}
-        rs(23) = 5;
+        rs(23) = 3;
         % 24: costcontig_normalization /in {0.1,...,3}
         rs(24) = 0;
         % 25: costsym_normalization /in {0.1,...,3}
