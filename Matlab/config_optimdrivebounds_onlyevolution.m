@@ -1,6 +1,6 @@
-function [rs] = config_optimdrivebounds_onlyevolution( upper )
-
-    rs = nan(1,21);
+function [rs] = config_optimdrivebounds_onlyevolution( upper, gauss )
+  
+rs = nan(1,25);
 
     if( upper )
     
@@ -9,9 +9,9 @@ function [rs] = config_optimdrivebounds_onlyevolution( upper )
         % 2: sum_contribution /in [0,1]
         rs(2) = 0;
         % 3: symIB /in [0,1]
-        rs(3) = 0;
+        rs(3) = 1;
         % 4: sym contr /in [0,1]
-        rs(4) = 0;
+        rs(4) = 1;
         % 5: evolution IB /in [0,1]
         rs(5) = 1;
         % 6: evolution contr /in [0,1]
@@ -25,9 +25,9 @@ function [rs] = config_optimdrivebounds_onlyevolution( upper )
         % 10: contigfut contr /in [0,1]
         rs(10) = 0;
         % 11: gauss IB /in [0,1]
-        rs(11) = 1;
+        rs(11) = gauss;
         % 12: gauss cont /in [0,1]
-        rs(12) = 1;
+        rs(12) = gauss;
         % 13: cosine norm /in [0.4,1.4]
         rs(13) = 1.4;
         % 14: solution_shift /in {-3,-2,-1,0,1,2,3}
@@ -43,9 +43,17 @@ function [rs] = config_optimdrivebounds_onlyevolution( upper )
         % 19: highPassFilter /in {50,...,500}
         rs(19) = 500;
         % 20: secondsPerTile /in {5,6,...,20}
-        rs(20) = 20;
+        rs(20) = 10;
         % 21: contig penalty /in {0.05,...,5}
         rs(21) = 5;
+        % 22: costevolution_normalization /in {0.1,...,3}
+        rs(22) = 3;
+        % 23: costsum_normalization /in {0.1,...,3}
+        rs(23) = 0;
+        % 24: costcontig_normalization /in {0.1,...,3}
+        rs(24) = 0;
+        % 25: costsym_normalization /in {0.1,...,3}
+        rs(25) = 0;
     
     else
         
@@ -91,5 +99,13 @@ function [rs] = config_optimdrivebounds_onlyevolution( upper )
         rs(20) = 5;
         % 21: contig penalty /in {0.05,...,5}
         rs(21) = 0.05;
+        % 22: costevolution_normalization /in {0.01,...,3}
+        rs(22) = 3;
+        % 23: costsum_normalization /in {0.01,...,3}
+        rs(23) = 0;
+        % 24: costcontig_normalization /in {0.01,...,3}
+        rs(24) = 0;
+        % 25: costsym_normalization /in {0.01,...,3}
+        rs(25) = 0;
     end
 end
