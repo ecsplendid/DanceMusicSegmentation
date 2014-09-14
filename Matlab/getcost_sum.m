@@ -21,12 +21,26 @@ if scale == 0
    return;
 end
 
-C(C>=0) = C(C>=0) .* (ib);
-C(C<0) = C(C<0) .* (1-ib);
+C_BLUE = C;
+C_BLUE(C_BLUE>=0) = 0;
+C_BLUE = abs(C_BLUE);
 
-SC = get_summationfast( C, W );
+C_RED = C;
+C_RED(C_RED<0) = 0;
+C_RED = abs(C_RED);
 
-SC = SC ./ repmat( (1:W).^normalization, size(SC,1), 1 );
+SC_BLUE = get_summationfast( C_BLUE, W, show.w );
+SC_RED = get_summationfast( C_RED, W, show.w );
+
+SC_BLUE = SC_BLUE ./ repmat( (1:W).^normalization, size(SC_BLUE,1), 1 );
+SC_RED = SC_RED ./ repmat( (1:W).^normalization, size(SC_RED,1), 1 );
+
+SC_BLUE = SC_BLUE .* ib;
+SC_RED = SC_RED .* (1-ib);
+
+SC_BLUE = -SC_BLUE;
+
+SC = SC_BLUE+SC_RED;
 
 SC = normalize_byincentivebias( SC, ib );
 

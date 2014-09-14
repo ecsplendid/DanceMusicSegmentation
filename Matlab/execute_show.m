@@ -1,25 +1,23 @@
 function [ results ] = ...
-    execute_show( show, config )
+    execute_show( s, config )
 
-    if( nargin < 2 )
-        config = config_getdefault;
-    end
-
-tic;
-
-% can pass in a show index and we load it, or just the show
-% itself which will save time loading it
-    if isnumeric( show ) 
-       show = get_show(show, config); 
-    end
+if( nargin < 2 )
+    config = config_getdefault;
+end
 
 % execute a given show, read the file, extract the features,
 % generate the cosine (similarity) matrix, generate the cost
 % matrices, add them together, (all with a given config) 
 % and evaluate performance, and return that
+% hint: try running me with execute_show(3, config_getdefault)
+% s is show number, there are 6 in the github test set
 
+    tic;
+    
     results = show_results();
- 
+
+    show = get_show(s, config);
+    
     show = get_cosinematrix( show, config );
     
     show.audio = nan;
@@ -65,5 +63,5 @@ tic;
         results.show.CosineMatrix=nan;
         results.show.CostMatrix=nan;
     end
-     
+         
 end

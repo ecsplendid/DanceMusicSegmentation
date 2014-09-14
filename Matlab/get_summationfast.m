@@ -1,4 +1,4 @@
-function [ SC ] = get_summationfast( C, W )
+function [ SC ] = get_summationfast( C, W, min_w )
 %   getcost_summationfast Summary of this function goes here
 %   C is cost matrix
 %   T is total time in seconds
@@ -37,6 +37,7 @@ for w=3:W
     end
 end
 
+    
 end
 
  

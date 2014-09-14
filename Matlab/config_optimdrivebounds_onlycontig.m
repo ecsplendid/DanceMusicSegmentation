@@ -43,7 +43,7 @@ rs = nan(1,25);
         % 19: highPassFilter /in {50,...,500}
         rs(19) = 500;
         % 20: secondsPerTile /in {5,6,...,20}
-        rs(20) = 20;
+        rs(20) = 10;
         % 21: contig penalty /in {0.05,...,5}
         rs(21) = 5;
         % 22: costevolution_normalization /in {0.1,...,3}
@@ -96,7 +96,7 @@ rs = nan(1,25);
         % 19: highPassFilter /in {50,...,500}
         rs(19) = 50;
         % 20: secondsPerTile /in {5,6,...,20}
-        rs(20) = 1;
+        rs(20) = 3;
         % 21: contig penalty /in {0.05,...,5}
         rs(21) = 0.05;
         % 22: costevolution_normalization /in {0.01,...,3}

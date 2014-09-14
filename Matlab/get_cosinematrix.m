@@ -2,98 +2,77 @@ function [show] = get_cosinematrix(...
     show, cfg )
 
 
-% we discard the last partial tile
-T = floor((length(show.audio)/cfg.sampleRate)/cfg.secondsPerTile);
-
-tileWidthSamples = cfg.secondsPerTile * cfg.sampleRate;
-
-nFFT = 2^nextpow2( tileWidthSamples );
-%max track width in seconds
-
-show.T = T;
-show.W =  ceil( cfg.maxExpectedTrackWidth /cfg.secondsPerTile ); 
-lowPassFilterSamples = ceil(cfg.lowPassFilter * ...
-    (nFFT/cfg.sampleRate))+1;
-highPassFilterSamples = ceil(cfg.highPassFilter * ...
-    (nFFT/cfg.sampleRate))+1;
-assert( lowPassFilterSamples < nFFT/2 );
-
-% in FFT steps
-bandw_fftSpace = ( cfg.bandwidth * (nFFT/cfg.sampleRate) ); 
-show.w = floor((cfg.minTrackLength) / cfg.secondsPerTile);
-
-% gaussian function
-gauss = @(x, sigma)exp(-x.^2/(2*sigma.^2)) / (sigma*sqrt(2*pi));
-% first order derivative of Gaussian
-dgauss = @(x, sigma)-x .* gauss(x,sigma) / sigma.^2;
-dgfilter = dgauss(-(bandw_fftSpace+10):(bandw_fftSpace+10), ...
-    bandw_fftSpace );
+    no_tiles = ceil((length(show.audio)/cfg.sampleRate)/cfg.secondsPerTile);
+    % we discard the last partial tile
+    tileWidth = floor(length(show.audio)/no_tiles);
+    nFFT = 2^nextpow2( tileWidth );
+    %max track width in seconds
     
-show.audio = gpuArray( show.audio );
+    downsample = 5000;
+    
+    show.W =  ceil( cfg.maxExpectedTrackWidth /cfg.secondsPerTile ); 
+    lowPassFilterSamples = ceil(cfg.lowPassFilter * ...
+        (nFFT/cfg.sampleRate))+1;
+    highPassFilterSamples = ceil(cfg.highPassFilter * ...
+        (nFFT/cfg.sampleRate))+1;
+    assert( lowPassFilterSamples < nFFT/2 );
+    fdata = nan( no_tiles, downsample  );
+    
+	% in FFT steps
+    bandw_fftSpace = ( cfg.bandwidth * (nFFT/cfg.sampleRate) ); 
+  
+    show.w = floor((cfg.minTrackLength) / cfg.secondsPerTile);
+                        
+    tileindexes = (1:tileWidth);
 
-square = reshape( ...
-        show.audio( 1:T*tileWidthSamples ), ...
-        tileWidthSamples, T )';
-   
-% perform fft and convolution on GPU
-adata = abs( fft( square, nFFT, 2));
-adata = adata( :, highPassFilterSamples:lowPassFilterSamples );
-adata = (conv2( adata, dgfilter,'same' ));
-adata = resample_vector( adata, 1000 ); % always want it 1000 big
-adata = adata ./ repmat( sqrt(sum( abs(adata).^2,2 )), 1, size(adata,2) );
+    % gaussian function
+    gauss = @(x, sigma)exp(-x.^2/(2*sigma.^2)) / (sigma*sqrt(2*pi));
+    %first order derivative of Gaussian
+    dgauss = @(x, sigma)-x .* gauss(x,sigma) / sigma.^2;
+    dgfilter = dgauss(-(bandw_fftSpace+10):(bandw_fftSpace+10), ...
+        bandw_fftSpace );
+    
+for x=1:no_tiles
 
-show.space = (0:T-1) .* cfg.secondsPerTile;
+        dft = fft( show.audio( tileindexes+(x-1)*tileWidth ), nFFT );
+        
+        Y = dft( highPassFilterSamples:lowPassFilterSamples );
+        Y = abs(Y);
+        
+        Y = resample_vector( Y, downsample );
+        
+        Y = (conv( Y, dgfilter,'same' ));
+        
+        %normalize (unit length) vec, so dot below gives cosines;
+        Y = Y./norm(Y); 
 
-% for a performance speed up we break the data into segments
-% and do D*D' from Segment X --> X+ahead so that we can 
-% skip some unused parts of the cosine matrix i.e. it's not
-% relevant how similar the first track is to the last track
-segs = 10;
-C = gpuArray(nan( T, T ));
-pts = floor(linspace(1,T,segs));
-
-ahead = 2;
-
-means = gpuArray (zeros(segs,1));
-
-for s=1:segs-ahead
-    S = adata( pts(s):pts(s+ahead), : );
-    Cp = ((S*S'));
-    C( pts(s):pts(s+ahead), pts(s):pts(s+ahead) ) = gather(Cp);
-    means(s) = mean( mean( Cp ) );
+        assert((norm(Y)-1)<1e-6);
+        fdata(x, : ) = Y;
 end
 
-% so now we expect C to be on [-1,1] (cosines)
 
-% scale to [0,1]
-C = (C - min(min(C))) ./ max( max( C(~isinf(C)) ) - min( min( C ) ) );
+    show.space = (0:no_tiles-1) .* cfg.secondsPerTile;
+    %%
+    %thrown an abs in there in case of any numerical error on the low costs
+    C = (abs((1-(fdata * fdata'))));
+    
+    % so now we expect C to be on [0,1] (cosines)
+     
+    % C is normally distributed but scewed in some random way depending on
+    % music
+    % We can normalize it around 0.5 which means we can expect more
+    % consistent behaviour with our methods. It will stay on [0,1]
+    % which is a bonus
+    
+    mean_c = mean(C(1:size(C,1)^2));
+    show.CosineMatrix=C.^(2*mean_c);
 
-% change to dis-similarities
-C = 1-C;
-
-% C is normally distributed but scewed in some random way depending on
-% music
-% We can normalize it around 0.5 which means we can expect more
-% consistent behaviour with our methods. It will stay on [0,1]
-% which is a bonus
-
-mean_c = mean(means);
-
-% scale mean to [0,1] from [-1,1]
-mean_c =  (mean_c + 1) / 2;
-
-for s=1:segs-ahead
-    C(pts(s):pts(s+ahead)) = C(pts(s):pts(s+ahead)).^(2*mean_c);
-end
-
-% perform the parameterised cosine normalization 
-C = C.^cfg.cosine_normalization;
-
-% scale to [1,2], then translate to [-1,1]
-C = (C.*2)-1; 
-
-show.CosineMatrix = gather(C);
-
-show.T = size(C,1);
+    % perform the parameterised cosine normalization 
+    show.CosineMatrix = show.CosineMatrix.^cfg.cosine_normalization;
+    
+    % scale to [1,2], then translate to [-1,1]
+    show.CosineMatrix = (show.CosineMatrix.*2)-1; 
+    
+    show.T = size(C,1);
 
 end
