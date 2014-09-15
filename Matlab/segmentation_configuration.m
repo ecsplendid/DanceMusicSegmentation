@@ -38,6 +38,9 @@ classdef segmentation_configuration
         costcontig_normalization
         costsym_normalization
         estimate_tracks = 0;
+        costcontig_pastdiffwindow
+        costcontig_futurediffwindow
+        costcontig_evolutiondiffwindow
     end
     
 end

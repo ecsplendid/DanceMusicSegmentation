@@ -40,6 +40,14 @@ function [c] = config_optimdrive(ibev, dataset)
     % 19: highPassFilter /in {50,...,500}
     % 20: secondsPerTile /in {5,6,...,40} 
     % 21: contig penalty /in {0.05,...,5}
+    % 22: c.costevolution_normalization = ibev(22);
+    % 23: c.costsum_normalization= ibev(23);
+    % 24: c.costcontig_normalization= ibev(24);
+    % 25: c.costsym_normalization= ibev(25);
+    % 26: costcontig_pastdiffwindow /in {1,2,...,400}
+    % 27: costcontig_futurediffwindow/ in {1,2,...,400}
+    % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
+    
     
     % see config_optimdrivebounds for bounds and random start driver
     
@@ -59,8 +67,12 @@ c.bandwidth = round(ibev(17)); % bandwith for the width of the convolution filte
 c.lowPassFilter = round(ibev(18)); %Hz
 c.highPassFilter = round(ibev(19)); %Hz
 
+c.costcontig_pastdiffwindow = ibev(26);
+c.costcontig_futurediffwindow= ibev(27);
+c.costcontig_evolutiondiffwindow= ibev(28);
+
 % figure drawing parameters
-c.drawSimMat = 1;
+c.drawSimMat = 0;
 c.compute_confs = 0;
 c.draw_confs = 0;
 

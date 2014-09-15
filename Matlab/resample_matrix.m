@@ -1,0 +1,9 @@
+function [ resampled ] = resample_matrix( M, outsize )
+% Will take a matrix* and subsample it
+
+    resampled = M( ...
+        1:size(M,1), ...
+        floor( linspace( 1, size(M,2), outsize ) ...
+        ) );
+end 
+

@@ -1,6 +1,6 @@
 function [rs] = config_optimdrivebounds_onlyevolution( upper, gauss )
   
-rs = nan(1,25);
+rs = nan(1,28);
 
     if( upper )
     
@@ -54,6 +54,12 @@ rs = nan(1,25);
         rs(24) = 0;
         % 25: costsym_normalization /in {0.1,...,3}
         rs(25) = 0;
+        % 26: costcontig_pastdiffwindow /in {1,2,...,400}
+        rs(26) = 0;
+        % 27: costcontig_futurediffwindow/ in {1,2,...,400}
+        rs(27) = 0;
+        % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
+        rs(28) = 400;
     
     else
         
@@ -96,16 +102,22 @@ rs = nan(1,25);
         % 19: highPassFilter /in {50,...,500}
         rs(19) = 50;
         % 20: secondsPerTile /in {5,6,...,20}
-        rs(20) = 5;
+        rs(20) = 3;
         % 21: contig penalty /in {0.05,...,5}
         rs(21) = 0.05;
         % 22: costevolution_normalization /in {0.01,...,3}
-        rs(22) = 3;
+        rs(22) = 0.01;
         % 23: costsum_normalization /in {0.01,...,3}
         rs(23) = 0;
         % 24: costcontig_normalization /in {0.01,...,3}
         rs(24) = 0;
         % 25: costsym_normalization /in {0.01,...,3}
         rs(25) = 0;
+        % 26: costcontig_pastdiffwindow /in {1,2,...,400}
+        rs(26) = 0;
+        % 27: costcontig_futurediffwindow/ in {1,2,...,400}
+        rs(27) = 0;
+        % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
+        rs(28) = 0;
     end
 end

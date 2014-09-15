@@ -1,9 +1,24 @@
 function [this_show] = get_show(s, config)
 
+    if nargin < 2
+        config = config_getdefault;
+    end
+
     % note, shows is initialised from calling /data=set/local_testset.m
     % execute that before everything else. I'm sorry it has to be like this
     % for some reason executing it twice fails
 
+    persistent show_cache;
+    
+    if isempty(show_cache) && config.dataset == 1
+        show_cache = cell(6,1);
+    end
+    
+    if ~isempty(show_cache) && ~isempty(show_cache{s})
+       this_show = show_cache{s};
+       return;
+    end
+    
     sampleRate = config.sampleRate;
     
     shows = get_allshows(config);
@@ -39,4 +54,6 @@ function [this_show] = get_show(s, config)
     end
 
     this_show.audio = this_show.audio(chopper);
+    
+    show_cache{s} = this_show;
 end

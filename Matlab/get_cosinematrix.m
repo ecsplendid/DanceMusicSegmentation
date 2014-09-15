@@ -1,7 +1,6 @@
 function [show] = get_cosinematrix(...
     show, cfg )
 
-
 % we discard the last partial tile
 T = floor((length(show.audio)/cfg.sampleRate)/cfg.secondsPerTile);
 
@@ -28,18 +27,47 @@ gauss = @(x, sigma)exp(-x.^2/(2*sigma.^2)) / (sigma*sqrt(2*pi));
 dgauss = @(x, sigma)-x .* gauss(x,sigma) / sigma.^2;
 dgfilter = dgauss(-(bandw_fftSpace+10):(bandw_fftSpace+10), ...
     bandw_fftSpace );
-    
-show.audio = gpuArray( show.audio );
 
-square = reshape( ...
+if show.use_gpu
+    show.audio = gpuArray( show.audio );
+end
+
+fft_limit = 13000;
+    
+% perform fft and convolution on GPU
+% note that if tile size is high highPassFilterSamples:lowPassFilterSamples
+% will be very large and doing these operations will take longer, so after
+% the convolution (afterwards because the bandwidth must make sense) we
+% resample it down if its more than fft_limit samples (basically 
+% never happens unless seconds per tile > 10).
+
+persistent fft_cache;
+
+if isempty(fft_cache) && cfg.dataset == 1 
+    fft_cache = cell(100,6);
+end
+
+if isempty(fft_cache{cfg.secondsPerTile, show.number}) ...
+        && ~isempty(fft_cache)
+    
+    square = reshape( ...
         show.audio( 1:T*tileWidthSamples ), ...
         tileWidthSamples, T )';
-   
-% perform fft and convolution on GPU
-adata = abs( fft( square, nFFT, 2));
+    
+    adata = abs( fft( square, nFFT, 2));
+    fft_cache{cfg.secondsPerTile, show.number} = adata;
+else
+    adata = fft_cache{cfg.secondsPerTile, show.number};
+end
+
+
 adata = adata( :, highPassFilterSamples:lowPassFilterSamples );
-adata = (conv2( adata, dgfilter,'same' ));
-adata = resample_vector( adata, 1000 ); % always want it 1000 big
+adata = conv2( adata, dgfilter,'same' );
+
+if size(adata,2) > fft_limit
+   adata = resample_matrix( adata, fft_limit );
+end
+
 adata = adata ./ repmat( sqrt(sum( abs(adata).^2,2 )), 1, size(adata,2) );
 
 show.space = (0:T-1) .* cfg.secondsPerTile;
@@ -49,12 +77,21 @@ show.space = (0:T-1) .* cfg.secondsPerTile;
 % skip some unused parts of the cosine matrix i.e. it's not
 % relevant how similar the first track is to the last track
 segs = 10;
-C = gpuArray(nan( T, T ));
+C = nan( T, T );
+
+if show.use_gpu
+    C = gpuArray(C);
+end
+
 pts = floor(linspace(1,T,segs));
 
 ahead = 2;
 
-means = gpuArray (zeros(segs,1));
+means = zeros(segs,1);
+
+if show.use_gpu
+    means = gpuArray(means);
+end
 
 for s=1:segs-ahead
     S = adata( pts(s):pts(s+ahead), : );
@@ -75,7 +112,6 @@ C = 1-C;
 % music
 % We can normalize it around 0.5 which means we can expect more
 % consistent behaviour with our methods. It will stay on [0,1]
-% which is a bonus
 
 mean_c = mean(means);
 

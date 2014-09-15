@@ -2,6 +2,7 @@ classdef show
     %SHOW class to describe the show we are currently working on
     
     properties
+        use_gpu = 0
         number
         file = '';
         indfile = '';

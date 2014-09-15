@@ -1,6 +1,6 @@
 function [rs] = config_optimdrivebounds_randomstart()
 
-    rs = nan(1,25);
+    rs = nan(1,28);
 
     % 1: sumIB /in [0,1]
     rs(1) = rand;
@@ -52,4 +52,10 @@ function [rs] = config_optimdrivebounds_randomstart()
     rs(24) = 0.1+((rand*3)-0.1);
     % 25: costsym_normalization /in {0.01,...,3}
     rs(25) = 0.1+((rand*3)-0.1);
+    % 26: costcontig_pastdiffwindow /in {1,2,...,400}
+    rs(26) = round((rand*399)+1);
+    % 27: costcontig_futurediffwindow/ in {1,2,...,400}
+    rs(27) = round((rand*399)+1);
+    % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
+    rs(28) = round((rand*399)+1);
 end

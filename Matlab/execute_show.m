@@ -5,7 +5,7 @@ function [ results ] = ...
         config = config_getdefault;
     end
 
-tic;
+    tic;
 
 % can pass in a show index and we load it, or just the show
 % itself which will save time loading it
@@ -23,18 +23,30 @@ tic;
     show = get_cosinematrix( show, config );
     
     show.audio = nan;
-        
-    CN = getcost_sum( show, config, ...
-        config.use_costsum, ...
-        config.costsum_incentivebalance, ...
-        config.costsum_normalization ); 
+
+	CN = getcost_sum( ...
+         show, config, ...
+            config.use_costsum, ...
+            config.costsum_incentivebalance, ...
+            config.costsum_normalization);
     
-    CS = getcost_symmetry3( show, config );  
-    CDG = getcost_contigdiag1( show, config );  
-    SCS = getcost_contigstatic2( show, config );  
-    SCG = getcost_gaussian( show, config );
+    % symmetry cost matrix
+    CS = getcost_symmetry3( ...
+        show, config );
     
-    show.CostMatrix = CN+CS+CDG+SCS+SCG;
+    % evolution cost matrix
+    CEV = getcost_contigevolution( ...
+        show, config );
+    
+    % contigous cost matrix
+    SCS = getcost_contigstatic2( ...
+        show, config );
+    
+    % gaussian cost matrix
+    SCG = getcost_gaussian( ...
+        show, config );
+    
+    show.CostMatrix = CN+CS+CEV+SCS+SCG;
     
     results = compute_trackplacement( config, show, results );
     
