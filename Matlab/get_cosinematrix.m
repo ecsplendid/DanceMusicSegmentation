@@ -57,7 +57,7 @@ if cfg.use_persistentvariables ~= 1 ...
     
     adata = abs( fft( square, nFFT, 2));
     
-    if cfg.use_persistentvariables ~= 1
+    if cfg.use_persistentvariables == 1
         fft_cache{cfg.secondsPerTile, show.number} = adata;
     end
 else
