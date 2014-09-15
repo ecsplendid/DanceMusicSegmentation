@@ -43,11 +43,11 @@ fft_limit = 13000;
 
 persistent fft_cache;
 
-if isempty(fft_cache) && config.use_persistentvariables == 1 
+if isempty(fft_cache) && cfg.use_persistentvariables == 1 
     fft_cache = cell(100,6);
 end
 
-if config.use_persistentvariables ~= 1 ...
+if cfg.use_persistentvariables ~= 1 ...
         || ( isempty(fft_cache{cfg.secondsPerTile, show.number}) ...
         && ~isempty(fft_cache) )
          
@@ -57,7 +57,7 @@ if config.use_persistentvariables ~= 1 ...
     
     adata = abs( fft( square, nFFT, 2));
     
-    if config.use_persistentvariables ~= 1
+    if cfg.use_persistentvariables ~= 1
         fft_cache{cfg.secondsPerTile, show.number} = adata;
     end
 else
