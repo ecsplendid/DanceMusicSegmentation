@@ -10,13 +10,17 @@ function [this_show] = get_show(s, config)
 
     persistent show_cache;
     
-    if isempty(show_cache) && config.dataset == 1
-        show_cache = cell(6,1);
-    end
+    if config.use_persistentvariables
     
-    if ~isempty(show_cache) && ~isempty(show_cache{s})
-       this_show = show_cache{s};
-       return;
+        if isempty(show_cache)
+            show_cache = cell(6,1);
+        end
+
+        if ~isempty(show_cache) && ~isempty(show_cache{s})
+           this_show = show_cache{s};
+           return;
+        end
+
     end
     
     sampleRate = config.sampleRate;
@@ -55,5 +59,7 @@ function [this_show] = get_show(s, config)
 
     this_show.audio = this_show.audio(chopper);
     
-    show_cache{s} = this_show;
+	if config.use_persistentvariables
+        show_cache{s} = this_show;
+    end
 end

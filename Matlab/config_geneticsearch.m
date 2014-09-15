@@ -1,13 +1,13 @@
 %% options setup
 
 options = gaoptimset;
-options = gaoptimset(options,'PopulationSize', [30 30 30] );
+options = gaoptimset(options,'PopulationSize', [25 25 25 ] );
 options = gaoptimset(options,'MigrationDirection', 'both');
 options = gaoptimset(options,'MigrationInterval', 3);
 options = gaoptimset(options,'MigrationFraction', 0.3);
 options = gaoptimset(options,'EliteCount', 8);
 options = gaoptimset(options,'CrossoverFraction', 0.5);
-options = gaoptimset(options,'Generations', 20);
+options = gaoptimset(options,'Generations', 40);
 options = gaoptimset(options,'StallGenLimit', 4);
 options = gaoptimset(options,'Display', 'iter');
 options = gaoptimset(options,'PlotFcns', {  ...

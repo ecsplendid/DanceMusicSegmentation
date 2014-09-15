@@ -43,19 +43,23 @@ fft_limit = 13000;
 
 persistent fft_cache;
 
-if isempty(fft_cache) && cfg.dataset == 1 
+if isempty(fft_cache) && config.use_persistentvariables == 1 
     fft_cache = cell(100,6);
 end
 
-if isempty(fft_cache{cfg.secondsPerTile, show.number}) ...
-        && ~isempty(fft_cache)
-    
+if config.use_persistentvariables ~= 1 ...
+        || ( isempty(fft_cache{cfg.secondsPerTile, show.number}) ...
+        && ~isempty(fft_cache) )
+         
     square = reshape( ...
         show.audio( 1:T*tileWidthSamples ), ...
         tileWidthSamples, T )';
     
     adata = abs( fft( square, nFFT, 2));
-    fft_cache{cfg.secondsPerTile, show.number} = adata;
+    
+    if config.use_persistentvariables ~= 1
+        fft_cache{cfg.secondsPerTile, show.number} = adata;
+    end
 else
     adata = fft_cache{cfg.secondsPerTile, show.number};
 end

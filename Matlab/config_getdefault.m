@@ -9,7 +9,7 @@ c.dataset = 1;
 
 % Feature Extraction Parameters
 c.sampleRate = 4000;
-c.secondsPerTile = 5;
+c.secondsPerTile = 3;
 c.minTrackLength = 142;
 c.maxExpectedTrackWidth = 613;   % (magicisland=380*2 others 350*2)
 c.bandwidth = 5; % bandwith for the width of the convolution filter
