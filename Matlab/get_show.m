@@ -8,20 +8,20 @@ function [this_show] = get_show(s, config)
     % execute that before everything else. I'm sorry it has to be like this
     % for some reason executing it twice fails
 
-    persistent show_cache;
-    
-    if config.use_persistentvariables
-    
-        if isempty(show_cache)
-            show_cache = cell(6,1);
-        end
-
-        if ~isempty(show_cache) && ~isempty(show_cache{s})
-           this_show = show_cache{s};
-           return;
-        end
-
-    end
+%     if config.use_persistentvariables
+%         
+%         persistent show_cache;
+%     
+%         if isempty(show_cache)
+%             show_cache = cell(6,1);
+%         end
+% 
+%         if ~isempty(show_cache) && ~isempty(show_cache{s})
+%            this_show = show_cache{s};
+%            return;
+%         end
+% 
+%     end
     
     sampleRate = config.sampleRate;
     
@@ -59,7 +59,7 @@ function [this_show] = get_show(s, config)
 
     this_show.audio = this_show.audio(chopper);
     
-	if config.use_persistentvariables
-        show_cache{s} = this_show;
-    end
+% 	if config.use_persistentvariables
+%         show_cache{s} = this_show;
+%     end
 end

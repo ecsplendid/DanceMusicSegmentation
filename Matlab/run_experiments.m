@@ -12,7 +12,7 @@ shows = get_allshows(config);
 
 experiment_results = cell(length(shows),1);
 
-parfor s=1:length(shows)
+for s=1:length(shows)
     experiment_results{s} = execute_show( s, config );
 end
     

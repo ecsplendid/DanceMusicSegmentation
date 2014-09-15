@@ -1,7 +1,7 @@
 %% options setup
 
 options = gaoptimset;
-options = gaoptimset(options,'PopulationSize', [ 50 50 ] );
+options = gaoptimset(options,'PopulationSize', [ 25 ] );
 options = gaoptimset(options,'MigrationDirection', 'both');
 options = gaoptimset(options,'MigrationInterval', 3);
 options = gaoptimset(options,'MigrationFraction', 0.3);
@@ -16,7 +16,7 @@ options = gaoptimset(options,'PlotFcns', {  ...
     @gaplotscorediversity @gaplotscores @gaplotselection...
     @gaplotstopping @gaplotmaxconstr });
 options = gaoptimset(options,'Vectorized', 'off');
-options = gaoptimset(options,'UseParallel', 1 );
+options = gaoptimset(options,'UseParallel', 0 );
 options = gaoptimset(options,'InitialPopulation', ...
     config_optimdrivebounds_randomstart() );
 

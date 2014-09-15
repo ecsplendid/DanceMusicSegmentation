@@ -41,28 +41,28 @@ fft_limit = 13000;
 % resample it down if its more than fft_limit samples (basically 
 % never happens unless seconds per tile > 10).
 
-persistent fft_cache;
+% persistent fft_cache;
+% 
+% if isempty(fft_cache) && cfg.use_persistentvariables == 1
+%     fft_cache = cell(100,6);
+% end
 
-if isempty(fft_cache) && cfg.use_persistentvariables == 1 
-    fft_cache = cell(100,6);
-end
-
-if cfg.use_persistentvariables ~= 1 ...
-        || ( isempty(fft_cache{cfg.secondsPerTile, show.number}) ...
-        && ~isempty(fft_cache) )
-         
+% if cfg.use_persistentvariables ~= 1 ...
+%         || ( isempty(fft_cache{cfg.secondsPerTile, show.number}) ...
+%         && ~isempty(fft_cache) )
+%          
     square = reshape( ...
         show.audio( 1:T*tileWidthSamples ), ...
         tileWidthSamples, T )';
     
     adata = abs( fft( square, nFFT, 2));
     
-    if cfg.use_persistentvariables == 1
-        fft_cache{cfg.secondsPerTile, show.number} = adata;
-    end
-else
-    adata = fft_cache{cfg.secondsPerTile, show.number};
-end
+%     if cfg.use_persistentvariables == 1
+%         fft_cache{cfg.secondsPerTile, show.number} = adata;
+%     end
+% else
+%     adata = fft_cache{cfg.secondsPerTile, show.number};
+% end
 
 
 adata = adata( :, highPassFilterSamples:lowPassFilterSamples );
