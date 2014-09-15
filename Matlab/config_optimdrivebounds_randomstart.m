@@ -41,7 +41,7 @@ function [rs] = config_optimdrivebounds_randomstart()
     % 19: highPassFilter /in {50,...,500}
     rs(19) = ceil(rand * (500-50))+50;
     % 20: secondsPerTile /in {5,6,...,10}
-    rs(20) = ceil(rand * 5)+5;
+    rs(20) = ceil(rand * 4)+1;
     % 21: contig penalty /in {0.05,...,5}
     rs(21) = ((rand+0.05)*(5+0.05));
     % 22: costevolution_normalization /in {0.01,...,3}

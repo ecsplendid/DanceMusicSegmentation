@@ -1,7 +1,7 @@
 %% options setup
 
 options = gaoptimset;
-options = gaoptimset(options,'PopulationSize', [40 40] );
+options = gaoptimset(options,'PopulationSize', [30 30 30] );
 options = gaoptimset(options,'MigrationDirection', 'both');
 options = gaoptimset(options,'MigrationInterval', 3);
 options = gaoptimset(options,'MigrationFraction', 0.3);
@@ -12,7 +12,7 @@ options = gaoptimset(options,'StallGenLimit', 4);
 options = gaoptimset(options,'Display', 'iter');
 options = gaoptimset(options,'PlotFcns', {  ...
     @gaplotbestf @gaplotbestindiv @gaplotdistance ...
-    @gaplotexpectation @gaplotgenealogy @gaplotrange ...
+    @gaplotexpectation @gaplotrange ...
     @gaplotscorediversity @gaplotscores @gaplotselection...
     @gaplotstopping @gaplotmaxconstr });
 options = gaoptimset(options,'Vectorized', 'off');
