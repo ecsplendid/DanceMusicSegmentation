@@ -114,9 +114,9 @@ rs = nan(1,28);
         % 25: costsym_normalization /in {0.01,...,3}
         rs(25) = 0;
         % 26: costcontig_pastdiffwindow /in {1,2,...,400}
-        rs(26) = 0;
+        rs(26) = 1;
         % 27: costcontig_futurediffwindow/ in {1,2,...,400}
-        rs(27) = 0;
+        rs(27) = 1;
         % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
         rs(28) = 0;
     end

@@ -17,8 +17,8 @@ options = gaoptimset(options,'PlotFcns', {  ...
     @gaplotstopping @gaplotmaxconstr });
 options = gaoptimset(options,'Vectorized', 'off');
 options = gaoptimset(options,'UseParallel', 0 );
-options = gaoptimset(options,'InitialPopulation', ...
-    config_optimdrivebounds_randomstart() );
+%options = gaoptimset(options,'InitialPopulation', ...
+%    config_optimdrivebounds_randomstart() );
 
 gauss = 1;
 

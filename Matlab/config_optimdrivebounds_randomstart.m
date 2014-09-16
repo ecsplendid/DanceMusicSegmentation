@@ -1,31 +1,31 @@
-function [rs] = config_optimdrivebounds_randomstart()
+function [rs] = config_optimdrivebounds_randomstart( sum, sym, cont, evo, gauss )
 
     rs = nan(1,28);
 
     % 1: sumIB /in [0,1]
     rs(1) = rand;
     % 2: sum_contribution /in [0,1]
-    rs(2) = rand;
+    rs(2) = sum;
     % 3: symIB /in [0,1]
     rs(3) = rand;
     % 4: sym contr /in [0,1]
-    rs(4) = rand;
+    rs(4) = sym;
     % 5: evolution IB /in [0,1]
     rs(5) = rand;
     % 6: evolution contr /in [0,1]
-    rs(6) = rand;
+    rs(6) = evo;
     % 7: contigpast IB /in [0,1]
     rs(7) = rand;
     % 8: contigpast contr /in [0,1]
-    rs(8) = rand;
+    rs(8) = cont;
     % 9: contigfut IB /in [0,1]
     rs(9) = rand;
     % 10: contigfut contr /in [0,1]
-    rs(10) = rand;
+    rs(10) = cont;
     % 11: gauss IB /in [0,1]
     rs(11) = rand;
     % 12: gauss cont /in [0,1]
-    rs(12) = rand;
+    rs(12) = gauss;
     % 13: cosine norm /in [0.4,1.4]
     rs(13) = rand+0.4;
     % 14: solution_shift /in {-3,-2,-1,0,1,2,3}
@@ -44,13 +44,13 @@ function [rs] = config_optimdrivebounds_randomstart()
     rs(20) = ceil(rand * 4)+1;
     % 21: contig penalty /in {0.05,...,5}
     rs(21) = ((rand+0.05)*(5+0.05));
-    % 22: costevolution_normalization /in {0.01,...,3}
+    % 22: costevolution_normalization /in {0.1,...,3}
     rs(22) = 0.1+((rand*3)-0.1);
-    % 23: costsum_normalization /in {0.01,...,3}
+    % 23: costsum_normalization /in {0.0,...,3}
     rs(23) = 0.1+((rand*3)-0.1);
-    % 24: costcontig_normalization /in {0.01,...,3}
+    % 24: costcontig_normalization /in {0.1,...,3}
     rs(24) = 0.1+((rand*3)-0.1);
-    % 25: costsym_normalization /in {0.01,...,3}
+    % 25: costsym_normalization /in {0.1,...,3}
     rs(25) = 0.1+((rand*3)-0.1);
     % 26: costcontig_pastdiffwindow /in {1,2,...,400}
     rs(26) = round((rand*399)+1);
