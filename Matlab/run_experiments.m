@@ -1,5 +1,5 @@
 function [ agg_results ] = ...
-    run_experiments( config )
+    run_experiments( config, description )
 %run_experiments run the experiments for the dataset requested in the
 %configuration and return the results in an object
 tic;
@@ -8,15 +8,29 @@ if( nargin == 0 )
     config = config_getdefault;
 end
 
+if( nargin < 2 )
+    description = 'None Given';
+end
+
 shows = get_allshows(config);
 
-experiment_results = cell(length(shows),1);
+experiment_results = [];
 
 parfor s=1:length(shows)
-    experiment_results{s} = execute_show( s, config );
+    experiment_results = ...
+        [ experiment_results ...
+            execute_show( s, config ) ];
 end
     
-agg_results = get_aggregateresults(experiment_results, config);
+agg_results = get_aggregateresults( ...
+    description, ...
+    experiment_results, ...
+    config, ...
+    0 );
+
+agg_results.asot = get_aggregateresultsbyshow( agg_results, 1 );
+agg_results.magic = get_aggregateresultsbyshow( agg_results, 2 );
+agg_results.tatw = get_aggregateresultsbyshow( agg_results, 3 );
 
 agg_results.execution_time = toc;
 

@@ -2,6 +2,9 @@ classdef aggregate_results
     % results for executing a show
     
     properties
+        asot
+        tatw
+        magic
         description
         results = [];
         config
@@ -20,11 +23,7 @@ classdef aggregate_results
         track_placementconfidenceavg_mean
         mean_indexplacementconfidence_mean
         execution_time
+        convexity_estimate=0
     end
-    
-    methods
-        function ag = byshow(s)
-            ag = get_aggregateresultsbyshow( agg_results, s );
-        end
-    end
+  
 end     

@@ -34,7 +34,6 @@ if( config.compute_confs )
 	zeros( width, 1 );
 	agg_results.track_indexconfidences_sum = ...
 	zeros( width, 1 );
-
 end
 
 function si = gsi(s)
@@ -49,14 +48,20 @@ function si = gsi(s)
 	end
 end
 
+agg_results.convexity_estimate = 0;
+
 for i=1:length(results)
 		
 	r = results(i);
 
-	if show_type ~= gsi(r.show.showname)
+	if show_type ~= gsi(r.show.showname) && show_type ~= 0
 		continue;
-	end
-
+    end
+    
+    agg_results.convexity_estimate = ...
+        agg_results.convexity_estimate ...
+        + r.convexity_estimate;
+    
 	agg_results.mean_all = [agg_results.mean_all r.mean_score];
 	agg_results.heuristic_all = ...
 	[agg_results.heuristic_all r.heuristic_score];
@@ -86,11 +91,13 @@ for i=1:length(results)
 	end
 end
 
+agg_results.convexity_estimate = ...
+    agg_results.convexity_estimate / length(results);
+
 agg_results.track_placementconfidenceavg_mean = ...
 mean(agg_results.track_placementconfidenceavg_all);
 agg_results.mean_indexplacementconfidence_mean = ...
 mean(agg_results.mean_indexplacementconfidence_all);
-
 
 agg_results.mean_overall = mean(agg_results.mean_all);
 agg_results.heuristic_meanoverall = mean(agg_results.heuristic_all);

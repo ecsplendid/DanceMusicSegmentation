@@ -33,19 +33,19 @@ c.use_costgaussianwidth = 1;
 % not entirely normal, they are represented by a section on the left of the
 % distribution, I would guess a value slightly greater than 1 is optimal for
 % the symmetry and contig cost matrices. >1 shifts mean higher
-c.cosine_normalization = 0.8;
+c.cosine_normalization = 0.6;
 
 c.contig_penalty = 0.01;
 
 % which cost functions to use and how much weight do they have (>0)
 
 % USE THESE>>>
-c.use_costsymmetry        = 0;       c.costsymmetry_incentivebalance = 0.1238;
+c.use_costsymmetry        = 1;       c.costsymmetry_incentivebalance = 0.1238;
 c.use_costcontigpast      = 1;     c.costcontigpast_incentivebalance = 0.2;
-c.use_costcontigfuture    = 0.01;   c.costcontigfuture_incentivebalance = 0.8;
-c.use_costsum             = 0;             c.costsum_incentivebalance = 0.7;
-c.use_costgaussian        = 0.2;           c.costgauss_incentivebalance = 0.4116;
-c.use_costcontigevolution = 0;      c.costevolution_incentivebalance = 0.3736;
+c.use_costcontigfuture    = 0.4;   c.costcontigfuture_incentivebalance = 0.8;
+c.use_costsum             = 1;             c.costsum_incentivebalance = 0.2;
+c.use_costgaussian        = 1;           c.costgauss_incentivebalance = 0.4116;
+c.use_costcontigevolution = 1;      c.costevolution_incentivebalance = 0.3736;
 
 c.costevolution_normalization = 0.5;
 c.costsum_normalization = 0.5;

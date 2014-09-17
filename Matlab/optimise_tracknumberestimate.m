@@ -3,8 +3,10 @@ function [score] = optimise_tracknumberestimate( ibev )
     % this function will be driven from ga (genetic algorithm) to find
     % some decent parameters for optimal track number estimation
 
-
-    config = config_optimdrive(ibev)
+    estimate_tracks = 1;
+    dataset = 1;
+    
+    config = config_optimdrive(ibev, dataset, estimate_tracks);
 
     agresults = run_experiments( config );
 

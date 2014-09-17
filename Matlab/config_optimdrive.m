@@ -1,4 +1,4 @@
-function [c] = config_optimdrive(ibev, dataset)
+function [c] = config_optimdrive(ibev, dataset, estimate_tracks)
 
     c = segmentation_configuration();
 
@@ -11,6 +11,12 @@ function [c] = config_optimdrive(ibev, dataset)
             c.memory_efficient = 1;
         end
     end
+    
+    if( nargin < 3 )
+        estimate_tracks = 0;
+    end
+    
+    
 
     % config_optimdrive this function will get a configuration
     % driven by a random input vector from fmincon as part of the 
@@ -55,7 +61,8 @@ function [c] = config_optimdrive(ibev, dataset)
     % ubounds = [1,2,1,2,1,2,1,2,1,2,1,2,1.5,5]
     % lbounds = [0,0,0,0,0,0,0,0,0,0,0,0,0.4,1]
 
-
+c.estimate_tracks = estimate_tracks;
+    
 
 % Feature Extraction Parameters
 

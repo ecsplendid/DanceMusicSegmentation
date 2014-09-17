@@ -5,7 +5,7 @@ options = gaoptimset(options,'PopulationSize', [ 90 ] );
 options = gaoptimset(options,'MigrationDirection', 'both');
 options = gaoptimset(options,'MigrationInterval', 3);
 options = gaoptimset(options,'MigrationFraction', 0.3);
-options = gaoptimset(options,'EliteCount', 8);
+options = gaoptimset(options,'EliteCount', 10);
 options = gaoptimset(options,'CrossoverFraction', 0.5);
 options = gaoptimset(options,'Generations', 40);
 options = gaoptimset(options,'StallGenLimit', 4);
@@ -17,14 +17,12 @@ options = gaoptimset(options,'PlotFcns', {  ...
     @gaplotstopping @gaplotmaxconstr });
 options = gaoptimset(options,'Vectorized', 'off');
 options = gaoptimset(options,'UseParallel', 1 );
-%options = gaoptimset(options,'InitialPopulation', ...
-%    config_optimdrivebounds_randomstart() );
 
 gauss = 1;
 
 %% track number estimate
 
-cfg_trkplace_numberestimate = ga( @optimise_, ...
+cfg_trkplace_numberestimate = ga( @optimise_tracknumberestimate, ...
     28, ... % num constraints
     [],[],[],[], ...
     config_optimdrivebounds(0, gauss), ...
@@ -37,9 +35,13 @@ savefig('results/cfg_trkplace_numberestimate.fig');
 
 save results/cfg_trkplace_numberestimate_onlyconfig.mat cfg_trkplace_numberestimate;
 
+estimate_tracks = 1;
+
 % run the full experiment
-track_estimate = run_experiments( config_optimdrive(cfg_trkplace_numberestimate, 2) );
-track_estimate.description = 'track estimate';
+track_estimate = run_experiments( ...
+    config_optimdrive(cfg_trkplace_numberestimate, 2, estimate_tracks), ...
+    'track estimate' );
+
 save results/cfg_trkplace_numberestimate.mat track_estimate;
 
 
@@ -59,8 +61,8 @@ savefig('results/cfg_trkplace_sumgauss.fig');
 save results/cfg_trkplace_sumgauss_onlyconfig.mat cfg_trkplace_sumgauss;
 
 % run the full experiment
-sum_gauss = run_experiments( config_optimdrive(cfg_trkplace_sumgauss, 2) );
-sum_gauss.description = 'sum + gauss';
+sum_gauss = run_experiments( config_optimdrive(cfg_trkplace_sumgauss, 2), ...
+    'sum + gauss' );
 save results/cfg_trkplace_sumgauss.mat sum_gauss;
 
 %% only contig+gauss cost matrix
@@ -77,8 +79,10 @@ cfg_trkplace_contiggauss = ga( @optimise_trackplacementmean, ...
 savefig('results/cfg_trkplace_contiggauss.fig');
 
 % run the full experiment
-contiggauss = run_experiments( config_optimdrive(cfg_trkplace_contiggauss, 2) );
-contiggauss.description = 'contig + gauss';
+contiggauss = run_experiments( ...
+    config_optimdrive(cfg_trkplace_contiggauss, 2), ...
+    'contig + gauss' );
+
 save results/cfg_trkplace_contiggauss.mat contiggauss;
 
 %% mean for finding best optimise_trackplacementmean
@@ -95,8 +99,9 @@ cfg_trkplacemean = ga( @optimise_trackplacementmean, ...
 savefig('results/optimise_trackplacementmean.fig');
 
 % run the full experiment
-all = run_experiments( config_optimdrive(cfg_trkplacemean, 2) );
-all.description = 'best mean';
+all = run_experiments( ...
+    config_optimdrive(cfg_trkplacemean, 2), ...
+    'best mean' );
 save results/cfg_trkplacemean.mat all;
 
 
@@ -114,8 +119,9 @@ cfg_trkplace_evogauss = ga( @optimise_trackplacementmean, ...
 savefig('results/optimise_trackplacement_evogauss.fig');
 
 % run the full experiment
-evogauss = run_experiments( config_optimdrive(cfg_trkplace_evogauss, 2) );
-evogauss.description = 'evolution + gauss';
+evogauss = run_experiments( ...
+    config_optimdrive(cfg_trkplace_evogauss, 2), ...
+    'evolution + gauss' );
 save results/cfg_trkplace_evogauss.mat evogauss;
 
 %% only sym+gauss cost matrix
@@ -132,8 +138,9 @@ cfg_trkplace_symgauss = ga( @optimise_trackplacementmean, ...
 savefig('results/optimise_trackplacement_symgauss.fig');
 
 % run the full experiment
-symgauss = run_experiments( config_optimdrive(cfg_trkplace_symgauss, 2) );
-symgauss.description = 'sym + gauss';
+symgauss = run_experiments( ...
+    config_optimdrive(cfg_trkplace_symgauss, 2), ...
+    'sym + gauss' );
 save results/cfg_trkplace_symgauss.mat symgauss;
 
 gauss = 0;
@@ -154,8 +161,9 @@ savefig('results/cfg_trkplace_sum.fig');
 save results/cfg_trkplace_sum_onlyconfig.mat cfg_trkplace_sum;
 
 % run the full experiment
-sum = run_experiments( config_optimdrive(cfg_trkplace_sum, 2) );
-sum.description = 'sum';
+sum = run_experiments( ...
+    config_optimdrive(cfg_trkplace_sum, 2), ...
+    'sum' );
 save results/cfg_trkplace_sum.mat sum;
 
 %% only contig+gauss cost matrix
@@ -172,8 +180,9 @@ cfg_trkplace_contig = ga( @optimise_trackplacementmean, ...
 savefig('results/cfg_trkplace_contig.fig');
 
 % run the full experiment
-contig = run_experiments( config_optimdrive(cfg_trkplace_contig, 2) );
-contig.description = 'contig';
+contig = run_experiments( ...
+    config_optimdrive(cfg_trkplace_contig, 2), ...
+    'contig' );
 save results/cfg_trkplace_contig.mat contig;
 
 
@@ -191,8 +200,10 @@ cfg_trkplace_evo = ga( @optimise_trackplacementmean, ...
 savefig('results/optimise_trackplacement_evogauss.fig');
 
 % run the full experiment
-evo = run_experiments( config_optimdrive(cfg_trkplace_evo, 2) );
-evo.description = 'evolution';
+evo = run_experiments( ...
+    config_optimdrive(cfg_trkplace_evo, 2), ...
+    'evolution' );
+
 save results/cfg_trkplace_evo.mat evo;
 
 %% only sym+gauss cost matrix
@@ -209,12 +220,16 @@ cfg_trkplace_sym = ga( @optimise_trackplacementmean, ...
 savefig('results/optimise_trackplacement_sym.fig');
 
 % run the full experiment
-sym = run_experiments( config_optimdrive(cfg_trkplace_sym, 2) );
-sym.description = 'sym';
+sym = run_experiments( ...
+    config_optimdrive(cfg_trkplace_sym, 2), ...
+    'sym' );
+
 save results/cfg_trkplace_sym.mat sym;
 
 %% run a totally random one for comparison
 
-random_run = run_experiments( config_optimdrive(config_optimdrivebounds_randomstart, 2) );
-random_run.description = 'totally random';
+random_run = run_experiments( ...
+    config_optimdrive(config_optimdrivebounds_randomstart, 2), ...
+    'totally random');
+
 save results/cfg_random.mat random_run;

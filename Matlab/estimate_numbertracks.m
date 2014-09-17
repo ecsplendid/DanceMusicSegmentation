@@ -37,7 +37,8 @@ subplot(2,5,[10]);
        % exportfig(gcf,sprintf('%d_tracks.eps', show.number) );
     end
 
-    results.convexity_estimate = sum( abs( diff( best_results ) ) );
+    results.convexity_estimate = ...
+        min( abs( diff( best_results(~isnan(best_results)) ) ) );
     results.track_estimate = index;
     results.track_estimate_error = abs(results.track_estimate ...
         - (length(show.indexes)+1) );
