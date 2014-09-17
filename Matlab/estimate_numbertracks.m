@@ -1,10 +1,13 @@
 function [results] = estimate_numbertracks( ...
     show, results, config )
+% estimate_numbertracks will run the find_tracks for all m_i in {14,...,25}
+% and report the number of tracks at the minima of result/m_i and also report
+% the absolute sum of differences of the results which can be used as a confidence measure
 
     how_many = 30;
     best_results = nan(how_many,1);
 
-    for i=14:30
+    for i=14:25
 
         [F, ~] = find_tracks( i, show.CostMatrix );
 
@@ -34,6 +37,7 @@ subplot(2,5,[10]);
        % exportfig(gcf,sprintf('%d_tracks.eps', show.number) );
     end
 
+    results.convexity_estimate = sum( abs( diff( best_results ) ) );
     results.track_estimate = index;
     results.track_estimate_error = abs(results.track_estimate ...
         - (length(show.indexes)+1) );

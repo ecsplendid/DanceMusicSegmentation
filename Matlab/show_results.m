@@ -2,7 +2,8 @@ classdef show_results
     % results for executing a show
     
     properties
-        config
+       convexity_estimate
+    	config
         show
         posterior
         predictions

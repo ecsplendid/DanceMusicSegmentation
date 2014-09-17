@@ -9,7 +9,7 @@ c.dataset = 1;
 
 % Feature Extraction Parameters
 c.sampleRate = 4000;
-c.secondsPerTile = 5;
+c.secondsPerTile = 10;
 c.minTrackLength = 142;
 c.maxExpectedTrackWidth = 613;   % (magicisland=380*2 others 350*2)
 c.bandwidth = 5; % bandwith for the width of the convolution filter
@@ -52,12 +52,12 @@ c.costsum_normalization = 0.5;
 c.costcontig_normalization = 0.2;
 c.costsym_normalization = 1;
 
-c.costcontig_pastdiffwindow = 400;
-c.costcontig_futurediffwindow = 400;
+c.costcontig_pastdiffwindow = 2;
+c.costcontig_futurediffwindow = 2;
 c.costcontig_evolutiondiffwindow= 20;
 
 
-c.estimate_tracks = 0;
+c.estimate_tracks = 1;
 
 end
 

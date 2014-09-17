@@ -22,6 +22,27 @@ options = gaoptimset(options,'UseParallel', 1 );
 
 gauss = 1;
 
+%% track number estimate
+
+cfg_trkplace_numberestimate = ga( @optimise_, ...
+    28, ... % num constraints
+    [],[],[],[], ...
+    config_optimdrivebounds(0, gauss), ...
+    config_optimdrivebounds(1, gauss), ...
+    [], ...
+    [14,15,16,17,18,19,20,21,26,27,28], ... % int constraints
+    options );
+
+savefig('results/cfg_trkplace_numberestimate.fig');
+
+save results/cfg_trkplace_numberestimate_onlyconfig.mat cfg_trkplace_numberestimate;
+
+% run the full experiment
+track_estimate = run_experiments( config_optimdrive(cfg_trkplace_numberestimate, 2) );
+track_estimate.description = 'track estimate';
+save results/cfg_trkplace_numberestimate.mat track_estimate;
+
+
 %% only sum+gauss cost matrix
 
 cfg_trkplace_sumgauss = ga( @optimise_trackplacementmean, ...
