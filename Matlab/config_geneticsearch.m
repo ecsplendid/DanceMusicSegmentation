@@ -7,7 +7,7 @@ options = gaoptimset(options,'MigrationInterval', 3);
 options = gaoptimset(options,'MigrationFraction', 0.3);
 options = gaoptimset(options,'EliteCount', 10);
 options = gaoptimset(options,'CrossoverFraction', 0.5);
-options = gaoptimset(options,'Generations', 40);
+options = gaoptimset(options,'Generations', 3);
 options = gaoptimset(options,'StallGenLimit', 4);
 options = gaoptimset(options,'Display', 'iter');
 options = gaoptimset(options,'PlotFcns', {  ...
@@ -100,7 +100,7 @@ savefig('results/optimise_trackplacementmean.fig');
 
 % run the full experiment
 all = run_experiments( ...
-    config_optimdrive(cfg_trkplacemean, 2), ...
+    config_optimdrive(cfg_trkplacemean, 2, estimate_tracks ), ...
     'best mean' );
 save results/cfg_trkplacemean.mat all;
 
