@@ -21,4 +21,10 @@ classdef aggregate_results
         mean_indexplacementconfidence_mean
         execution_time
     end
+    
+    methods
+        function ag = byshow(s)
+            ag = get_aggregateresultsbyshow( agg_results, s );
+        end
+    end
 end     

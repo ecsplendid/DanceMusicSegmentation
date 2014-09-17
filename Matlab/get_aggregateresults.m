@@ -1,4 +1,4 @@
-function [agg_results] = get_aggregateresults( results, config, show )
+function [agg_results] = get_aggregateresults( description, results, config, show_type )
 
 if nargin < 3
 
@@ -11,11 +11,22 @@ end
 
 agg_results = aggregate_results();
 
+agg_results.description = description;
+
+switch( show_type )
+    case 1
+        agg_results.description = strcat(agg_results.description , ' ASOT');
+    case 2
+        agg_results.description = strcat(agg_results.description , ' MAGIC');
+    case 3
+        agg_results.description = strcat(agg_results.description , ' TATW');
+end
+
 agg_results.config = config;
 
 assert(~isempty(results));
 
-width = size(results{1}.track_placementconfidence,1);
+width = size(results(1).track_placementconfidence,1);
 
 if( config.compute_confs )
 
@@ -27,17 +38,22 @@ if( config.compute_confs )
 end
 
 function si = gsi(s)
-	if strcmp(s,'state'), si=1, end
-	if strcmp(s,'around'), si=2, end	
-	if strcmp(s,'magic'), si=3, end
+	if ~isempty(strfind(s,'state')) 
+		si=1;
+	elseif ~isempty(strfind(s,'around'))
+		si=3;
+    	elseif ~isempty(strfind(s,'magic'))
+		si=2;
+    	else 
+		si = 4;
+	end
 end
 
 for i=1:length(results)
 		
-	r = results{i};
+	r = results(i);
 
-	if show ~= 0 ...
-		|| i(r.showname) ~= show
+	if show_type ~= gsi(r.show.showname)
 		continue;
 	end
 
