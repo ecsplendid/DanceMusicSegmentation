@@ -118,6 +118,6 @@ rs = nan(1,28);
         % 27: costcontig_futurediffwindow/ in {1,2,...,400}
         rs(27) = 0;
         % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
-        rs(28) = 0;
+        rs(28) = 1;
     end
 end
