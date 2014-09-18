@@ -21,9 +21,7 @@ options = gaoptimset(options,'UseParallel', 1 );
 gauss = 1;
 estimate_tracks = 1;
 
-%% only evolution+gauss cost matrix
 
-cfg_trkplace_evogauss.mat evogauss;
 
 %% mean for finding best optimise_trackplacementmean
 
