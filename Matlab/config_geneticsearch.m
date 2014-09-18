@@ -1,5 +1,7 @@
 %% options setup
 
+diary on;
+
 options = gaoptimset;
 options = gaoptimset(options,'PopulationSize', [ 50 ] );
 options = gaoptimset(options,'MigrationDirection', 'both');
