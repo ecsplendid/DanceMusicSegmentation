@@ -19,34 +19,30 @@ function [SC] = getcost_contigevolution ( ...
 %%
 T = show.T;
 W = show.W;
-w = show.w;
 
-if config.use_costcontigevolution == 0
+if config.use_costcontigevolution <= 1e-6
    SC = zeros( T, W ); 
    return;
 end
 
 C = show.CosineMatrix;
-C2 = zeros( size( show.CosineMatrix ) );
 
 diffn = config.costcontig_evolutiondiffwindow;
 
 for w=1:W
+    
     d = diag( C, w );
-    b = d<0;
-    b = b((diffn+1):end);
-    
-    df = abs(diff(d, diffn));
-    d = df;
-    d( b ) = -d( b );
-    
+    sg = sign(d);
+  
     in = idiag(size(C), w);
     
-    C2( in((diffn+1):end) ) = d;
+    C( in((diffn+1):end) ) = ...
+        sg( diffn+1:end ) .* ...
+        abs( diff( d, diffn ) );
 end
 
 %%
-show.CosineMatrix = C2;
+show.CosineMatrix = C;
 
 SC = getcost_sum( show, config, ...
     config.use_costcontigevolution, ...

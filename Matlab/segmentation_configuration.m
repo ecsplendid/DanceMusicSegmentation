@@ -21,7 +21,6 @@ classdef segmentation_configuration
         solution_shift
         use_costgaussianwidth
         cosine_normalization
-        contig_penalty = 0.2
         use_costsymmetry
         costsymmetry_incentivebalance
         use_costcontigpast

@@ -45,7 +45,7 @@ function [c] = config_optimdrive(ibev, dataset, estimate_tracks)
     % 18: lowPassFilter /in {800,...,1950}
     % 19: highPassFilter /in {50,...,500}
     % 20: secondsPerTile /in {5,6,...,40} 
-    % 21: contig penalty /in {0.05,...,5}
+    % 21: gaussian window pinch /in {1,2,3,4}
     % 22: c.costevolution_normalization = ibev(22);
     % 23: c.costsum_normalization= ibev(23);
     % 24: c.costcontig_normalization= ibev(24);
@@ -74,9 +74,9 @@ c.bandwidth = round(ibev(17)); % bandwith for the width of the convolution filte
 c.lowPassFilter = round(ibev(18)); %Hz
 c.highPassFilter = round(ibev(19)); %Hz
 
-c.costcontig_pastdiffwindow = ibev(26);
-c.costcontig_futurediffwindow= ibev(27);
-c.costcontig_evolutiondiffwindow= ibev(28);
+c.costcontig_pastdiffwindow = round(ibev(26));
+c.costcontig_futurediffwindow= round(ibev(27));
+c.costcontig_evolutiondiffwindow= round(ibev(28));
 
 % figure drawing parameters
 c.drawSimMat = 0;
@@ -89,15 +89,13 @@ c.eta = 10;
 % shift the solutions by x seconds, seems useless
 c.solution_shift = round(ibev(14));
 % gaussian width (>1) higher values pinch the gaussian
-c.use_costgaussianwidth = 1;
+c.use_costgaussianwidth = round(ibev(21));
 % suggested: [0.5,1.5], shift the mean of the (gaussian) distribution of
 % the cosine matrix, by default its shifted to be mean 0 but the songs are
 % not entirely normal, they are represented by a section on the left of the
 % distribution, I would guess a value slightly greater than 1 is optimal for
 % the symmetry and contig cost matrices. >1 shifts mean higher
 c.cosine_normalization = ibev(13);
-
-c.contig_penalty = ibev(21);
 
 % which cost functions to use and how much linear weight do they have (>0)
 

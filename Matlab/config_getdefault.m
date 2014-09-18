@@ -9,12 +9,12 @@ c.dataset = 1;
 
 % Feature Extraction Parameters
 c.sampleRate = 4000;
-c.secondsPerTile = 10;
-c.minTrackLength = 142;
-c.maxExpectedTrackWidth = 613;   % (magicisland=380*2 others 350*2)
-c.bandwidth = 5; % bandwith for the width of the convolution filter
-c.lowPassFilter = 872; %Hz
-c.highPassFilter = 168; %Hz
+c.secondsPerTile = 30;
+c.minTrackLength = 134;
+c.maxExpectedTrackWidth = 641;   % (magicisland=380*2 others 350*2)
+c.bandwidth = 6; % bandwith for the width of the convolution filter
+c.lowPassFilter = 1144; %Hz
+c.highPassFilter = 109; %Hz
 
 % figure drawing parameters
 c.drawSimMat = 1;
@@ -25,39 +25,40 @@ c.draw_confs = 0;
 c.eta = 10;
 
 % shift the solutions by x seconds, seems useless
-c.solution_shift = 0;
+c.solution_shift = -2;
 % gaussian width (>1) higher values pinch the gaussian
-c.use_costgaussianwidth = 1;
+c.use_costgaussianwidth = 3;
 % suggested: [0.5,1.5], shift the mean of the (gaussian) distribution of
 % the cosine matrix, by default its shifted to be mean 0 but the songs are
 % not entirely normal, they are represented by a section on the left of the
 % distribution, I would guess a value slightly greater than 1 is optimal for
 % the symmetry and contig cost matrices. >1 shifts mean higher
-c.cosine_normalization = 0.6;
-
-c.contig_penalty = 0.01;
+c.cosine_normalization = 0.9604;
 
 % which cost functions to use and how much weight do they have (>0)
 
 % USE THESE>>>
-c.use_costsymmetry        = 1;       c.costsymmetry_incentivebalance = 0.1238;
-c.use_costcontigpast      = 1;     c.costcontigpast_incentivebalance = 0.2;
-c.use_costcontigfuture    = 0.4;   c.costcontigfuture_incentivebalance = 0.8;
-c.use_costsum             = 1;             c.costsum_incentivebalance = 0.2;
-c.use_costgaussian        = 1;           c.costgauss_incentivebalance = 0.4116;
-c.use_costcontigevolution = 1;      c.costevolution_incentivebalance = 0.3736;
+c.use_costsymmetry        = 0;       c.costsymmetry_incentivebalance = 0.1238;
+c.use_costcontigpast      = 0;     c.costcontigpast_incentivebalance = 0.5295;
+c.use_costcontigfuture    = 0;   c.costcontigfuture_incentivebalance = 0.5227;
+c.use_costsum             = 0;             c.costsum_incentivebalance = 0.2;
+c.use_costgaussian        = 0.3;           c.costgauss_incentivebalance = 0.4585;
+c.use_costcontigevolution = 1;      c.costevolution_incentivebalance = 0.5736;
 
 c.costevolution_normalization = 0.5;
 c.costsum_normalization = 0.5;
-c.costcontig_normalization = 0.2;
 c.costsym_normalization = 1;
 
-c.costcontig_pastdiffwindow = 2;
-c.costcontig_futurediffwindow = 2;
-c.costcontig_evolutiondiffwindow= 20;
+
+c.costcontig_normalization = 0.7;
+c.costcontig_pastdiffwindow = 60;
+c.costcontig_futurediffwindow = 60;
 
 
-c.estimate_tracks = 1;
+c.costcontig_evolutiondiffwindow= 1;
+
+
+c.estimate_tracks = 0;
 
 end
 

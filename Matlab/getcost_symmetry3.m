@@ -11,7 +11,7 @@ C = show.CosineMatrix;
 
 incentivebalance = config.costsymmetry_incentivebalance;
 
-if config.use_costsymmetry == 0
+if config.use_costsymmetry <= 1e-6
    SC = zeros( T, W ); 
    return;
 end

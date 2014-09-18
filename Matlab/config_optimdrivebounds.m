@@ -31,7 +31,7 @@ function [rs] = config_optimdrivebounds( upper, gauss )
         % 13: cosine norm /in [0.4,1.4]
         rs(13) = 1.4;
         % 14: solution_shift /in {-3,-2,-1,0,1,2,3}
-        rs(14) = 3;
+        rs(14) = 5;
         % 15: minTrackLength /in {80,121,...,180}
         rs(15) = 180;
         % 16: maxExpectedTrackWidth /in {10*60,...,15*60}
@@ -43,9 +43,9 @@ function [rs] = config_optimdrivebounds( upper, gauss )
         % 19: highPassFilter /in {50,...,500}
         rs(19) = 500;
         % 20: secondsPerTile /in {5,6,...,20}
-        rs(20) = 5;
-        % 21: contig penalty /in {0.05,...,5}
-        rs(21) = 5;
+        rs(20) = 3;
+        % 21: gaussian window pinch /in {1,2,3,4}
+        rs(21) = 4;
         % 22: costevolution_normalization /in {0.1,...,3}
         rs(22) = 3;
         % 23: costsum_normalization /in {0.1,...,3}
@@ -54,12 +54,12 @@ function [rs] = config_optimdrivebounds( upper, gauss )
         rs(24) = 3;
         % 25: costsym_normalization /in {0.1,...,3}
         rs(25) = 3;
-        % 26: costcontig_pastdiffwindow /in {1,2,...,400}
-        rs(26) = 400;
-        % 27: costcontig_futurediffwindow/ in {1,2,...,400}
-        rs(27) = 400;
-        % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
-        rs(28) = 400;
+        % 26: costcontig_pastdiffwindow /in {1,2,...,100}
+        rs(26) = 100;
+        % 27: costcontig_futurediffwindow/ in {1,2,...,100}
+        rs(27) = 100;
+        % 28: costcontig_evolutiondiffwindow /in {1,2,...,100}  
+        rs(28) = 100;
     
     else
         
@@ -90,7 +90,7 @@ function [rs] = config_optimdrivebounds( upper, gauss )
         % 13: cosine norm /in [0.4,1.4]
         rs(13) = 0.4;
         % 14: solution_shift /in {-3,-2,-1,0,1,2,3}
-        rs(14) = -3;
+        rs(14) = -5;
         % 15: minTrackLength /in {80,121,...,180}
         rs(15) = 80;
         % 16: maxExpectedTrackWidth /in {10*60,...,15*60}
@@ -102,9 +102,9 @@ function [rs] = config_optimdrivebounds( upper, gauss )
         % 19: highPassFilter /in {50,...,500}
         rs(19) = 50;
         % 20: secondsPerTile /in {5,6,...,20}
-        rs(20) = 3;
-        % 21: contig penalty /in {0.05,...,5}
-        rs(21) = 0.05;
+        rs(20) = 20;
+        % 21: gaussian window pinch /in {1,2,3,4}
+        rs(21) = 1;
         % 22: costevolution_normalization /in {0.1,...,3}
         rs(22) = 0.1;
         % 23: costsum_normalization /in {0.1,...,3}
@@ -113,11 +113,11 @@ function [rs] = config_optimdrivebounds( upper, gauss )
         rs(24) = 0.1;
         % 25: costsym_normalization /in {0.1,...,3}
         rs(25) = 0.1;
-        % 26: costcontig_pastdiffwindow /in {1,2,...,400}
+        % 26: costcontig_pastdiffwindow /in {1,2,...,100}
         rs(26) = 1;
-        % 27: costcontig_futurediffwindow/ in {1,2,...,400}
+        % 27: costcontig_futurediffwindow/ in {1,2,...,100}
         rs(27) = 1;
-        % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
+        % 28: costcontig_evolutiondiffwindow /in {1,2,...,100}  
         rs(28) = 1;
     end
 end

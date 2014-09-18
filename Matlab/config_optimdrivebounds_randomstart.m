@@ -42,8 +42,8 @@ function [rs] = config_optimdrivebounds_randomstart( sum, sym, cont, evo, gauss 
     rs(19) = ceil(rand * (500-50))+50;
     % 20: secondsPerTile /in {5,6,...,10}
     rs(20) = ceil(rand * 4)+1;
-    % 21: contig penalty /in {0.05,...,5}
-    rs(21) = ((rand+0.05)*(5+0.05));
+    % 21: gaussian window pinch /in {1,2,3,4}
+    rs(21) = ceil((rand*4))
     % 22: costevolution_normalization /in {0.1,...,3}
     rs(22) = 0.1+((rand*3)-0.1);
     % 23: costsum_normalization /in {0.0,...,3}
@@ -52,10 +52,10 @@ function [rs] = config_optimdrivebounds_randomstart( sum, sym, cont, evo, gauss 
     rs(24) = 0.1+((rand*3)-0.1);
     % 25: costsym_normalization /in {0.1,...,3}
     rs(25) = 0.1+((rand*3)-0.1);
-    % 26: costcontig_pastdiffwindow /in {1,2,...,400}
-    rs(26) = round((rand*399)+1);
-    % 27: costcontig_futurediffwindow/ in {1,2,...,400}
-    rs(27) = round((rand*399)+1);
-    % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
-    rs(28) = round((rand*399)+1);
+    % 26: costcontig_pastdiffwindow /in {1,2,...,100}
+    rs(26) = round((rand*199)+1);
+    % 27: costcontig_futurediffwindow/ in {1,2,...,100}
+    rs(27) = round((rand*199)+1);
+    % 28: costcontig_evolutiondiffwindow /in {1,2,...,100}  
+    rs(28) = round((rand*199)+1);
 end

@@ -1,18 +1,14 @@
 function [SC] = getcost_contigstatic2(...
     show, config ) 
- %getcost_contigstatic2 110914 
+ %getcost_contigstatic2 180914
  % re-hash of contigous cost matrix concept
  % now the idea is we modify the cosine matrix in-place, and sum over
- % changes
- % we set the non-used half to zero
  % we work on two conceptualizations, "past" and "future"
  % past means we trace downwards from main diag, future accross
- % then we conv a hamming window up and down the matrix for each one
- % and then do a cumsum on both to give a basic increased score for contig
- % then we build other matrices to punish non-contiguity, this is created
- % from Nth order differences of smoothed matrices, cumsumed, scaled and
- % factored out
- % parameters are 1) diff order, 2) penalty scaling exponent
+ % * apply incentive balance and usage scaling
+ % * do trace wise Nth order differences future (across) past (down)
+ % * set sign back to the original sign
+ % * sum as usual, will now effectively sum the amount of contiguity
  
 %%
 
@@ -22,65 +18,46 @@ C = show.CosineMatrix;
 ibp = config.costcontigpast_incentivebalance;
 ibf = config.costcontigfuture_incentivebalance;
 
-if config.use_costcontigpast == 0 ...
-        && config.use_costcontigfuture == 0
-   SC = zeros( T, W ); 
-   return;
+if config.use_costcontigfuture <= 1e-6 ...
+        && config.use_costcontigpast <= 1e-6
+    SC = zeros(T, W);
+    
+    return;
 end
 
-for t=1:T
-    C( t, 1:t ) = 0;
-end
 
-C2=C;
+CP = C;
+CP(CP<=0) = CP(CP<=0) .* ibp;
+CP(CP>0) = CP(CP>0) * (1-ibp);
+CP = CP * config.use_costcontigpast;
 
-C2 = normalize_byincentivebias(C2, 0.5);
-C2(C2>0) = 1;
-C2(C2<=0) = -1;
+CF = C;
+CF(CF<=0) = CF(CF<=0) .* ibf;
+CF(CF>0) = CF(CF>0) * (1-ibf);
+CF = CF * config.use_costcontigfuture;
 
-normalize = @(sc)(sc - min(min(sc))) ./ ...
-    max( max( sc(~isinf(sc)) ) - min( min( sc ) ) );
+sg = sign(C);
 
-%% future
+dpa = config.costcontig_pastdiffwindow;
+dfa = config.costcontig_futurediffwindow;
 
-fut_penalty = diff( C2, config.costcontig_futurediffwindow, 2 );
-fut_penalty = fut_penalty>0;
-fut_penalty = cumsum(fut_penalty')';
-fut_penalty = normalize(fut_penalty);
-fut_penalty = fut_penalty.^config.contig_penalty;  % how quickly to penalize non contiguity
-fut_penalty = [fut_penalty zeros(T, config.costcontig_futurediffwindow)];
-fut_penalty = 1-fut_penalty;
+Cpast = ( (flipud((diff(flipud(CP), dpa)))')' );
+Cfuture = diff(CF,dfa,2)'; 
 
-%% past
+C3 = ones(T,T);
 
-pas_penalty = diff( C2, config.costcontig_pastdiffwindow );
-pas_penalty = pas_penalty>0;
-pas_penalty = flipud(cumsum(flipud(pas_penalty)'));
-pas_penalty = normalize(pas_penalty);
-pas_penalty = pas_penalty.^config.contig_penalty;  % how quickly to penalize non contiguity
-pas_penalty = 1-pas_penalty;
-pas_penalty = [pas_penalty zeros(T, config.costcontig_pastdiffwindow ) ];
+C3( dpa+1:T, : ) = Cpast;
+C3( dfa+1:T, : ) = C3( dfa+1:T, : ) + Cfuture;
 
-%%
-Cpast = (flipud(cumsum(flipud(pas_penalty.*C)))')';
-Cfuture = cumsum((fut_penalty.*C)')';
+C3 = sg .* ( abs(C3)  );
 
-SC = zeros( T, show.W );
+show.CosineMatrix = C3;
 
-if config.use_costcontigpast > 0
-    show.CosineMatrix = Cpast;
-    SCP = getcost_sum( show, config, config.use_costcontigpast, ibp, ...
+SC = getcost_sum( show, config, 1, 0.5, ...
         config.costcontig_normalization );
-    SC = SC + SCP;
-end
-
-if config.use_costcontigfuture > 0
-    show.CosineMatrix = Cfuture;
-    SCF = getcost_sum( show, config, config.use_costcontigfuture, ibf, ...
-        config.costcontig_normalization );
-    SC = SC + SCF;
-end
 
 SC(:,1:show.w-1 )=inf;
+
+%%
 
 end
