@@ -43,7 +43,7 @@ function [rs] = config_optimdrivebounds( upper, gauss )
         % 19: highPassFilter /in {50,...,500}
         rs(19) = 500;
         % 20: secondsPerTile /in {5,6,...,20}
-        rs(20) = 3;
+        rs(20) = 20;
         % 21: gaussian window pinch /in {1,2,3,4}
         rs(21) = 4;
         % 22: costevolution_normalization /in {0.1,...,3}
@@ -102,7 +102,7 @@ function [rs] = config_optimdrivebounds( upper, gauss )
         % 19: highPassFilter /in {50,...,500}
         rs(19) = 50;
         % 20: secondsPerTile /in {5,6,...,20}
-        rs(20) = 20;
+        rs(20) = 3;
         % 21: gaussian window pinch /in {1,2,3,4}
         rs(21) = 1;
         % 22: costevolution_normalization /in {0.1,...,3}
