@@ -34,7 +34,6 @@ classdef segmentation_configuration
         use_costcontigevolution
         costevolution_incentivebalance
         costsum_normalization
-        costcontig_normalization
         costsym_normalization
         estimate_tracks = 0;
         costcontig_pastdiffwindow
