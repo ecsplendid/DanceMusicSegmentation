@@ -1,40 +1,39 @@
-function [ SC ] = getcost_sum( show, config, scale, ib, normalization )
+function [ SC ] = getcost_sum( show, config )
 %   getcost_sum 
 %   builds the sum cost matrix calling the dynamic program get_summationfast
 %   which is described in detail in the first paper. Runs in O(2TW)
 
-if nargin < 3
-    % this function is used in the context of contig too
-    % so we don't always want to use config.usecostsum
-    scale = 1;
-end
-
-if nargin < 4
-    ib = config.costsum_incentivebalance;
-end
-
 W = show.W;
+T = show.T;
 C = show.CosineMatrix;
 
-if scale == 0
-   SC = zeros( show.T, W ); 
+if config.use_costsum <= 1e-6 ...
+    && config.use_costcontigevolution <= 1e-6 ...
+    && config.use_costcontigpast <= 1e-6 ...
+    && config.use_costcontigfuture <= 1e-6 
+   SC = zeros( T, W ); 
    return;
 end
 
-C(C>=0) = C(C>=0) .* (ib);
-C(C<0) = C(C<0) .* (1-ib);
+if config.use_costsum > 1e-6
+    C(C>=0) = C(C>=0) .* (config.costsum_incentivebalance);
+    C(C<0) = C(C<0) .* (1-config.costsum_incentivebalance);
+    C = normalize_costmatrix( C ) ...
+        .* config.use_costsum;
+end
 
-SC = get_summationfast( C, W );
+CC = getcosines_contigstatic( show, config );
+CE = getcosines_contigevolution ( show, config );
 
-SC = SC ./ repmat( (1:W).^normalization, size(SC,1), 1 );
+CA = CC + C + CE;
 
-SC = normalize_byincentivebias( SC, ib );
+SC = get_summationfast( CA, W );
+SC = SC ./ repmat( (1:W).^config.costsum_normalization, size(SC,1), 1 );
+SC = normalize_costmatrix( SC );
 
 SC( isnan(SC) ) = inf;
 SC(:,1:show.w-1 ) = inf;
     
-SC = SC .* scale;
-
 end
 
  

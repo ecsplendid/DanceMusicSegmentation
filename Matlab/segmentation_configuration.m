@@ -33,7 +33,6 @@ classdef segmentation_configuration
         costgauss_incentivebalance
         use_costcontigevolution
         costevolution_incentivebalance
-        costevolution_normalization
         costsum_normalization
         costcontig_normalization
         costsym_normalization

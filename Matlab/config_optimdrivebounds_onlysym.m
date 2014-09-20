@@ -1,6 +1,6 @@
-function [rs] = config_optimdrivebounds_onlysum( upper, gauss )
+function [rs] = config_optimdrivebounds_onlysym( upper, gauss )
   
-rs = nan(1,28);
+rs = nan(1,26);
 
     if( upper )
     
@@ -46,20 +46,16 @@ rs = nan(1,28);
         rs(20) = 20;
         % 21: gaussian window pinch /in {1,2,3,4}
         rs(21) = 4;
-        % 22: costevolution_normalization /in {0.1,...,3}
+        % 22: costsum_normalization /in {0.1,...,3}
         rs(22) = 0;
-        % 23: costsum_normalization /in {0.1,...,3}
-        rs(23) = 0;
-        % 24: costcontig_normalization /in {0.1,...,3}
+        % 23: costsym_normalization /in {0.1,...,3}
+        rs(23) = 3;
+        % 24: costcontig_pastdiffwindow /in {1,2,...,50}
         rs(24) = 0;
-        % 25: costsym_normalization /in {0.1,...,3}
-        rs(25) = 3;
-        % 26: costcontig_pastdiffwindow /in {1,2,...,400}
+        % 25: costcontig_futurediffwindow/ in {1,2,...,50}
+        rs(25) = 0;
+        % 26: costcontig_evolutiondiffwindow /in {1,2,...,50}  
         rs(26) = 0;
-        % 27: costcontig_futurediffwindow/ in {1,2,...,400}
-        rs(27) = 0;
-        % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
-        rs(28) = 0;
     
     else
         
@@ -105,19 +101,15 @@ rs = nan(1,28);
         rs(20) = 3;
         % 21: gaussian window pinch /in {1,2,3,4}
         rs(21) = 1;
-        % 22: costevolution_normalization /in {0.01,...,3}
+        % 22: costsum_normalization /in {0.01,...,3}
         rs(22) = 0;
-        % 23: costsum_normalization /in {0.01,...,3}
-        rs(23) = 0;
-        % 24: costcontig_normalization /in {0.01,...,3}
+        % 23: costsym_normalization /in {0.01,...,3}
+        rs(23) = 0.1;
+        % 24: costcontig_pastdiffwindow /in {1,2,...,50}
         rs(24) = 0;
-        % 25: costsym_normalization /in {0.01,...,3}
-        rs(25) = 0.1;
-        % 26: costcontig_pastdiffwindow /in {1,2,...,400}
+        % 25: costcontig_futurediffwindow/ in {1,2,...,50}
+        rs(25) = 0;
+        % 26: costcontig_evolutiondiffwindow /in {1,2,...,50}  
         rs(26) = 0;
-        % 27: costcontig_futurediffwindow/ in {1,2,...,400}
-        rs(27) = 0;
-        % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
-        rs(28) = 0;
     end
 end

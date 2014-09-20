@@ -16,8 +16,6 @@ function [c] = config_optimdrive(ibev, dataset, estimate_tracks)
         estimate_tracks = 0;
     end
     
-    
-
     % config_optimdrive this function will get a configuration
     % driven by a random input vector from fmincon as part of the 
     % process of finding the best config
@@ -46,13 +44,11 @@ function [c] = config_optimdrive(ibev, dataset, estimate_tracks)
     % 19: highPassFilter /in {50,...,500}
     % 20: secondsPerTile /in {5,6,...,40} 
     % 21: gaussian window pinch /in {1,2,3,4}
-    % 22: c.costevolution_normalization = ibev(22);
-    % 23: c.costsum_normalization= ibev(23);
-    % 24: c.costcontig_normalization= ibev(24);
-    % 25: c.costsym_normalization= ibev(25);
-    % 26: costcontig_pastdiffwindow /in {1,2,...,400}
-    % 27: costcontig_futurediffwindow/ in {1,2,...,400}
-    % 28: costcontig_evolutiondiffwindow /in {1,2,...,400}  
+    % 22: c.costsum_normalization= ibev(23);
+    % 23: c.costsym_normalization= ibev(25);
+    % 24: costcontig_pastdiffwindow /in {1,2,...,400}
+    % 25: costcontig_futurediffwindow/ in {1,2,...,400}
+    % 26: costcontig_evolutiondiffwindow /in {1,2,...,400}  
     
     
     % see config_optimdrivebounds for bounds and random start driver
@@ -74,9 +70,9 @@ c.bandwidth = round(ibev(17)); % bandwith for the width of the convolution filte
 c.lowPassFilter = round(ibev(18)); %Hz
 c.highPassFilter = round(ibev(19)); %Hz
 
-c.costcontig_pastdiffwindow = round(ibev(26));
-c.costcontig_futurediffwindow= round(ibev(27));
-c.costcontig_evolutiondiffwindow= round(ibev(28));
+c.costcontig_pastdiffwindow = round(ibev(24));
+c.costcontig_futurediffwindow= round(ibev(25));
+c.costcontig_evolutiondiffwindow= round(ibev(26));
 
 % figure drawing parameters
 c.drawSimMat = 0;
@@ -107,11 +103,7 @@ c.use_costsum             = ibev(2);    c.costsum_incentivebalance = ibev(1);
 c.use_costgaussian        = ibev(12);   c.costgauss_incentivebalance = ibev(11);
 c.use_costcontigevolution = ibev(6);    c.costevolution_incentivebalance = ibev(5);
 
-
-c.costevolution_normalization = ibev(22);
-c.costsum_normalization= ibev(23);
-c.costcontig_normalization= ibev(24);
-c.costsym_normalization= ibev(25);
-
+c.costsum_normalization= ibev(22);
+c.costsym_normalization= ibev(23);
 
 end

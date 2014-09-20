@@ -24,29 +24,19 @@ function [ results ] = ...
     
     show.audio = nan;
 
+    % sum-based matrices (basic, contig future, past, evolution)
 	CN = getcost_sum( ...
-         show, config, ...
-            config.use_costsum, ...
-            config.costsum_incentivebalance, ...
-            config.costsum_normalization);
+         show, config );
     
     % symmetry cost matrix
     CS = getcost_symmetry3( ...
         show, config );
     
-    % evolution cost matrix
-    CEV = getcost_contigevolution( ...
-        show, config );
-    
-    % contigous cost matrix
-    SCS = getcost_contigstatic2( ...
-        show, config );
-    
-    % gaussian cost matrix
+    % gaussian regularisation cost matrix
     SCG = getcost_gaussian( ...
         show, config );
     
-    show.CostMatrix = CN+CS+CEV+SCS+SCG;
+    show.CostMatrix = CS+CN+SCG;
     
     results = compute_trackplacement( config, show, results );
     
@@ -69,7 +59,7 @@ function [ results ] = ...
     
     if config.drawSimMat == 1 
        
-        results.vis();
+        results.vis(1);
     end
     
     if config.memory_efficient == 1
