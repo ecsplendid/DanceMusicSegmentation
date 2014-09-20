@@ -5,7 +5,7 @@ function [ SC ] = getcost_sum( show, config )
 
 W = show.W;
 T = show.T;
-C = show.CosineMatrix;
+C = zeros(T,T);
 
 if config.use_costsum <= 1e-6 ...
     && config.use_costcontigevolution <= 1e-6 ...
@@ -15,7 +15,8 @@ if config.use_costsum <= 1e-6 ...
    return;
 end
 
-if config.use_costsum > 1e-6
+if config.use_costsum > 1e-3
+    C = show.CosineMatrix;
     C(C>=0) = C(C>=0) .* (config.costsum_incentivebalance);
     C(C<0) = C(C<0) .* (1-config.costsum_incentivebalance);
     C = normalize_costmatrix( C ) ...
@@ -26,6 +27,10 @@ CC = getcosines_contigstatic( show, config );
 CE = getcosines_contigevolution ( show, config );
 
 CA = CC + C + CE;
+
+figure(5)
+imagesc(CA)
+colorbar
 
 SC = get_summationfast( CA, W );
 SC = SC ./ repmat( (1:W).^config.costsum_normalization, size(SC,1), 1 );

@@ -37,10 +37,18 @@ for w=1:W
   
     in = idiag(size(C), w);
     
-    C2( in((diffn+1):end) ) = ...
-        sg( diffn+1:end ) .* ...
+    n = sg( diffn+1:end ) .* ...
         abs( diff( d, diffn ) );
+    
+    n = n .* w ^ config.costevolution_normalization;
+    
+    C2( in((diffn+1):end) ) = n;
 end
+
+C2 = normalize_costmatrix( C2 );
+
+C2(C2<=0) = 1-abs(C2(C2<=0));
+C2(C2>0) = 1-C2(C2>0);
 
 C2 = normalize_costmatrix( C2 ) ...
     .* config.use_costcontigevolution;

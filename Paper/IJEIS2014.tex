@@ -186,7 +186,7 @@
 	\[
 	\hat H(P,A) =  \mathrm{Median}\left(    \mathrm{Sort}\left( |P_i-A_{1,2,\ldots,|P|}|\right)_1 \right)
 	\] for all $i=1,2,\ldots,|A|$
-	takes the median of the absolute differences between each prediction in $P$ and the nearest actual index in $A$. This is the most meaningful single metric of \textit{accuracy}. It is largely invariant to misplacements.
+	takes the median of the absolute differences between each prediction in $P$ and the nearest actual index in $A$. This is the most meaningful single metric of \textit{accuracy}. It is largely invariant to misplacements. There are typically only a few misplacements, if any. The median gives us a fair idea of what the accuracy would have been without the misplacements.  
 	
 	The thresholds metric is the percentage of matched tracks within different intervals of time \[\{~60, ~30, ~20, ~10, ~5, ~3, ~1~\},\] in \emph{seconds} as a margin around any of the track indices we have been given. This metric is also invariant to alignment and is provided for comparison with our other paper \cite{scarfe2013long}.
 	

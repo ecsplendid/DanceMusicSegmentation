@@ -1,6 +1,6 @@
 function [rs] = config_optimdrivebounds_randomstart( sum, sym, cont, evo, gauss )
 
-    rs = nan(1,26);
+    rs = nan(1,28);
 
     % 1: sumIB /in [0,1]
     rs(1) = rand;
@@ -40,18 +40,22 @@ function [rs] = config_optimdrivebounds_randomstart( sum, sym, cont, evo, gauss 
     rs(18) = ceil(rand * (1950-800))+800;
     % 19: highPassFilter /in {50,...,500}
     rs(19) = ceil(rand * (500-50))+50;
-    % 20: secondsPerTile /in {3,4,5,6,...,10}
-    rs(20) = ceil(rand * 7)+3;
+    % 20: secondsPerTile /in {5,6,...,10}
+    rs(20) = ceil(rand * 4)+1;
     % 21: gaussian window pinch /in {1,2,3,4}
-    rs(21) = ceil((rand*4));
-    % 22: costsum_normalization /in {0.0,...,3}
+    rs(21) = ceil((rand*4))
+    % 22: costevolution_normalization /in {0.1,...,3}
     rs(22) = 0.1+((rand*3)-0.1);
-    % 23: costsym_normalization /in {0.1,...,3}
+    % 23: costsum_normalization /in {0.0,...,3}
     rs(23) = 0.1+((rand*3)-0.1);
-    % 24: costcontig_pastdiffwindow /in {1,2,...,50}
-    rs(24) = round((rand*49)+1);
-    % 25: costcontig_futurediffwindow/ in {1,2,...,50}
-    rs(25) = round((rand*49)+1);
-    % 26: costcontig_evolutiondiffwindow /in {1,2,...,50}  
+    % 24: costcontig_normalization /in {0.1,...,3}
+    rs(24) = 0.1+((rand*3)-0.1);
+    % 25: costsym_normalization /in {0.1,...,3}
+    rs(25) = 0.1+((rand*3)-0.1);
+    % 26: costcontig_pastdiffwindow /in {1,2,...,50}
     rs(26) = round((rand*49)+1);
+    % 27: costcontig_futurediffwindow/ in {1,2,...,50}
+    rs(27) = round((rand*49)+1);
+    % 28: costcontig_evolutiondiffwindow /in {1,2,...,50}  
+    rs(28) = round((rand*49)+1);
 end
