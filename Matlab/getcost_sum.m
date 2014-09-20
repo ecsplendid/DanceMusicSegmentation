@@ -28,10 +28,6 @@ CE = getcosines_contigevolution ( show, config );
 
 CA = CC + C + CE;
 
-figure(5)
-imagesc(CA)
-colorbar
-
 SC = get_summationfast( CA, W );
 SC = SC ./ repmat( (1:W).^config.costsum_normalization, size(SC,1), 1 );
 SC = normalize_costmatrix( SC );
