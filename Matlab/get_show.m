@@ -35,6 +35,9 @@ function [this_show] = get_show(s, config)
     tic;
 
     this_show.audio = audioread( this_show.file );
+    
+    this_show.showlength_secs = round(...
+        length(this_show.audio)/sampleRate);
 
     % some sanitization of the github test set file names
     showname = this_show.file;

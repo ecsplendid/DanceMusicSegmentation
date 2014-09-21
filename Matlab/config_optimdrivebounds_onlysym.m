@@ -58,7 +58,7 @@ rs = nan(1,28);
         rs(26) = 0;
         % 27: costcontig_futurediffwindow/ in {1,2,...,50}
         rs(27) = 0;
-        % 28: costcontig_evolutiondiffwindow /in {1,2,...,5}  
+        % 28: costcontig_evolutiondiffwindow /in {1,2,...,50}  
         rs(28) = 0;
     
     else

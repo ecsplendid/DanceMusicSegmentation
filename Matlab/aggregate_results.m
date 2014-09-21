@@ -14,6 +14,8 @@ classdef aggregate_results
         heuristic_all
         track_estimate_errors = [];
         track_estimate_errors_avg
+        naive_trackestimate_errors = []
+        naive_trackestimate_errors_avg
         shifts = [];
         shifts_avg
         track_indexconfidences_sum

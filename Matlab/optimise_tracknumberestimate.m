@@ -10,7 +10,7 @@ function [score] = optimise_tracknumberestimate( ibev )
 
     agresults = run_experiments( config );
 
-    score = agresults.convexity_estimate;
+    score = agresults.track_estimate_errors_avg;
 
 end
 
