@@ -66,10 +66,14 @@ for i=1:length(results)
 	agg_results.heuristic_all = ...
 	[agg_results.heuristic_all r.heuristic_score];
 	agg_results.shifts = [agg_results.shifts r.shifts];
+    
 	agg_results.track_estimate_errors = ...
 	[agg_results.track_estimate_errors r.track_estimate_error];
 	agg_results.results = [agg_results.results r];
-
+    
+    agg_results.naive_trackestimate_errors = ...
+	[agg_results.naive_trackestimate_errors r.naive_track_estimate_error];
+    
 	if( config.compute_confs )
 
 		agg_results.track_placementconfidenceavg_all = ...
@@ -104,5 +108,8 @@ agg_results.heuristic_meanoverall = mean(agg_results.heuristic_all);
 agg_results.shifts_avg = mean(agg_results.shifts);
 agg_results.track_estimate_errors_avg = ...
 mean(agg_results.track_estimate_errors);
+
+agg_results.naive_trackestimate_errors_avg = ...
+mean(agg_results.naive_trackestimate_errors);
 
 end
