@@ -56,6 +56,6 @@ function [rs] = config_optimdrivebounds_randomstart( sum, sym, cont, evo, gauss 
     rs(26) = round((rand*49)+1);
     % 27: costcontig_futurediffwindow/ in {1,2,...,50}
     rs(27) = round((rand*49)+1);
-    % 28: costcontig_evolutiondiffwindow /in {1,2,...,5}  
-    rs(28) = round((rand*4)+1);
+    % 28: costcontig_evolutiondiffwindow /in {1,2,...,50}  
+    rs(28) = round((rand*49)+1);
 end
