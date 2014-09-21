@@ -7,14 +7,18 @@ function config_geneticsearch( optimization, execute_full, gauss )
 % optimization==3, track number estimate
 
 optimization_fn = @optimise_trackplacementmean;
+desc = 'mean_';
 
 if nargin > 0
     if optimization == 1
         optimization_fn = @optimise_trackplacementheuristic;
+        desc = 'heur_';
     elseif optimization == 2
         optimization_fn = @optimise_trackplacementheuristicandmean;
+        desc = 'mean-heur_';
     elseif optimization == 3
         optimization_fn = @optimise_tracknumberestimate;
+        desc = 'trackes_';
     end
 end
 
@@ -38,12 +42,6 @@ execute_geneticsearch( ...
     @config_optimdrivebounds, ...
     gauss, execute_full );
 
-%% only evolution+gauss cost matrix
-execute_geneticsearch( ...
-    strcat('evo',gaussdesc), optimization_fn, ...
-    @config_optimdrivebounds_onlyevolution, ...
-    gauss, execute_full );
-
 %% only sym+gauss cost matrix
 execute_geneticsearch( ...
     strcat('sym',gaussdesc), optimization_fn, ...
@@ -61,6 +59,13 @@ execute_geneticsearch( ...
     strcat('sum',gaussdesc), optimization_fn, ...
     @config_optimdrivebounds_onlysum, ...
     gauss, execute_full );
+
+%% only evolution+gauss cost matrix
+execute_geneticsearch( ...
+    strcat('evo',gaussdesc), optimization_fn, ...
+    @config_optimdrivebounds_onlyevolution, ...
+    gauss, execute_full );
+
 
 %% run a totally random one for comparison
 if execute_full

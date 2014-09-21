@@ -39,10 +39,11 @@ dataset = 2;
 
 % run the full experiment
 config = config_optimdrive(best_configraw, dataset, estimate_tracks);
-save( sprintf('results/config_%s_%s.mat', desc, date ), config );
+save( sprintf('results/config_%s_%s.mat', desc, date ), 'config' );
 
 if execute_full 
-    run_experiments( config, desc );
+    agr = run_experiments( config, desc );
+    save( sprintf('results/agres_%s_%s.mat', desc, date ), 'agr' );
 end
 
 end
