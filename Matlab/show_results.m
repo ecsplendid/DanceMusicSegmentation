@@ -2,8 +2,8 @@ classdef show_results
     % results for executing a show
     
     properties
-       convexity_estimate
-    	config
+        convexity_estimate
+        config
         show
         posterior
         predictions
@@ -23,6 +23,7 @@ classdef show_results
         execution_time
         naive_trackestimate
         naive_track_estimate_error
+        novelty_predictions
     end
     
     methods

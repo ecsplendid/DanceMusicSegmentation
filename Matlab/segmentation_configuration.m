@@ -4,6 +4,9 @@ classdef segmentation_configuration
     % to resort to global variables
     
     properties
+        novelty_minpeakradius = 50
+        novelty_threshold = 0.3
+        novelty_kernelsize = 120
         use_persistentvariables = 0; % dont use this inside a parfor
         memory_efficient = 1; % wipe CosineMatrix and CostMatrix after run
         dataset = 1 % 1==github, 2==denis full, 3==lindmik

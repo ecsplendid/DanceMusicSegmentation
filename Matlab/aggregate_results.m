@@ -27,5 +27,4 @@ classdef aggregate_results
         execution_time
         convexity_estimate=0
     end
-  
 end     
