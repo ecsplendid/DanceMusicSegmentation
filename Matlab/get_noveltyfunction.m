@@ -65,11 +65,11 @@ end
 [ p, f ] = findpeaks( novelty, ...
     'MINPEAKDISTANCE', min_distance );
 
-f = f(f>threshold);
+allowed = p>threshold;
 
 if draw_plot
     % plot the peaks
-    plot( f, p, 'kx', 'LineWidth', 10 );
+    plot( f(allowed), p(allowed), 'kx', 'LineWidth', 10 );
     % plot the threshold line
     plot( 1:T, ones(T,1).*threshold, 'k--', 'LineWidth', 2 );
 
@@ -93,5 +93,7 @@ if draw_plot
     hold off;
     axis tight
 end
+
+f = f(allowed);
 
 end

@@ -12,7 +12,7 @@ c.sampleRate = 4000;
 c.secondsPerTile = 5;
 c.minTrackLength = 134;
 c.maxExpectedTrackWidth = 641;   % (magicisland=380*2 others 350*2)
-c.bandwidth = 6; % bandwith for the width of the convolution filter
+c.bandwidth = 2; % bandwith for the width of the convolution filter
 c.lowPassFilter = 1144; %Hz
 c.highPassFilter = 109; %Hz
 
@@ -41,9 +41,9 @@ c.cosine_normalization = 0.8;
 c.use_costsymmetry        = 0;       c.costsymmetry_incentivebalance = 0.1238;
 c.use_costcontigpast      = 0;     c.costcontigpast_incentivebalance = 0.5295;
 c.use_costcontigfuture    = 0;   c.costcontigfuture_incentivebalance = 0.5227;
-c.use_costsum             = 0.3;             c.costsum_incentivebalance = 0.2;
-c.use_costgaussian        = 0.7;           c.costgauss_incentivebalance = 0.4585;
-c.use_costcontigevolution = 1;      c.costevolution_incentivebalance = 0.4;
+c.use_costsum             = 1;             c.costsum_incentivebalance = 0.5;
+c.use_costgaussian        = 0;           c.costgauss_incentivebalance = 0.5;
+c.use_costcontigevolution = 0;      c.costevolution_incentivebalance = 0.4;
 
 c.costevolution_normalization = 1;
 c.costcontig_normalization = 0.5;

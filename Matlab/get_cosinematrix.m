@@ -114,7 +114,9 @@ C = C.^cfg.cosine_normalization;
 % scale to [1,2], then translate to [-1,1]
 C = (C.*2)-1; 
 
-show.CosineMatrix = gather(C);
+C = gather(C);
+
+show.CosineMatrix = C;
 
 show.T = size(C,1);
 
