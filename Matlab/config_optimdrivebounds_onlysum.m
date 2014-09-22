@@ -43,7 +43,7 @@ rs = nan(1,28);
         % 19: highPassFilter /in {50,...,500}
         rs(19) = 500;
         % 20: secondsPerTile /in {5,6,...,20}
-        rs(20) = 10;
+        rs(20) = 50;
         % 21: gaussian window pinch /in {1,2,3,4}
         rs(21) = 4;
         % 22: costevolution_normalization /in {0.1,...,3}

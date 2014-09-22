@@ -40,8 +40,8 @@ function [rs] = config_optimdrivebounds_randomstart( sum, sym, cont, evo, gauss 
     rs(18) = ceil(rand * (1950-800))+800;
     % 19: highPassFilter /in {50,...,500}
     rs(19) = ceil(rand * (500-50))+50;
-    % 20: secondsPerTile /in {5,6,...,10}
-    rs(20) = ceil(rand * 4)+1;
+    % 20: secondsPerTile /in {5,6,...,50}
+    rs(20) = ceil(rand * 49)+1;
     % 21: gaussian window pinch /in {1,2,3,4}
     rs(21) = ceil((rand*4))
     % 22: costevolution_normalization /in {0.1,...,3}

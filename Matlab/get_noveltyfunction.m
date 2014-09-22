@@ -65,7 +65,14 @@ end
 [ p, f ] = findpeaks( novelty, ...
     'MINPEAKDISTANCE', min_distance );
 
-allowed = p>threshold;
+% there should be no track indices at start or end
+% we are helping the novelty function along here
+% as it's a tricky start overlapping onto the zero padded matrix
+edge_margintiles = floor( 120 / show_results.config.secondsPerTile );
+
+allowed = p > threshold ... % over the threshold
+            & f>edge_margintiles ... % not too close to start
+            & f<(T-edge_margintiles); % not too close to end
 
 if draw_plot
     % plot the peaks
