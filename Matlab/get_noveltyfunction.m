@@ -1,5 +1,5 @@
 function f = get_noveltyfunction( ...
-    show_results, w, ...
+    show_results, kernel_size, ...
     min_distance, threshold, draw_plot )
 % get_noveltyfunction create a novelty function along the lines suggested
 % by foote et al in his papers, run a gaussian tapered checkerboard kernel
@@ -9,7 +9,7 @@ function f = get_noveltyfunction( ...
 % (Badawy,2013) for a clear run through
 
 if nargin < 2
-   w = 120; 
+   kernel_size = 120; 
 end
 
 if nargin < 3
@@ -33,21 +33,21 @@ novelty = nan(T,1);
 
 C(isnan(C)) = 0;
 
-k = kron( [1 -1; -1 1], ones(w/2,w/2) );
-g = fspecial('gaussian', [w w], w);
+k = kron( [1 -1; -1 1], ones(kernel_size/2,kernel_size/2) );
+g = fspecial('gaussian', [kernel_size kernel_size], kernel_size);
 g = (g-min(min(g)))./(max(max(g))-min(min(g)));
 k = k.*g;
 
 % we need to make a bigger C, zero pad it
 % so that we can slide the kernel from start to end
-C2 = zeros( size(C)+w );
+C2 = zeros( size(C)+kernel_size );
 
-C2( floor(w/2):end-floor(w/2)-1, ...
-    floor(w/2):end-floor(w/2)-1 ) = C;
+C2( floor(kernel_size/2):end-floor(kernel_size/2)-1, ...
+    floor(kernel_size/2):end-floor(kernel_size/2)-1 ) = C;
 
 for t=1:T
    
-    sq = C2( t:t+w-1, t:t+w-1 );
+    sq = C2( t:t+kernel_size-1, t:t+kernel_size-1 );
     r = corrcoef(sq, k);
     novelty( t ) = -r(1,2);
 end
@@ -85,7 +85,7 @@ if draw_plot
 
     title( sprintf( ...
 'Novelty Peak Finding\n Show: %s\nMinimum Peak Distance: %d, Kernel Size: %d, Threshold: %0.1f', ...
-        show_results.show.showname, min_distance, w, threshold ) );
+        show_results.show.showname, min_distance, kernel_size, threshold ) );
 
     ylabel( 'Normalized Correlation Coefficient' );
     xlabel('Tiles')
