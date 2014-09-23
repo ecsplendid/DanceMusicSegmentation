@@ -4,7 +4,7 @@ Dance Music Segmentation
 Segmenting electronic dance music streams based on self-similarity
 
 - Tim Scarfe (http://www.developer-x.com)
-- Wouter M.~Koolen (http://wouterkoolen.info/)
+- Wouter M. Koolen (http://wouterkoolen.info/)
 - Yuri Kalnishkan (http://www.clrc.rhul.ac.uk/people/yura/)
 
 We present an unsupervised, deterministic algorithm for segmenting DJ-mixed Electronic 
