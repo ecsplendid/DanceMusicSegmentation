@@ -1,4 +1,4 @@
-function [tpf, fpf] = draw_roccurve( ag_results, mode, how_many )
+function [F, Rr, Pf] = results_fscore( ag_results, mode, how_many )
 % for every result, for every threshold
 % get the true positives and false positives
 % subsequent predictions within a used boundary yields a false positive
@@ -6,19 +6,20 @@ function [tpf, fpf] = draw_roccurve( ag_results, mode, how_many )
 % mode 0: our predictions
 % mode 1: novelty function
 % mode 2: guesses
+% this currently runs slow as hell, needs optimization
 
 if nargin < 2
    mode = 0; 
 end
 
-limit = 600;
+limit = 120;
 
 if nargin < 3
     how_many = length( ag_results.results );
 end
 
-TPRS=zeros(how_many,limit);
-FPRS=zeros(how_many,limit);
+R=zeros(how_many,limit);
+P=zeros(how_many,limit);
 
 for s=1:how_many
 
@@ -75,18 +76,20 @@ for s=1:how_many
                 TP = TP + 1;
             end
             
-            [mn, in] = min( diffs );
+            [~, in] = min( diffs );
             
             used(in) = used(in) | m(in);
         end
         
 
-        TPRS(s, tol) = TP/no_tracks;
-        FPRS(s, tol) = FP/no_predictions;
+        R(s, tol) = TP/no_tracks;
+        P(s, tol) = TP/no_predictions;
     end
 end
 
-tpf = mean(TPRS);
-fpf = mean(FPRS);
+Rr = mean(R);
+Pf = mean(P);
+
+F = ((Rr.*Pf)./(Rr+Pf)).*2;
 
 end
