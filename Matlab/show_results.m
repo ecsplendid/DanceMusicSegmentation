@@ -7,6 +7,7 @@ classdef show_results
         show
         posterior
         predictions
+        predictions_tracksnotknown
         predictions_timespace
         matched_tracks
         shifts

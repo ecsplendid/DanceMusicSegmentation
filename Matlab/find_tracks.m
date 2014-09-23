@@ -1,6 +1,6 @@
 function [L, best_begin] = find_tracks( M, SC )
 
-% number of tracks we want to find
+% number of tracks we want to find (tracks not indexes, i.e. indexes + 1 )
 % cost matrix(t,j) cost of song width j starting at time t
 
 [T, W] = size(SC);

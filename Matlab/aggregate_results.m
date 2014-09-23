@@ -28,6 +28,9 @@ classdef aggregate_results
         trackestimate_noveltyerrorsavg
         trackestimate_naiveerrors=[];
         trackestimate_naiveerrorsavg
+        global_errormean
+        global_errormedian
+        global_errorstd
     end
 end     
 

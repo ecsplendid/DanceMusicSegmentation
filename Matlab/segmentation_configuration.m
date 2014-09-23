@@ -44,6 +44,7 @@ classdef segmentation_configuration
         costcontig_pastdiffwindow
         costcontig_futurediffwindow
         costcontig_evolutiondiffwindow
+        trackestimate_naiveaverage = 380
     end
     
 end

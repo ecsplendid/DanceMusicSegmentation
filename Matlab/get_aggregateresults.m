@@ -99,6 +99,10 @@ for i=1:length(results)
 	end
 end
 
+agg_results.global_errormean = mean(abs(agg_results.shifts));
+agg_results.global_errormedian = median(abs(agg_results.shifts));
+agg_results.global_errorstd = std(agg_results.shifts);
+
 agg_results.convexity_estimate = ...
     agg_results.convexity_estimate / length(results);
 

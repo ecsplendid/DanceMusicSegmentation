@@ -52,17 +52,10 @@ function [ results ] = ...
         (length( show.indexes ) + 1) ...
         - (length( results.trackestimate_novelty ) + 1);
     
-    avg = 380;
-    if ~isempty( regexp( show.showname ,'state','ignorecase' ) )
-        avg = 380;
-    elseif ~isempty( regexp( show.showname, 'around','ignorecase' ) )
-        avg = 370;
-    elseif ~isempty( regexp( show.showname, 'magic','ignorecase' ) ) 
-        avg = 390;
-    end
-    
     % naive track estimate
-    results.trackestimate_naive = round(show.showlength_secs/avg);
+    results.trackestimate_naive = ...
+        round(show.showlength_secs / ...
+            config.trackestimate_naiveaverage);
     results.trackestimate_naiveerror = ...
          results.trackestimate_naive - (length(show.indexes)+1);
      
@@ -70,9 +63,18 @@ function [ results ] = ...
     if ~isempty( track_config )
        
         show2 = process_show( show.number, track_config );
-        
         results = estimate_numbertracks( ...
             show2, results, track_config );
+        
+        results_fair = show_results();
+        
+        results_fair = ...
+            compute_trackplacement( ...
+                config, show, results_fair, ...
+                results.track_estimate );
+            
+        results.predictions_tracksnotknown = ...
+            results_fair;
     end
      
     if config.memory_efficient == 1
