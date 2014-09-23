@@ -47,3 +47,6 @@ for my research and also Mikael Lindgren from CueNation. Both provided me with i
 find the optimal track indices. The dataset I have from Dennis is quite large but sharable on Google Drive.
 
 Some information from Denis about how he makes the cuesheets -- https://docs.google.com/a/developer-x.com/document/d/1vgr7x0nwzoWrVewLFyRS9xO0ehZowdeyKdCGDvSfQN8/edit
+
+
+![ambigous track](https://sites.google.com/a/developer-x.com/developer-x-com/_/rsrc/1411512447347/papers/segmentationextended/ambigous.png)
