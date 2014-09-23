@@ -1,14 +1,13 @@
-function best_average = genetic_findbestnaiveaverage()
+function best_novelty = genetic_findbestnoveltyparameters()
 %genetic_findbestnaiveaverage find the best average track length
 % to use for the naive track estimation
-% 377 is the answer for gittest
 
 options = gaoptimset;
-options = gaoptimset(options,'PopulationSize', 5 );
+options = gaoptimset(options,'PopulationSize', 10 );
 options = gaoptimset(options,'MigrationDirection', 'both');
 options = gaoptimset(options,'MigrationInterval', 3);
 options = gaoptimset(options,'MigrationFraction', 0.3);
-options = gaoptimset(options,'EliteCount', 2);
+options = gaoptimset(options,'EliteCount', 4);
 options = gaoptimset(options,'CrossoverFraction', 0.5);
 options = gaoptimset(options,'Generations', 100);
 options = gaoptimset(options,'StallGenLimit', 3);
@@ -21,13 +20,18 @@ options = gaoptimset(options,'PlotFcns', {  ...
 options = gaoptimset(options,'Vectorized', 'off');
 options = gaoptimset(options,'UseParallel', 1 );
 
-best_average = ga( @optimise_naiveaverage, ...
-    1, ... % num constraints
+% learn these three
+% 1,novelty_minpeakradius = 50
+% 2,novelty_threshold = 0.3
+% 3,novelty_kernelsize = 120
+
+best_novelty = ga( @optimise_noveltyparameters, ...
+    3, ... % num constraints
     [],[],[],[], ...
-    100, ...
-    600, ...
+    [10,0.01,30], ...
+    [150,1,300], ...
     [], ...
-    1, ... % int constraints
+    [1,3], ... % int constraints
     options );
 
 end
