@@ -7,7 +7,9 @@ function [results] = estimate_numbertracks( ...
     how_many = 30;
     best_results = nan(how_many,1);
 
-    for i=14:25
+    ntiles = size(show.CostMatrix,1);
+    
+    for i=ceil(ntiles/show.W):ceil(ntiles/show.w)
 
         [F, ~] = find_tracks( i, show.CostMatrix );
 
@@ -17,6 +19,7 @@ function [results] = estimate_numbertracks( ...
     [~, index] = min(best_results);
     
     if config.drawSimMat==1
+        figure(1)
 subplot(2,5,[10]);
         
         plot(best_results,'k:');

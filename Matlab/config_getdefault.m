@@ -2,14 +2,14 @@ function [c] = config_getdefault()
 
 c = segmentation_configuration();
 
-c.memory_efficient = 0;
+c.memory_efficient = 1;
 
 % 1== github, 2==denis, 3==lindmik
 c.dataset = 1;
 
 % Feature Extraction Parameters
 c.sampleRate = 4000;
-c.secondsPerTile = 5;
+c.secondsPerTile = 20;
 c.minTrackLength = 134;
 c.maxExpectedTrackWidth = 641;   % (magicisland=380*2 others 350*2)
 c.bandwidth = 2; % bandwith for the width of the convolution filter
@@ -17,7 +17,7 @@ c.lowPassFilter = 1144; %Hz
 c.highPassFilter = 109; %Hz
 
 % figure drawing parameters
-c.drawSimMat = 1;
+c.drawSimMat = 0;
 c.compute_confs = 0;
 c.draw_confs = 0;
 

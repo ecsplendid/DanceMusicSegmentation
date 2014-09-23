@@ -62,6 +62,8 @@ function [ results ] = ...
     % predict track number using our method
     if ~isempty( track_config )
        
+        track_config.dataset = config.dataset;
+        
         show2 = process_show( show.number, track_config );
         results = estimate_numbertracks( ...
             show2, results, track_config );

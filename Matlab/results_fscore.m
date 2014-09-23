@@ -46,8 +46,8 @@ for s=1:how_many
     
     no_tracks = length(show.indexes);
 
-    % never more than 28 tracks
-    padded_size = 28;
+    % never more than 50 tracks (some of lindmiks are big)
+    padded_size = 50;
 
     for tol=1:1:limit
 
@@ -56,7 +56,7 @@ for s=1:how_many
 
         used = zeros( 1, padded_size );
 
-        for p=1:no_predictions
+        for p = 1:no_predictions
 
             pred = predictions(p);
 
