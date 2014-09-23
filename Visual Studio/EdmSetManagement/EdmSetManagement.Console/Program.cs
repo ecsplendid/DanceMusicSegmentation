@@ -122,16 +122,13 @@ namespace EdmSetManagement.ConsoleApplication
 		{
 			string directoryPath = ".";
 
-			directoryPath = @"C:\Users\tim_000\Google Drive\Dennis Music Dataset\Magic Island - Music for Balearic People";
+			directoryPath = @"E:\Dennis Music Dataset\Lindmik";
 
 			if ( true || args.Any() && args.First() == "--createindexesseconds" )
 			{
 				foreach ( var f in new DirectoryInfo(directoryPath)
 					.GetFiles()
 					.Where(f => f.Extension.ToLower() == ".cue")
-					
-
-					
 					)
 				{
 					Cuesheet c = new Cuesheet()

@@ -17,7 +17,6 @@ function [results] = estimate_numbertracks( ...
     [~, index] = min(best_results);
     
     if config.drawSimMat==1
-        figure(2)
 subplot(2,5,[10]);
         
         plot(best_results,'k:');

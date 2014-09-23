@@ -17,7 +17,7 @@ function [ results ] = ...
 
     results = compute_trackplacement( config, show, results );
     
-    if config.estimate_tracks
+    if config.estimate_tracks && isempty( track_config )
         results = estimate_numbertracks( show, results, config );
     end
     

@@ -23,19 +23,17 @@ classdef show
     methods
         
         function sw = show(varargin)
-          sw.file = varargin{1};
-          sw.indfile = varargin{2};
-          sw.indfile;
-          sw.indexes = dlmread(varargin{2});
-          
-          if nargin>2
-          	sw.chops = dlmread(varargin{3});
-          else
-              sw.chops = [];
-          end
+            sw.file = varargin{1};
+            sw.indfile = varargin{2};
+            sw.indfile;
+            sw.indexes = dlmread(varargin{2});
+            
+            if nargin > 2 && exist(varargin{3}, 'file') == 2
+                sw.chops = dlmread(varargin{3});
+            else
+                sw.chops = [];
+            end
         end
-        
-       
     end
 end
 
