@@ -24,11 +24,7 @@ that have been hand labelled by a domain expert.
 In laymans terms, the purpose of this software is to automatically generate a cue sheet in
 the situation that you have downloaded a radio show like A State of Trance and you have only
 the track list. Web sites already exist where humans manually create cue sheets i.e. http://cuenation.com/
-The problem is you have to rely on them (you can't automate the process) and as I have seen first 
-hand they make a lot of mistakes on the indexes. They are obsessed with "precision" while often failing
-on basic accuracy. Manually finding the indices is (I think) a laborious error-prone task. I can't quite believe 
-that they have the will or the inclination to do it manually, but they do. A potential fork of this
-project would be to use the self-similarity matrix visualization as a helper for them to do it manually faster.
+The problem is you have to rely on them (you can't automate the process). 
 
 See http://www.developer-x.com/papers/segmentationextended for more information and associated papers.
 
@@ -36,7 +32,7 @@ On this github project we supply the working code with a sample test set in ./Ma
 The project is written in Matlab although some helper functions i.e. for pre-processing the dataset,
 extracting cue sheet times etc are included as part of a Visual Studio project.
 
-Simply execute run_experiments.m to predict the track indexes for the test dataset which is:
+Simply execute execute_show(1) to see it work. I have included training set binaries:
 
 - A State of Trance (With Armin van Buuren) 453 + 462
 - Trance Around World (with Above and Beyond) 364 + 372
@@ -48,6 +44,6 @@ I would be happy to collaborate. Get in touch.
 
 I would like to personally thank Dennis Goncharov for providing me with a dataset complete with cues
 for my research and also Mikael Lindgren from CueNation. Both provided me with insight on how they
-find the optimal track indices. The dataset I have from Dennis is quite large but I will supply it on request.
+find the optimal track indices. The dataset I have from Dennis is quite large but sharable on Google Drive.
 
 Some information from Denis about how he makes the cuesheets -- https://docs.google.com/a/developer-x.com/document/d/1vgr7x0nwzoWrVewLFyRS9xO0ehZowdeyKdCGDvSfQN8/edit
