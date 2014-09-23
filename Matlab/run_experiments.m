@@ -1,5 +1,6 @@
 function [ agg_results ] = ...
-    run_experiments( config, description )
+    run_experiments( ...
+        config, description, trackestimate_config )
 %run_experiments run the experiments for the dataset requested in the
 %configuration and return the results in an object
 tic;
@@ -12,6 +13,10 @@ if( nargin < 2 )
     description = 'None Given';
 end
 
+if( nargin < 3 )
+    trackestimate_config = [];
+end
+
 shows = get_allshows(config);
 
 experiment_results = [];
@@ -19,7 +24,7 @@ experiment_results = [];
 parfor s=1:length(shows)
     experiment_results = ...
         [ experiment_results ...
-            execute_show( s, config ) ];
+            execute_show( s, config, trackestimate_config ) ];
 end
     
 agg_results = get_aggregateresults( ...

@@ -21,9 +21,10 @@ classdef show_results
         worst_indexplacementconfidence
         track_placementconfidence
         execution_time
-        naive_trackestimate
-        naive_track_estimate_error
-        novelty_predictions
+        trackestimate_naive
+        trackestimate_naiveerror
+        trackestimate_novelty
+        trackestimate_noveltyerror
     end
     
     methods

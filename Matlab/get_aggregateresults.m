@@ -71,9 +71,13 @@ for i=1:length(results)
 	[agg_results.track_estimate_errors r.track_estimate_error];
 	agg_results.results = [agg_results.results r];
     
-    agg_results.naive_trackestimate_errors = ...
-	[agg_results.naive_trackestimate_errors r.naive_track_estimate_error];
+    agg_results.trackestimate_naiveerrors = ...
+	[agg_results.trackestimate_naiveerrors r.trackestimate_naiveerror];
     
+    agg_results.trackestimate_noveltyerrors = ...
+        [ agg_results.trackestimate_noveltyerrors ...
+            r.trackestimate_noveltyerror ];
+
 	if( config.compute_confs )
 
 		agg_results.track_placementconfidenceavg_all = ...
@@ -106,10 +110,14 @@ mean(agg_results.mean_indexplacementconfidence_all);
 agg_results.mean_overall = mean(agg_results.mean_all);
 agg_results.heuristic_meanoverall = mean(agg_results.heuristic_all);
 agg_results.shifts_avg = mean(agg_results.shifts);
-agg_results.track_estimate_errors_avg = ...
-mean(agg_results.track_estimate_errors);
 
-agg_results.naive_trackestimate_errors_avg = ...
-mean(agg_results.naive_trackestimate_errors);
+agg_results.track_estimate_errors_avg = ...
+mean(abs(agg_results.track_estimate_errors));
+
+agg_results.trackestimate_naiveerrorsavg = ...
+mean(abs(agg_results.trackestimate_naiveerrors));
+
+agg_results.trackestimate_noveltyerrorsavg = ...
+    mean(abs(agg_results.trackestimate_noveltyerrors));
 
 end

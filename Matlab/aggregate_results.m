@@ -14,8 +14,6 @@ classdef aggregate_results
         heuristic_all
         track_estimate_errors = [];
         track_estimate_errors_avg
-        naive_trackestimate_errors = []
-        naive_trackestimate_errors_avg
         shifts = [];
         shifts_avg
         track_indexconfidences_sum
@@ -26,5 +24,11 @@ classdef aggregate_results
         mean_indexplacementconfidence_mean
         execution_time
         convexity_estimate=0
+        trackestimate_noveltyerrors=[];
+        trackestimate_noveltyerrorsavg
+        trackestimate_naiveerrors=[];
+        trackestimate_naiveerrorsavg
     end
 end     
+
+

@@ -37,23 +37,11 @@ subplot(2,5,[10]);
        % exportfig(gcf,sprintf('%d_tracks.eps', show.number) );
     end
 
-    avg = 380;
-    
-    if ~isempty( regexp( show.showname ,'state','ignorecase' ) )
-        avg = 380;
-    elseif ~isempty( regexp( show.showname, 'around','ignorecase' ) )
-        avg = 370;
-    elseif ~isempty( regexp( show.showname, 'magic','ignorecase' ) ) 
-        avg = 390;
-    end
-    
-    results.naive_trackestimate = round(show.showlength_secs/avg);
-     results.naive_track_estimate_error = abs(results.naive_trackestimate ...
-        - (length(show.indexes)+1) );
-    
     results.convexity_estimate = ...
         min( abs( diff( best_results(~isnan(best_results)) ) ) );
     results.track_estimate = index;
-    results.track_estimate_error = abs(results.track_estimate ...
-        - (length(show.indexes)+1) );
+    
+    results.track_estimate_error = ...
+        (length(show.indexes)+1) - results.track_estimate;
+       
 end

@@ -1,43 +1,20 @@
 function [ results ] = ...
-    execute_show( show, config )
+    execute_show( show, config, track_config )
 
     if( nargin < 2 )
         config = config_getdefault;
     end
+    
+    if( nargin < 3 )
+        track_config = [];
+    end    
 
     tic;
 
-% can pass in a show index and we load it, or just the show
-% itself which will save time loading it
-    if isnumeric( show ) 
-       show = get_show(show, config); 
-    end
-
-% execute a given show, read the file, extract the features,
-% generate the cosine (similarity) matrix, generate the cost
-% matrices, add them together, (all with a given config) 
-% and evaluate performance, and return that
-
+    show = process_show( show, config );
+    
     results = show_results();
- 
-    show = get_cosinematrix( show, config );
-    
-    show.audio = nan;
 
-    % sum-based matrices (basic, contig future, past, evolution)
-	CN = getcost_sum( ...
-         show, config );
-    
-    % symmetry cost matrix
-    CS = getcost_symmetry3( ...
-        show, config );
-    
-    % gaussian regularisation cost matrix
-    SCG = getcost_gaussian( ...
-        show, config );
-    
-    show.CostMatrix = CS+CN+SCG;
-    
     results = compute_trackplacement( config, show, results );
     
     if config.estimate_tracks
@@ -61,14 +38,43 @@ function [ results ] = ...
         results.vis(1);
     end
     
-    results.novelty_predictions = ...
+    % novelty predictions
+    results.trackestimate_novelty = ...
         get_noveltyfunction( ...
             results, ...
             config.novelty_kernelsize, ...
             config.novelty_minpeakradius, ...
             config.novelty_threshold, ...
             config.drawSimMat );
+        
+    % novelty track error
+    results.trackestimate_noveltyerror = ...
+        (length( show.indexes ) + 1) ...
+        - (length( results.trackestimate_novelty ) + 1);
     
+    avg = 380;
+    if ~isempty( regexp( show.showname ,'state','ignorecase' ) )
+        avg = 380;
+    elseif ~isempty( regexp( show.showname, 'around','ignorecase' ) )
+        avg = 370;
+    elseif ~isempty( regexp( show.showname, 'magic','ignorecase' ) ) 
+        avg = 390;
+    end
+    
+    % naive track estimate
+    results.trackestimate_naive = round(show.showlength_secs/avg);
+    results.trackestimate_naiveerror = ...
+         results.trackestimate_naive - (length(show.indexes)+1);
+     
+    % predict track number using our method
+    if ~isempty( track_config )
+       
+        show2 = process_show( show.number, track_config );
+        
+        results = estimate_numbertracks( ...
+            show2, results, track_config );
+    end
+     
     if config.memory_efficient == 1
         
         results.show.CosineMatrix=nan;
