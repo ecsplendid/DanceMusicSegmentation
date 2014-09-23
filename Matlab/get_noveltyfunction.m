@@ -42,8 +42,8 @@ k = k.*g;
 % so that we can slide the kernel from start to end
 C2 = zeros( size(C)+kernel_size );
 
-C2( floor(kernel_size/2):end-floor(kernel_size/2)-1, ...
-    floor(kernel_size/2):end-floor(kernel_size/2)-1 ) = C;
+C2( floor(kernel_size/2)+1:end-floor(kernel_size/2), ...
+    floor(kernel_size/2)+1:end-floor(kernel_size/2) ) = C;
 
 for t=1:T
    
@@ -57,7 +57,7 @@ novelty = (novelty - min(novelty)) ./ ...
     ( max(novelty) - min(novelty) );
 
 if draw_plot
-    figure(2)
+    figure(9)
     plot(novelty,'k', 'LineWidth', 2)
     hold on;
 end

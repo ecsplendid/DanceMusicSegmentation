@@ -61,12 +61,6 @@ function [ results ] = ...
         results.vis(1);
     end
     
-    if config.memory_efficient == 1
-        
-        results.show.CosineMatrix=nan;
-        results.show.CostMatrix=nan;
-    end
-    
     results.novelty_predictions = ...
         get_noveltyfunction( ...
             results, ...
@@ -74,4 +68,12 @@ function [ results ] = ...
             config.novelty_minpeakradius, ...
             config.novelty_threshold, ...
             config.drawSimMat );
+    
+    if config.memory_efficient == 1
+        
+        results.show.CosineMatrix=nan;
+        results.show.CostMatrix=nan;
+    end
+    
+
 end
