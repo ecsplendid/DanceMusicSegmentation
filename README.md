@@ -32,7 +32,17 @@ On this github project we supply the working code with a sample test set in ./Ma
 The project is written in Matlab although some helper functions i.e. for pre-processing the dataset,
 extracting cue sheet times etc are included as part of a Visual Studio project.
 
-Simply execute execute_show(1) to see it work. I have included training set binaries:
+Simply execute execute_show(1) to see it work. 
+
+Or for more cool stuff: 
+
+s = 1; % change to 1,2,...,6 for the github test set shows
+
+execute_show( s, config_getbest(1,1), ...
+  config_getdefaultsegcalculation, ...
+  config_getbestnoveltyconfig );
+
+I have included training set binaries:
 
 - A State of Trance (With Armin van Buuren) 453 + 462
 - Trance Around World (with Above and Beyond) 364 + 372
