@@ -144,6 +144,4 @@ agg_results.F1Score_Ours = F1;
 agg_results.F1Score_Novelty = F2;
 agg_results.F1Score_Guesses = F3;
 
-results_drawfpcurves(agg_results);
-
 end
