@@ -38,8 +38,8 @@ Or for more cool stuff:
 
 s = 1; % change to 1,2,...,6 for the github test set shows
 
-execute_show( s, config_getbest(1,1), ...
-  config_getdefaultsegcalculation, ...
+execute_show( s, config_getbest(1,1), 
+  config_getdefaultsegcalculation, 
   config_getbestnoveltyconfig );
 
 I have included training set binaries:
