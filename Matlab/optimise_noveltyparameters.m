@@ -1,4 +1,4 @@
-function [score] = optimise_noveltyparameters( ibev )
+function [score] = optimise_noveltyparameters( ibev, test_mode )
 %optimise_noveltyparameters find the best parameters for the novelty
 %function
 % learn these 
@@ -11,6 +11,10 @@ function [score] = optimise_noveltyparameters( ibev )
 % 7,lpf 800..1950 INT
 % 8,hpf 50..500 INT
 % 9,solution shift -5..5 INT
+
+if nargin > 0
+    ibev = [ 40, 0.3, 120, 20, 5, 0.9, 1400, 50, 0 ];
+end
 
     config = config_getbest(1);
     
@@ -29,7 +33,7 @@ function [score] = optimise_noveltyparameters( ibev )
     
 shows = get_allshows(config);
 
-scores = nan(length(shows));
+scores = nan(length(shows), 1);
 
 parfor s=1:length(shows)
     
@@ -46,7 +50,7 @@ parfor s=1:length(shows)
             config.drawSimMat );
         
     % novelty track error
-    scores(s) = ...
+    scores(s, 1) = ...
         (length( show.indexes ) + 1) ...
         - (length( trackestimate_novelty ) + 1);
 end
