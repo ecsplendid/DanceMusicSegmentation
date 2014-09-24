@@ -1,4 +1,4 @@
-function [ ag ] = get_aggregateresultsbyshow( agg_results, show )
+function [ ag ] = get_aggregateresultsbyshow( agg_results, show, f_score )
 %get_aggregateresultsbyshow rerun the get_aggregateresults with a filter on
 %the show class, 
 
@@ -6,5 +6,5 @@ function [ ag ] = get_aggregateresultsbyshow( agg_results, show )
             agg_results.description, ...
             agg_results.results, ...
             agg_results.config, ...
-            show );
+            show, f_score );
 end
