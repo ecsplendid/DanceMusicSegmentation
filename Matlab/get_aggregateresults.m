@@ -1,4 +1,5 @@
-function [agg_results] = get_aggregateresults( description, results, config, show_type )
+function [agg_results] = get_aggregateresults( ...
+description, results, config, show_type )
 
 if nargin < 3
 
@@ -123,5 +124,14 @@ mean(abs(agg_results.trackestimate_naiveerrors));
 
 agg_results.trackestimate_noveltyerrorsavg = ...
     mean(abs(agg_results.trackestimate_noveltyerrors));
+
+[F1,F2,F3,F4] = results_drawfpcurves(agg_results);
+
+% fscores
+agg_results.F1Score_Ours = F1;
+agg_results.F1Score_Novelty = F2;
+agg_results.F1Score_Guesses = F3;
+agg_results.F1Score_OursEstimated = F4;
+
 
 end

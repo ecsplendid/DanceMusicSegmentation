@@ -4,6 +4,7 @@ classdef segmentation_configuration
     % to resort to global variables
     
     properties
+        novelty_solutionshift=0
         novelty_minpeakradius = 50
         novelty_threshold = 0.3
         novelty_kernelsize = 120

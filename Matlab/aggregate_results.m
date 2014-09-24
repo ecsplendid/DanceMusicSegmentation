@@ -31,6 +31,10 @@ classdef aggregate_results
         global_errormean
         global_errormedian
         global_errorstd
+        F1Score_Ours
+        F1Score_Novelty
+        F1Score_Guesses
+        F1Score_OursEstimated
     end
 end     
 

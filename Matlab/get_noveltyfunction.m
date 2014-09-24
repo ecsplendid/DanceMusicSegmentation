@@ -1,5 +1,5 @@
 function f = get_noveltyfunction( ...
-    show_results, kernel_size, ...
+    show, config, kernel_size, ...
     min_distance, threshold, draw_plot )
 % get_noveltyfunction create a novelty function along the lines suggested
 % by foote et al in his papers, run a gaussian tapered checkerboard kernel
@@ -24,8 +24,13 @@ if nargin < 4
    draw_plot = 1;
 end
 
+%% kernel size must be even
+if mod( kernel_size, 2 ) ~= 0
+    kernel_size = kernel_size - 1;
+end
+
 %%
-C = show_results.show.CosineMatrix;
+C = show.CosineMatrix;
 
 T = size(C,1);
 
@@ -68,7 +73,7 @@ end
 % there should be no track indices at start or end
 % we are helping the novelty function along here
 % as it's a tricky start overlapping onto the zero padded matrix
-edge_margintiles = floor( 120 / show_results.config.secondsPerTile );
+edge_margintiles = floor( 120 / config.secondsPerTile );
 
 allowed = p > threshold ... % over the threshold
             & f>edge_margintiles ... % not too close to start
@@ -81,8 +86,8 @@ if draw_plot
     plot( 1:T, ones(T,1).*threshold, 'k--', 'LineWidth', 2 );
 
     actual_tilespace = floor( ...
-        show_results.show.indexes ./ ...
-        show_results.config.secondsPerTile );
+        show.indexes ./ ...
+        config.secondsPerTile );
 
     for i=1:length(actual_tilespace)
 
@@ -92,7 +97,7 @@ if draw_plot
 
     title( sprintf( ...
 'Novelty Peak Finding\n Show: %s\nMinimum Peak Distance: %d, Kernel Size: %d, Threshold: %0.1f', ...
-        show_results.show.showname, min_distance, kernel_size, threshold ) );
+        show.showname, min_distance, kernel_size, threshold ) );
 
     ylabel( 'Normalized Correlation Coefficient' );
     xlabel('Tiles')
@@ -101,6 +106,6 @@ if draw_plot
     axis tight
 end
 
-f = f(allowed);
+f = f(allowed) + config.novelty_solutionshift;
 
 end

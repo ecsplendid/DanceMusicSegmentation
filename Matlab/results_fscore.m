@@ -6,6 +6,7 @@ function [F, Rr, Pf] = results_fscore( ag_results, mode, how_many )
 % mode 0: our predictions
 % mode 1: novelty function
 % mode 2: guesses
+% mode 3: ours, track estimated
 % this currently runs slow as hell, needs optimization
 
 if nargin < 2
