@@ -1,4 +1,4 @@
-function [F, Rr, Pf] = results_fscore( ag_results, mode, how_many )
+function [F] = results_fscore( ag_results, mode, how_many )
 % for every result, for every threshold
 % get the true positives and false positives
 % subsequent predictions within a used boundary yields a false positive
@@ -91,9 +91,13 @@ for s=1:how_many
     end
 end
 
+F = F1Score();
+
 Rr = mean(R);
 Pf = mean(P);
 
-F = ((Rr.*Pf)./(Rr+Pf)).*2;
-
+F.Scores = ((Rr.*Pf)./(Rr+Pf)).*2;
+F.Recall = R;
+F.Precision = P;
+   
 end

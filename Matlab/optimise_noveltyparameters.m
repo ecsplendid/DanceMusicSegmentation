@@ -30,7 +30,7 @@ config.novelty_solutionshift = (ibev(9));
 config.memory_efficient = 1;
 config.estimate_tracks = 0;
 config.drawSimMat = 0;
-    
+
 base_conf = config_getdefault;
 base_conf.secondsPerTile=40;
 base_conf.use_costsymmetry        = 0;       

@@ -13,7 +13,7 @@ cfg = load('config/best_mean.mat');
 c = cfg.best_config;
 
 c.drawSimMat = extended;
-c.memory_efficient = extended;
+c.memory_efficient = ~extended;
 c.compute_confs = extended;
 
 c.dataset = dataset;

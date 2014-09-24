@@ -1,5 +1,7 @@
 function [agg_results] = get_aggregateresults( ...
-description, results, config, show_type )
+        description, results, ...
+        config, show_type, ...
+        f_scores )
 
 if nargin < 3
 
@@ -9,6 +11,10 @@ if nargin < 3
 	% 3 == trance around the world, ONLY
     % 4 == LINDMIK, ONLY
 	show = 0;
+end
+
+if nargin < 5
+    f_scores = 0;
 end
 
 agg_results = aggregate_results();
@@ -130,18 +136,23 @@ mean(abs(agg_results.trackestimate_naiveerrors));
 agg_results.trackestimate_noveltyerrorsavg = ...
     mean(abs(agg_results.trackestimate_noveltyerrors));
 
-[ F1 ] = results_fscore( agg_results, 0 );
-[ F2 ] = results_fscore( agg_results, 1 );
-[ F3 ] = results_fscore( agg_results, 2 );
+if f_scores
+    
+    disp('calculating f-scores');
 
-if ~isempty(results(1).predictions_tracksnotknown)
-    [ F4 ] = results_fscore( agg_results, 3 );
-    agg_results.F1Score_OursEstimated = F4;
+    [ F1 ] = results_fscore( agg_results, 0 );
+    [ F2 ] = results_fscore( agg_results, 1 );
+    [ F3 ] = results_fscore( agg_results, 2 );
+
+    if ~isempty(results(1).predictions_tracksnotknown)
+        [ F4 ] = results_fscore( agg_results, 3 );
+        agg_results.F1Score_OursEstimated = F4;
+    end
+
+    % fscores
+    agg_results.F1Score_Ours = F1;
+    agg_results.F1Score_Novelty = F2;
+    agg_results.F1Score_Guesses = F3;
 end
-
-% fscores
-agg_results.F1Score_Ours = F1;
-agg_results.F1Score_Novelty = F2;
-agg_results.F1Score_Guesses = F3;
 
 end

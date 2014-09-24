@@ -45,6 +45,8 @@ function [ results ] = ...
     
     if ~isempty( novelty_config )
     
+        novelty_config.dataset = config.dataset;
+        
         nshow = get_show(show.number, novelty_config); 
         nshow = get_cosinematrix( nshow, novelty_config );
         
