@@ -12,7 +12,7 @@ function [score] = optimise_noveltyparameters( ibev, test_mode )
 % 8,hpf 50..500 INT
 % 9,solution shift -5..5 INT
 
-if nargin > 0
+if nargin > 1
     ibev = [ 40, 0.3, 120, 20, 5, 0.9, 1400, 50, 0 ];
 end
 
@@ -56,6 +56,6 @@ parfor s=1:length(shows)
 end
  
     
-score = sum(scores);
+score = mean(abs(scores));
 
 end
