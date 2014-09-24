@@ -1,7 +1,8 @@
-function [pheuristicaccuracy] = get_heuristicaccuracy(indexes_timespace, predictions_timespace)
+function [pheuristicaccuracy] = get_heuristicaccuracy(...
+    indexes_timespace, predictions_timespace)
 % when the tracks are out of alignment, the mean measurement will not
 % clearly demonstrate performance. Here we do an alignment before taking
-% the absolute difference.
+% the absolute difference. deprecated 24/09/14
 
     pheuristicaccuracy = nan( length( indexes_timespace ), 1 );
 

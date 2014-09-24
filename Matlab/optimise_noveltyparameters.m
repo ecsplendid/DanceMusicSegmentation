@@ -16,46 +16,38 @@ if nargin > 1
     ibev = [ 40, 0.3, 120, 20, 5, 0.9, 1400, 50, 0 ];
 end
 
-    config = config_getbest(1);
+config = config_getbest(1);
     
-    config.novelty_minpeakradius = (ibev(1));
-    config.novelty_threshold = ibev(2);
-    config.novelty_kernelsize = (ibev(3));
-    config.secondsPerTile = (ibev(4));
-    config.bandwidth = (ibev(5));
-    config.cosine_normalization = (ibev(6));
-    config.lowPassFilter = (ibev(7));
-    config.highPassFilter = (ibev(8));
-    config.novelty_solutionshift = (ibev(9));
-    config.memory_efficient = 1;
-    config.estimate_tracks = 0;
-    config.drawSimMat = 0;
+config.novelty_minpeakradius = (ibev(1));
+config.novelty_threshold = ibev(2);
+config.novelty_kernelsize = (ibev(3));
+config.secondsPerTile = (ibev(4));
+config.bandwidth = (ibev(5));
+config.cosine_normalization = (ibev(6));
+config.lowPassFilter = (ibev(7));
+config.highPassFilter = (ibev(8));
+config.novelty_solutionshift = (ibev(9));
+config.memory_efficient = 1;
+config.estimate_tracks = 0;
+config.drawSimMat = 0;
     
-shows = get_allshows(config);
+base_conf = config_getdefault;
+base_conf.secondsPerTile=40;
+base_conf.use_costsymmetry        = 0;       
+base_conf.use_costcontigpast      = 0;     
+base_conf.use_costcontigfuture    = 0;   
+base_conf.use_costsum             = 0;    
+base_conf.use_costgaussian        = 0;           
+base_conf.use_costcontigevolution = 0; 
+base_conf.estimate_tracks=0;
+base_conf.memory_efficient=1;
+base_conf.drawSimMat=0;
 
-scores = nan(length(shows), 1);
-
-parfor s=1:length(shows)
+ag = run_experiments( ...
+        base_conf, 'opt', ...
+        [], ...
+        config );
     
-    show = get_show(s, config); 
-    show = get_cosinematrix( show, config );
-    
-      % novelty predictions
-    trackestimate_novelty = ...
-        get_noveltyfunction( ...
-            show, config, ...
-            config.novelty_kernelsize, ...
-            config.novelty_minpeakradius, ...
-            config.novelty_threshold, ...
-            config.drawSimMat );
-        
-    % novelty track error
-    scores(s, 1) = ...
-        (length( show.indexes ) + 1) ...
-        - (length( trackestimate_novelty ) + 1);
-end
- 
-    
-score = mean(abs(scores));
+score = -sum( ag.F1Score_Novelty );
 
 end

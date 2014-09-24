@@ -5,6 +5,7 @@ classdef aggregate_results
         asot
         tatw
         magic
+        lindmik
         description
         results = [];
         config

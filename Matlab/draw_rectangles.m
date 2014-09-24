@@ -12,8 +12,6 @@ for i=1:length(indexes)-1
     
 end
 
-
-
 hold off
 
 

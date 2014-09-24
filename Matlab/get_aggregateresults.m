@@ -7,6 +7,7 @@ if nargin < 3
 	% 1 == a state of trance ONLY
 	% 2 == magic island, ONLY
 	% 3 == trance around the world, ONLY
+    % 4 == LINDMIK, ONLY
 	show = 0;
 end
 
@@ -21,6 +22,8 @@ switch( show_type )
         agg_results.description = strcat(agg_results.description , ' MAGIC');
     case 3
         agg_results.description = strcat(agg_results.description , ' TATW');
+    case 4
+        agg_results.description = strcat(agg_results.description , ' LINDMIK');
 end
 
 agg_results.config = config;
@@ -44,8 +47,10 @@ function si = gsi(s)
 		si=3;
     	elseif ~isempty(strfind(s,'magic'))
 		si=2;
+        elseif ~isempty(strfind(s,'lindmik'))
+		si=4;
     	else 
-		si = 4;
+		si = 5;
 	end
 end
 
@@ -125,13 +130,20 @@ mean(abs(agg_results.trackestimate_naiveerrors));
 agg_results.trackestimate_noveltyerrorsavg = ...
     mean(abs(agg_results.trackestimate_noveltyerrors));
 
-[F1,F2,F3,F4] = results_drawfpcurves(agg_results);
+[ F1 ] = results_fscore( agg_results, 0 );
+[ F2 ] = results_fscore( agg_results, 1 );
+[ F3 ] = results_fscore( agg_results, 2 );
+
+if ~isempty(results(1).predictions_tracksnotknown)
+    [ F4 ] = results_fscore( agg_results, 3 );
+    agg_results.F1Score_OursEstimated = F4;
+end
 
 % fscores
 agg_results.F1Score_Ours = F1;
 agg_results.F1Score_Novelty = F2;
 agg_results.F1Score_Guesses = F3;
-agg_results.F1Score_OursEstimated = F4;
 
+results_drawfpcurves(agg_results);
 
 end

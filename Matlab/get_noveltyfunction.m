@@ -1,12 +1,15 @@
 function f = get_noveltyfunction( ...
-    show, config, kernel_size, ...
-    min_distance, threshold, draw_plot )
+    show, config, draw_plot )
 % get_noveltyfunction create a novelty function along the lines suggested
 % by foote et al in his papers, run a gaussian tapered checkerboard kernel
 % down the diagonal of the cosines matrix. Then do peak finding subject to
 % constraints (threshold and minimum radius).
 % check out "AUDIO NOVELTY-BASED SEGMENTATION OF MUSIC CONCERTS"
 % (Badawy,2013) for a clear run through
+
+kernel_size = config.novelty_kernelsize;
+min_distance = config.novelty_minpeakradius;
+threshold = config.novelty_threshold;
 
 if nargin < 2
    kernel_size = 120; 
@@ -106,6 +109,7 @@ if draw_plot
     axis tight
 end
 
-f = f(allowed) + config.novelty_solutionshift;
+%put it in time space and perform the shift
+f = show.space( f(allowed) ) + config.novelty_solutionshift;
 
 end

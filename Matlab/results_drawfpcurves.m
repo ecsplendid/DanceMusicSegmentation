@@ -1,36 +1,29 @@
-function [F1,F2,F3,F4] = results_drawfpcurves(ag_results)
-%results_drawfpcurves draw f scores for all modes, return them
-% mode 0: our predictions
-% mode 1: novelty function
-% mode 2: guesses
-% this currently runs slow as hell, needs optimization
+function results_drawfpcurves(ag_results, save_fig)
+%results_drawfpcurves draw f scores for all modes
 
-    [F1] = results_fscore( ag_results, 0 );
+if nargin < 1
+   save_fig=1; 
+end
 
-    plot(F1,'k');
-
-    [F2] = results_fscore( ag_results, 1 );
+    plot(ag_results.F1Score_Ours,'k');
 
     hold on;
-    plot(F2,'k:');
-    [F3] = results_fscore( ag_results, 2 );
-    plot(F3,'k--');
+    plot(ag_results.F1Score_Novelty,'k:');
+    plot(ag_results.F1Score_Guesses,'k--');
+    plot(ag_results.F1Score_OursEstimated,'k+');
 
-    [F4] = results_fscore( ag_results, 3 );
-    plot(F4,'k+');
-
-    legend( 'Our Method', 'Novelty Peak Finding', ...
-        'Guessing', 'Our Method (Track # Estimated)' );
+    legend( 'Our Algorithm', 'Novelty Peak Finding', ...
+        'Guessing', 'Our Algorithm (Track # Estimated)' );
     ylabel('F-Measure');
     xlabel('Threshold (Seconds)');
-    title('F_1 Score Method Comparison Over Thresholds');
+    title('F_1 Score Method Comparison Over Time Thresholds');
 
     hold off;
+    axis tight;
     
-    c=clock;
-    
-    savefig( sprintf('results/fig_fscores_%s%d%d.fig', ...
-        date, c(4), c(5) ) );
-
-
+%     if save_fig==1
+%         c=clock;
+%         savefig( sprintf('results/fig_fscores_%s%d%d.fig', ...
+%             date, c(4), c(5) ) );
+%     end
 end

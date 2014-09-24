@@ -97,7 +97,9 @@ if( config.draw_confs == 1)
     colorbar;
 end
 
-results.posterior = PB;
+if ~config.memory_efficient
+    results.posterior = PB;
+end
 
 %% calculate the posterior for song position (hard to visualize probably wont for paper)
 
@@ -207,7 +209,7 @@ end
 
 results.mean_indexplacementconfidence = mean(confidence);
 results.worst_indexplacementconfidence = min(confidence);
-results.track_indexconfidences = resample_matrix( confidence, output_width);
+results.track_indexconfidences = resample_matrix( confidence', output_width);
 
 %% new uncertainty calculation (of correct track TIME)
 
@@ -238,7 +240,7 @@ if( config.draw_confs == 1)
 end
 
 results.track_placementconfidenceavg = mean(track_placementconf);
-results.track_placementconfidence = resample_matrix(track_placementconf, output_width);
+results.track_placementconfidence = resample_matrix(track_placementconf', output_width);
 
 %% how close is our posterior probability distribution?
 

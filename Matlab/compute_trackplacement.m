@@ -9,25 +9,27 @@ function results = compute_trackplacement( ...
     [~, best_begin] = find_tracks( ...
         num_tracks, show.CostMatrix );
 
-    results.predictions = best_begin( 2:end );
-    results.predictions_timespace = show.space( results.predictions );
+    results.predictions_tilespace = best_begin( 2:end );
+    
+    % now in TIME space by default
+    results.predictions = show.space(results.predictions_tilespace);
 
     % they might not be if num_tracks was passed in
     if length(results.predictions) == length(show.indexes)
     
         % we shift the solutions in time space
-        results.predictions_timespace = results.predictions_timespace + ...
+        results.predictions = results.predictions + ...
             config.solution_shift;
 
         results.matched_tracks = evaluate_performance( ...
-                            show.indexes, results.predictions_timespace);
+                            show.indexes, results.predictions);
 
-        results.shifts = (results.predictions_timespace-show.indexes');
+        results.shifts = (results.predictions-show.indexes');
 
         results.mean_score = mean(abs(results.shifts));
 
         results.heuristic_score = get_heuristicaccuracy( ...
-                           show.indexes, results.predictions_timespace );
+                           show.indexes, results.predictions );
 
     end
 end

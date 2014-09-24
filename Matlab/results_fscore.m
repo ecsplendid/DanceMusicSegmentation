@@ -40,6 +40,9 @@ for s=1:how_many
             
             predictions = predictions(2:end-1);
     elseif mode==3 % our predictions (track estimated)
+        assert( ...
+            ~isempty(results.predictions_tracksnotknown), ...
+'there are no track estimation predictions, include the relevant config file as an argument' )
         predictions = results.predictions_tracksnotknown.predictions;
     end
     
@@ -61,7 +64,7 @@ for s=1:how_many
 
             pred = predictions(p);
 
-            diffs = abs( results.show.space( pred ) - ...
+            diffs = abs( pred - ...
                  results.show.indexes  )';
             
             % are there any preds within tolerance

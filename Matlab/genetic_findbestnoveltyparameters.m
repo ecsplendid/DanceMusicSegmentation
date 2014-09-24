@@ -1,4 +1,4 @@
-function config = genetic_findbestnoveltyparameters()
+function nov_config = genetic_findbestnoveltyparameters()
 %genetic_findbestnaiveaverage find the best average track length
 % to use for the naive track estimation
 
@@ -48,15 +48,18 @@ save( sprintf('results/config_noveltyraw-best_%s.mat', date ), ...
 
 savefig( sprintf('results/fig_novelty-best_%s.fig', date ) );
 
-config = config_getdefault;
-config.novelty_minpeakradius = (best_novelty_raw(1));
-config.novelty_threshold = best_novelty_raw(2);
-config.novelty_kernelsize = (best_novelty_raw(3));
-config.secondsPerTile = (best_novelty_raw(4));
-config.bandwidth = (best_novelty_raw(5));
-config.cosine_normalization = (best_novelty_raw(6));
-config.lowPassFilter = (best_novelty_raw(7));
-config.highPassFilter = (best_novelty_raw(8));
-config.solution_shift = (best_novelty_raw(9));
+nov_config = config_getdefault;
+nov_config.novelty_minpeakradius = (best_novelty_raw(1));
+nov_config.novelty_threshold = best_novelty_raw(2);
+nov_config.novelty_kernelsize = (best_novelty_raw(3));
+nov_config.secondsPerTile = (best_novelty_raw(4));
+nov_config.bandwidth = (best_novelty_raw(5));
+nov_config.cosine_normalization = (best_novelty_raw(6));
+nov_config.lowPassFilter = (best_novelty_raw(7));
+nov_config.highPassFilter = (best_novelty_raw(8));
+nov_config.solution_shift = (best_novelty_raw(9));
+
+save( sprintf('config/config_novelty-best_%s.mat', date ), ...
+    'nov_config' );
 
 end

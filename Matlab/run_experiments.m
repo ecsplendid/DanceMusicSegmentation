@@ -44,6 +44,7 @@ agg_results = get_aggregateresults( ...
 agg_results.asot = get_aggregateresultsbyshow( agg_results, 1 );
 agg_results.magic = get_aggregateresultsbyshow( agg_results, 2 );
 agg_results.tatw = get_aggregateresultsbyshow( agg_results, 3 );
+agg_results.lindmik = get_aggregateresultsbyshow( agg_results, 4 );
 
 agg_results.execution_time = toc;
 

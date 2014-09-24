@@ -7,11 +7,10 @@ classdef show_results
         show
         posterior
         predictions
-        predictions_tracksnotknown
-        predictions_timespace
+        predictions_tracksnotknown=[]
+        predictions_tilespace
         matched_tracks
         shifts
-        avg_shift
         mean_score
         heuristic_score
         track_estimate
@@ -26,6 +25,7 @@ classdef show_results
         trackestimate_naiveerror
         trackestimate_novelty
         trackestimate_noveltyerror
+        novelty_indexerror
     end
     
     methods
