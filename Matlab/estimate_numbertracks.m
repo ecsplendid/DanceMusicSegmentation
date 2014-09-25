@@ -9,7 +9,7 @@ function [results] = estimate_numbertracks( ...
 
     ntiles = size(show.CostMatrix,1);
     
-    for i=ceil(ntiles/show.W):ceil(ntiles/show.w)
+    for i=ceil(ntiles/show.W):ceil(ntiles/mean([show.w, show.W]))
 
         [F, ~] = find_tracks( i, show.CostMatrix );
 
