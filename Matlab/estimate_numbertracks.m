@@ -9,7 +9,7 @@ function [results] = estimate_numbertracks( ...
 
     ntiles = size(show.CostMatrix,1);
     
-    for i=ceil(ntiles/show.W):ceil(ntiles/mean([show.w, show.W]))
+    for i=ceil(ntiles/show.W):mean([ceil(ntiles/show.w),ceil(ntiles/show.W)])
 
         [F, ~] = find_tracks( i, show.CostMatrix );
 
@@ -44,6 +44,6 @@ subplot(2,5,[10]);
     results.track_estimate = index;
     
     results.track_estimate_error = ...
-        (length(show.indexes)+1) - results.track_estimate;
+        results.track_estimate - (length(show.indexes)+1);
        
 end

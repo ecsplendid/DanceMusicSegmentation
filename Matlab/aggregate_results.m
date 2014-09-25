@@ -15,8 +15,11 @@ classdef aggregate_results
         heuristic_all
         track_estimate_errors = [];
         track_estimate_errors_avg
-        shifts = [];
-        shifts_avg
+        residuals_ourmethod= [];
+        residuals_noveltyfixed = [];
+        residuals_naives = [];
+        residuals_ourmethod_all = [];
+        residuals_ourmethod_all_avg
         track_indexconfidences_sum
         track_placementconfidence_sum
         track_placementconfidenceavg_all
@@ -37,6 +40,7 @@ classdef aggregate_results
         F1Score_Guesses
         F1Score_OursEstimated
         F1Score_NoveltyKnown
+        F1Score_NoveltyNoRadius
     end
 end     
 

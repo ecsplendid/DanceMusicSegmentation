@@ -24,9 +24,9 @@ function results = compute_trackplacement( ...
         results.matched_tracks = evaluate_performance( ...
                             show.indexes, results.predictions);
 
-        results.shifts = (results.predictions-show.indexes');
+        results.residuals_ourmethod = (results.predictions-show.indexes');
 
-        results.mean_score = mean(abs(results.shifts));
+        results.mean_score = mean(abs(results.residuals_ourmethod));
 
         results.heuristic_score = get_heuristicaccuracy( ...
                            show.indexes, results.predictions );

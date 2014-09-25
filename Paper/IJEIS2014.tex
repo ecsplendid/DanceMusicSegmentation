@@ -45,7 +45,7 @@
 
 \hypersetup{
 	pdfauthor={Tim Scarfe, Wouter M. Koolen and Yuri Kalnishkan},
-	pdftitle={Homogeneous segmentation of electronic dance music},
+	pdftitle={Segmentation of electronic dance music},
 	pdfkeywords={audio,stream,segmentation,dj,mixing},
 	pdfsubject={Artificial Intelligence},
 	pdfcreator={Tim Scarfe},
@@ -63,16 +63,16 @@
 % to remove in the final version!!
 
 
-\title{Homogeneous segmentation of electronic dance music}
+\title{Segmentation of electronic dance music}
 \begin{document}
 	
 	\maketitle
 	
 	\begin{abstract}
 		
-		We consider the problem of segmenting DJ-mixed dance music recordings (pod-casts, radio shows, live events) into their original sequence of contiguous tracks. We present an algorithm to reconstruct a fixed number of segment boundaries as close as possible to what a human domain expert would create in respect of the same task. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. The goal of DJ-mixing is to render track boundaries  invisible from human perception.
+		We consider the problem of segmenting DJ-mixed dance music recordings (pod-casts, radio shows, live events) into their original sequence of contiguous tracks. We present an algorithm to reconstruct a fixed number of segment boundaries as close as possible to what a human domain expert would create in respect of the same task. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. We also adapt the method to estimate the number of tracks in a recording and compare our method with others. The goal of DJ-mixing is to render track boundaries invisible from human perception.
 		
-		Homogeneous segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of self-similarity, symmetry, contiguity and evolution in respect of time. The method could be used on other contiguous segmentation tasks where the number of segments is known in advance, and the audio based features could be replaced with ones from another domain.
+		Contiguous segmentation\footnote[1]{blabla} is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of self-similarity, symmetry, contiguity and evolution in respect of time. The method could be used on other segmentation tasks where the number of segments is known in advance, and the audio based features could be replaced with ones from another domain.
 		
 		Our work incorporates self-similarity over a soft time horizon with a fixed upper boundary and is quantitatively assessed on a large corpus of radio show recordings which have been hand-labelled by a domain expert.
 		\smallskip

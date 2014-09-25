@@ -43,7 +43,7 @@ function [rs] = config_optimdrivebounds_randomstart( sum, sym, cont, evo, gauss 
     % 20: secondsPerTile /in {5,6,...,50}
     rs(20) = ceil(rand * 49)+1;
     % 21: gaussian window pinch /in {1,2,3,4}
-    rs(21) = ceil((rand*4))
+    rs(21) = ceil((rand*4));
     % 22: costevolution_normalization /in {0.1,...,3}
     rs(22) = 0.1+((rand*3)-0.1);
     % 23: costsum_normalization /in {0.0,...,3}

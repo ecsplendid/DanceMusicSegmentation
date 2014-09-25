@@ -9,15 +9,14 @@ end
 
     hold on;
     plot(ag_results.F1Score_OursEstimated.Scores,'k+');
-    plot(ag_results.F1Score_Novelty.Scores,'r+');
-    plot(ag_results.F1Score_NoveltyKnown.Scores,'r:');
+    plot(ag_results.F1Score_Novelty.Scores,'r');
     plot(ag_results.F1Score_Guesses.Scores,'k--');
-    
+    plot(ag_results.F1Score_NoveltyNoRadius.Scores,'b:');
    
     
     legend( 'Our Algorithm','Our Algorithm (Track # Estimated)', ...
-        'Novelty Peak Finding (Tracks Known)', 'Novelty Peak Finding', ...
-        'Guessing' ...
+         'Novelty Peak Finding', ...
+        'Guessing', 'Novelty No Radius' ...
          );
     ylabel('F-Measure');
     xlabel('Threshold (Seconds)');

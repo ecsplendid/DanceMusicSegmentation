@@ -8,6 +8,7 @@ function [F] = results_fscore( ag_results, mode, how_many )
 % mode 2: guesses
 % mode 3: ours, track estimated
 % mode 4: novelty, tracks known
+% mode 5: novelty, no radius
 % this currently runs slow as hell, needs optimization
 
 if nargin < 2
@@ -33,13 +34,7 @@ for s=1:how_many
     elseif mode==1 % novelty
         predictions = results.predictions_novelty;
     elseif mode==2 % guesses
-        predictions = ...
-            floor(linspace( ...
-                1, ...
-                length(results.show.space), ...
-                length( show.indexes ) + 2 ));
-            
-            predictions = predictions(2:end-1);
+        predictions = results.predictions_naive;
     elseif mode==3 % our predictions (track estimated)
         assert( ...
             ~isempty(results.predictions_tracksnotknown), ...
@@ -47,6 +42,8 @@ for s=1:how_many
         predictions = results.predictions_tracksnotknown.predictions;
     elseif mode==4
         predictions = results.predictions_noveltytracksknown;
+    elseif mode==5
+        predictions = results.predictions_noveltynoradius;
     end
     no_predictions = length( predictions );
     

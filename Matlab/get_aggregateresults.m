@@ -46,6 +46,10 @@ if( config.compute_confs )
 	zeros( width, 1 );
 end
 
+agg_results.residuals_ourmethod = zeros( length(results), 15 );
+agg_results.residuals_noveltyfixed = nan( length(results), 15 );
+agg_results.residuals_naives= zeros( length(results), 15 );
+
 function si = gsi(s)
 	if ~isempty(strfind(s,'state')) 
 		si=1;
@@ -70,6 +74,18 @@ for i=1:length(results)
 		continue;
     end
     
+    % track over against progress
+    agg_results.residuals_ourmethod( i, : ) = ...
+        resample_matrix( r.residuals_ourmethod, 15 );
+    
+    if ~isempty(r.residuals_noveltyfixed)
+        agg_results.residuals_noveltyfixed( i, : ) = ...
+            resample_matrix( r.residuals_noveltyfixed', 15 );
+    end
+    
+    agg_results.residuals_naives( i, : ) = ...
+        resample_matrix( r.residuals_naives', 15 );
+    
     agg_results.convexity_estimate = ...
         agg_results.convexity_estimate ...
         + r.convexity_estimate;
@@ -77,7 +93,7 @@ for i=1:length(results)
 	agg_results.mean_all = [agg_results.mean_all r.mean_score];
 	agg_results.heuristic_all = ...
 	[agg_results.heuristic_all r.heuristic_score];
-	agg_results.shifts = [agg_results.shifts r.shifts];
+	agg_results.residuals_ourmethod_all = [agg_results.residuals_ourmethod_all r.residuals_ourmethod];
     
 	agg_results.track_estimate_errors = ...
 	[agg_results.track_estimate_errors r.track_estimate_error];
@@ -111,9 +127,9 @@ for i=1:length(results)
 	end
 end
 
-agg_results.global_errormean = mean(abs(agg_results.shifts));
-agg_results.global_errormedian = median(abs(agg_results.shifts));
-agg_results.global_errorstd = std(agg_results.shifts);
+agg_results.global_errormean = mean(abs(agg_results.residuals_ourmethod_all));
+agg_results.global_errormedian = median(abs(agg_results.residuals_ourmethod_all));
+agg_results.global_errorstd = std(agg_results.residuals_ourmethod_all);
 
 agg_results.convexity_estimate = ...
     agg_results.convexity_estimate / length(results);
@@ -125,7 +141,8 @@ mean(agg_results.mean_indexplacementconfidence_all);
 
 agg_results.mean_overall = mean(agg_results.mean_all);
 agg_results.heuristic_meanoverall = mean(agg_results.heuristic_all);
-agg_results.shifts_avg = mean(agg_results.shifts);
+agg_results.residuals_ourmethod_all_avg = ...
+    mean(agg_results.residuals_ourmethod_all);
 
 agg_results.track_estimate_errors_avg = ...
 mean(abs(agg_results.track_estimate_errors));
@@ -150,12 +167,14 @@ if f_scores
     end
 
     [ F5 ] = results_fscore( agg_results, 4 );
+    [ F6 ] = results_fscore( agg_results, 5 );
     
     % fscores
     agg_results.F1Score_Ours = F1;
     agg_results.F1Score_Novelty = F2;
     agg_results.F1Score_Guesses = F3;
     agg_results.F1Score_NoveltyKnown = F5;
+    agg_results.F1Score_NoveltyNoRadius = F6;
     
 end
 

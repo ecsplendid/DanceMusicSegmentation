@@ -1,5 +1,6 @@
 function f = get_noveltyfunction( ...
-    show, config, draw_plot, maximum_indices )
+    show, config, draw_plot, ...
+    maximum_indices, min_distance, threshold )
 % get_noveltyfunction create a novelty function along the lines suggested
 % by foote et al in his papers, run a gaussian tapered checkerboard kernel
 % down the diagonal of the cosines matrix. Then do peak finding subject to
@@ -8,8 +9,7 @@ function f = get_noveltyfunction( ...
 % (Badawy,2013) for a clear run through
 
 kernel_size = config.novelty_kernelsize;
-min_distance = config.novelty_minpeakradius;
-threshold = config.novelty_threshold;
+
 
 if nargin < 3
    draw_plot = 1;
@@ -19,10 +19,19 @@ if nargin < 4
     maximum_indices = 999;
 end
 
+if nargin < 5
+    min_distance = config.novelty_minpeakradius;
+end
+
+if nargin < 6
+    threshold = config.novelty_threshold;
+end
+
 %% kernel size must be even
 if mod( kernel_size, 2 ) ~= 0
     kernel_size = kernel_size - 1;
 end
+
 
 %%
 C = show.CosineMatrix;
