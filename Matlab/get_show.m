@@ -41,9 +41,11 @@ function [this_show] = get_show(s, config)
 
     % some sanitization of the github test set file names
     showname = this_show.file;
-    repl = '\d{2}-\d{2}-\d{4}|-tt|\.wav|01-|-|_|Above and Beyond|(di.fm)|music for balearic people|armin van buuren|roger shah';
-    showname = regexprep(showname,'.+\\(?=[^\\]+$)','');
-    showname = regexprep(showname, repl,'');
+    repl = '\d{2}-\d{2}-\d{4}|-tt|\.wav|01-|-|_|Above and Beyond|(di.fm)|music for balearic people|armin van buuren|roger shah|\(\)';
+    showname = regexprep(showname, repl,'', 'ignorecase');
+    showname = regexprep(showname,'.+\\(?=[^\\]+$)|\(|\)','');
+    
+    showname = regexprep(showname,'(\d{3})',' $0');
     showname = lower(showname);
     
     this_show.showname = showname;

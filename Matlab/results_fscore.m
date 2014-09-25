@@ -7,6 +7,7 @@ function [F] = results_fscore( ag_results, mode, how_many )
 % mode 1: novelty function
 % mode 2: guesses
 % mode 3: ours, track estimated
+% mode 4: novelty, tracks known
 % this currently runs slow as hell, needs optimization
 
 if nargin < 2
@@ -30,7 +31,7 @@ for s=1:how_many
     if mode==0 % our predictions
         predictions = results.predictions;
     elseif mode==1 % novelty
-        predictions = results.trackestimate_novelty;
+        predictions = results.predictions_novelty;
     elseif mode==2 % guesses
         predictions = ...
             floor(linspace( ...
@@ -44,8 +45,9 @@ for s=1:how_many
             ~isempty(results.predictions_tracksnotknown), ...
 'there are no track estimation predictions, include the relevant config file as an argument' )
         predictions = results.predictions_tracksnotknown.predictions;
+    elseif mode==4
+        predictions = results.predictions_noveltytracksknown;
     end
-    
     no_predictions = length( predictions );
     
     no_tracks = length(show.indexes);

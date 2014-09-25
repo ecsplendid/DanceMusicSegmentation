@@ -149,10 +149,14 @@ if f_scores
         agg_results.F1Score_OursEstimated = F4;
     end
 
+    [ F5 ] = results_fscore( agg_results, 4 );
+    
     % fscores
     agg_results.F1Score_Ours = F1;
     agg_results.F1Score_Novelty = F2;
     agg_results.F1Score_Guesses = F3;
+    agg_results.F1Score_NoveltyKnown = F5;
+    
 end
 
 end

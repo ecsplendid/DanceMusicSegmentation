@@ -1,5 +1,5 @@
 function f = get_noveltyfunction( ...
-    show, config, draw_plot )
+    show, config, draw_plot, maximum_indices )
 % get_noveltyfunction create a novelty function along the lines suggested
 % by foote et al in his papers, run a gaussian tapered checkerboard kernel
 % down the diagonal of the cosines matrix. Then do peak finding subject to
@@ -11,20 +11,12 @@ kernel_size = config.novelty_kernelsize;
 min_distance = config.novelty_minpeakradius;
 threshold = config.novelty_threshold;
 
-if nargin < 2
-   kernel_size = 120; 
-end
-
 if nargin < 3
-   min_distance = 60;
-end
-
-if nargin < 3
-   threshold = 0.3;
+   draw_plot = 1;
 end
 
 if nargin < 4
-   draw_plot = 1;
+    maximum_indices = 999;
 end
 
 %% kernel size must be even
@@ -71,14 +63,19 @@ if draw_plot
 end
 
 [ p, f ] = findpeaks( novelty, ...
-    'MINPEAKDISTANCE', min_distance );
+    'MINPEAKDISTANCE', min_distance, ...
+    'MINPEAKHEIGHT', threshold, ...
+    'NPEAKS', maximum_indices ...
+    );
 
 % there should be no track indices at start or end
 % we are helping the novelty function along here
 % as it's a tricky start overlapping onto the zero padded matrix
+% this is only fair as I have a minimum track width parameter
 edge_margintiles = floor( 120 / config.secondsPerTile );
 
-allowed = p > threshold ... % over the threshold
+ % over the threshold (superflous now because of MINPEAKHEIGHT)
+allowed = p > threshold ...
             & f>edge_margintiles ... % not too close to start
             & f<(T-edge_margintiles); % not too close to end
 
@@ -98,9 +95,15 @@ if draw_plot
             [ min(novelty) max(novelty) ], 'k:', 'LineWidth', 1 );
     end
 
-    title( sprintf( ...
-'Novelty Peak Finding\n Show: %s\nMinimum Peak Distance: %d, Kernel Size: %d, Threshold: %0.1f', ...
-        show.showname, min_distance, kernel_size, threshold ) );
+s1=sprintf('Novelty Peak Finding, Show: %s', ...
+      show.showname );
+s2=sprintf('Minimum Peak Distance: %d Kernel Size: %d Tile Size: %d Threshold: %0.1f', ...
+    min_distance, kernel_size,config.secondsPerTile, threshold );
+s3=sprintf('Cosine Normalization: %0.1f, lpf: %d hpf: %d Shift: %d Bandwidth: %d', ...
+     config.cosine_normalization, config.lowPassFilter, ...
+     config.highPassFilter, config.solution_shift, config.bandwidth );
+
+    title( sprintf( '%s\n%s\n%s', s1, s2, s3 ) );
 
     ylabel( 'Normalized Correlation Coefficient' );
     xlabel('Tiles')

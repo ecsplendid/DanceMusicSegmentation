@@ -36,6 +36,7 @@ classdef aggregate_results
         F1Score_Novelty
         F1Score_Guesses
         F1Score_OursEstimated
+        F1Score_NoveltyKnown
     end
 end     
 

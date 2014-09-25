@@ -1,4 +1,4 @@
-function results_shifthistogram
+function draw_shifthistogram
 
 xr = -60:60;
 

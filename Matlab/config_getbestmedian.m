@@ -10,7 +10,7 @@ end
 
 cfg = load('config/best-median.mat');
 
-c = cfg.best_config;
+c = cfg.heur;
 
 c.drawSimMat = extended;
 c.memory_efficient = ~extended;

@@ -8,12 +8,17 @@ end
     plot(ag_results.F1Score_Ours.Scores,'k');
 
     hold on;
-    plot(ag_results.F1Score_Novelty.Scores,'k:');
-    plot(ag_results.F1Score_Guesses.Scores,'k--');
     plot(ag_results.F1Score_OursEstimated.Scores,'k+');
-
-    legend( 'Our Algorithm', 'Novelty Peak Finding', ...
-        'Guessing', 'Our Algorithm (Track # Estimated)' );
+    plot(ag_results.F1Score_Novelty.Scores,'r+');
+    plot(ag_results.F1Score_NoveltyKnown.Scores,'r:');
+    plot(ag_results.F1Score_Guesses.Scores,'k--');
+    
+   
+    
+    legend( 'Our Algorithm','Our Algorithm (Track # Estimated)', ...
+        'Novelty Peak Finding (Tracks Known)', 'Novelty Peak Finding', ...
+        'Guessing' ...
+         );
     ylabel('F-Measure');
     xlabel('Threshold (Seconds)');
     title('F_1 Score Method Comparison Over Time Thresholds');

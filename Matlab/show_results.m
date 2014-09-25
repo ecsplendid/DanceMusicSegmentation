@@ -23,8 +23,9 @@ classdef show_results
         execution_time
         trackestimate_naive
         trackestimate_naiveerror
-        trackestimate_novelty
         trackestimate_noveltyerror
+        predictions_novelty
+        predictions_noveltytracksknown
         novelty_indexerror
     end
     
