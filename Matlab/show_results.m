@@ -7,10 +7,16 @@ classdef show_results
         show
         posterior
         predictions
+        predictions_naive
         predictions_tracksnotknown=[]
         predictions_tilespace
+        predictions_novelty
+        predictions_noveltytracksknown
+        predictions_noveltynoradius
         matched_tracks
-        shifts
+        residuals_ourmethod
+        residuals_noveltyfixed
+        residuals_naives
         mean_score
         heuristic_score
         track_estimate
@@ -24,8 +30,6 @@ classdef show_results
         trackestimate_naive
         trackestimate_naiveerror
         trackestimate_noveltyerror
-        predictions_novelty
-        predictions_noveltytracksknown
         novelty_indexerror
     end
     
