@@ -19,15 +19,14 @@ function [results] = estimate_numbertracks( ...
     [~, index] = min(best_results);
     
     if config.drawSimMat==1
-        figure(1)
-subplot(2,5,[10]);
-        
-        plot(best_results,'k:');
+        figure(12)
+        plot(best_results,'k');
+    
         hold on;
-
         plot(length(show.indexes)+1, best_results(length(show.indexes)+1),'*k');
         plot(index, best_results(index),'+k');
         hold off;
+        
         title(strcat(show.showname,''));
         xlabel('Number Of Tracks')
         ylabel('Sum cost normalized by number tracks');

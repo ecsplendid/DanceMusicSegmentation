@@ -16,106 +16,111 @@
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{radu}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
 \citation{Matejka:2013:SIO:2470654.2466149}
 \citation{tzanetakis1999framework}
 \citation{tzanetakis1999framework}
 \citation{eckmann1987recurrence}
 \citation{foote1999visualizing,foote1997similarity,foote2000automatic,foote2003media,foote2001visualizing}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Literature Review}{2}{subsection.1.1}}
 \citation{goodwin2004dynamic}
 \citation{goodwin2003audio}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Literature Review}{2}{subsection.1.1}}
 \citation{hauptmann1998story}
 \citation{peiszer2008automatic}
+\citation{elaudio}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Corpus}{3}{section.2}}
 \newlabel{dataset}{{2}{3}{Corpus}{section.2}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The track length distribution for all three radio shows. The \textit  {bump} of short tracks (less than $3$ minutes) is often introductions or otherwise extraneous.}}{4}{figure.1}}
 \newlabel{fig:tracklengths}{{1}{4}{The track length distribution for all three radio shows. The \textit {bump} of short tracks (less than $3$ minutes) is often introductions or otherwise extraneous}{figure.1}{}}
+\citation{nyquist1928certain}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Human Accuracy}{5}{section.3}}
 \newlabel{human_acc}{{3}{5}{Human Accuracy}{section.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Evaluation Criteria}{5}{section.4}}
-\newlabel{eval_crit}{{4}{5}{Evaluation Criteria}{section.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Data Handling}{5}{section.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Preprocessing}{5}{subsection.4.1}}
+\newlabel{proprocessing}{{4.1}{5}{Preprocessing}{subsection.4.1}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Illustration of the `human disagreement' random variable (zoomed in at the bottom), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($\approx 14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section\nobreakspace  {}\ref  {dataset}. }}{5}{figure.2}}
 \newlabel{fig:human_muchconfuse}{{2}{5}{Illustration of the `human disagreement' random variable (zoomed in at the bottom), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($\approx 14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section~\ref {dataset}}{figure.2}{}}
-\citation{scarfe2013long}
-\citation{nyquist1928certain}
 \citation{frigo2004fftw}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Data Handling}{6}{section.5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Preprocessing}{6}{subsection.5.1}}
-\newlabel{proprocessing}{{5.1}{6}{Preprocessing}{subsection.5.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Feature Extraction}{6}{subsection.5.2}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.1}Music}{6}{subsubsection.5.2.1}}
-\newlabel{feat_ex}{{5.2.1}{6}{Music}{subsubsection.5.2.1}{}}
 \citation{tzanetakis1999multifeature}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Feature Extraction}{6}{subsection.4.2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Music}{6}{subsubsection.4.2.1}}
+\newlabel{feat_ex}{{4.2.1}{6}{Music}{subsubsection.4.2.1}{}}
 \citation{tzanetakis1999framework}
 \citation{foote1999visualizing}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of the effect of normalization parameter $\mathaccentV {hat}05Ec=0.7$ on the values in $S$ on radio show Magic Island $110$. The small raised section on the left correspond to the tracks.}}{7}{figure.3}}
+\newlabel{fig:cosine_norm}{{3}{7}{Illustration of the effect of normalization parameter $\hat c=0.7$ on the values in $S$ on radio show Magic Island $110$. The small raised section on the left correspond to the tracks}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Self Similarity}{7}{subsubsection.4.2.2}}
+\newlabel{costmatrix_sec}{{4.2.2}{7}{Self Similarity}{subsubsection.4.2.2}{}}
 \citation{scarfe2013long}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of the effect of normalization parameter $\mathaccentV {hat}05Ec=0.7$ on the values in $S$ on radio show Magic Island $110$. The small raised section on the left correspond to the tracks.}}{8}{figure.3}}
-\newlabel{fig:cosine_norm}{{3}{8}{Illustration of the effect of normalization parameter $\hat c=0.7$ on the values in $S$ on radio show Magic Island $110$. The small raised section on the left correspond to the tracks}{figure.3}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.2}Self Similarity}{8}{subsubsection.5.2.2}}
-\newlabel{costmatrix_sec}{{5.2.2}{8}{Self Similarity}{subsubsection.5.2.2}{}}
 \@writefile{toc}{\contentsline {paragraph}{Summation}{8}{section*.2}}
-\@writefile{toc}{\contentsline {paragraph}{Symmetry}{9}{section*.3}}
+\@writefile{toc}{\contentsline {paragraph}{Symmetry}{8}{section*.3}}
 \@writefile{toc}{\contentsline {paragraph}{Static Contiguity}{9}{section*.4}}
-\@writefile{toc}{\contentsline {paragraph}{Evolutionary Contiguity}{10}{section*.5}}
-\@writefile{toc}{\contentsline {paragraph}{Gaussian}{10}{section*.6}}
-\@writefile{toc}{\contentsline {paragraph}{Normalization}{10}{section*.7}}
+\@writefile{toc}{\contentsline {paragraph}{Evolutionary Contiguity}{9}{section*.5}}
+\@writefile{toc}{\contentsline {paragraph}{Gaussian}{9}{section*.6}}
+\@writefile{toc}{\contentsline {paragraph}{Normalization}{9}{section*.7}}
 \@writefile{toc}{\contentsline {paragraph}{Mixing Cost Functions}{10}{section*.8}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Computing Best Segmentation}{10}{section.6}}
-\newlabel{best_cost}{{6}{10}{Computing Best Segmentation}{section.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Confidence Intervals}{11}{section.7}}
-\newlabel{sec:confidence-intervals}{{7}{11}{Confidence Intervals}{section.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Posterior Marginal of Song Boundary}{11}{subsection.7.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Computing Best Segmentation}{10}{section.5}}
+\newlabel{best_cost}{{5}{10}{Computing Best Segmentation}{section.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =1$ and therefore containing disincentives. }}{10}{figure.5}}
+\newlabel{fig:cmsumib1}{{5}{10}{Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =1$ and therefore containing disincentives}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =0$ and therefore containing incentives. }}{10}{figure.6}}
+\newlabel{fig:cmsumib1}{{6}{10}{Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =0$ and therefore containing incentives}{figure.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Confidence Intervals}{11}{section.6}}
+\newlabel{sec:confidence-intervals}{{6}{11}{Confidence Intervals}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Posterior Marginal of Song Boundary}{11}{subsection.6.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces A visualization of $log(P(j,s))$ ($\eta =10$) for one of the shows in the test set using the cost matrix parameters from experiment $10$. The actual tracks are overlaid as white crosses.}}{12}{figure.7}}
-\newlabel{fig:posterior}{{7}{12}{A visualization of $log(P(j,s))$ ($\eta =10$) for one of the shows in the test set using the cost matrix parameters from experiment $10$. The actual tracks are overlaid as white crosses}{figure.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Posterior Marginal of Song Position}{12}{subsection.7.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Track Index Confidence}{12}{subsection.7.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Track Time Confidence}{13}{subsection.7.4}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Experimental Methodology}{13}{section.8}}
-\newlabel{sec:methodology}{{8}{13}{Experimental Methodology}{section.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Estimating Segment Count}{13}{section.9}}
-\newlabel{sec:trackcount}{{9}{13}{Estimating Segment Count}{section.9}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {10}Materials}{13}{section.10}}
-\newlabel{sec:materials}{{10}{13}{Materials}{section.10}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {11}Results}{13}{section.11}}
-\newlabel{sec:results}{{11}{13}{Results}{section.11}{}}
+\newlabel{fig:posterior3}{{7}{12}{A visualization of $log(P(j,s))$ ($\eta =10$) for one of the shows in the test set using the cost matrix parameters from experiment $10$. The actual tracks are overlaid as white crosses}{figure.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Posterior Marginal of Song Position}{13}{subsection.6.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Track Index Confidence}{13}{subsection.6.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Track Time Confidence}{13}{subsection.6.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Experiments}{13}{section.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Training Set}{13}{subsection.7.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Finding The Best Cost Matrix}{13}{subsection.7.2}}
+\newlabel{sec:findingbestcostmatrix}{{7.2}{13}{Finding The Best Cost Matrix}{subsection.7.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Estimating Segment Count}{13}{section.8}}
+\newlabel{sec:trackcount}{{8}{13}{Estimating Segment Count}{section.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Evaluation}{13}{section.9}}
+\newlabel{eval_crit}{{9}{13}{Evaluation}{section.9}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The shows randomly selected for inclusion in the \textit  {GitHub training set}.}}{14}{table.1}}
 \newlabel{table:githubset}{{1}{14}{The shows randomly selected for inclusion in the \textit {GitHub training set}}{table.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Histogram of the differences between reconstructed and human captured time indices on experiment 10. The slight bumps are uncertainty about track placement perhaps related to the $\approx 14.8$ second bar intervals in Trance Music. The humans are much more likely to place an index before a predicted index. }}{14}{figure.9}}
-\newlabel{fig:shifthistogram}{{9}{14}{Histogram of the differences between reconstructed and human captured time indices on experiment 10. The slight bumps are uncertainty about track placement perhaps related to the $\approx 14.8$ second bar intervals in Trance Music. The humans are much more likely to place an index before a predicted index}{figure.9}{}}
-\citation{theiler1997contiguity}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Number of tracks estimated correctly a show in the GitHub training set after a genetics algorithm was run to select a new set of configuration parameters.}}{14}{figure.8}}
+\newlabel{fig:github_trackestimation}{{8}{14}{Number of tracks estimated correctly a show in the GitHub training set after a genetics algorithm was run to select a new set of configuration parameters}{figure.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces }}{14}{figure.9}}
+\newlabel{fig:track_shift}{{9}{14}{}{figure.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Results}{15}{section.10}}
+\newlabel{sec:results}{{10}{15}{Results}{section.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {11}Summary}{15}{section.11}}
+\newlabel{conclusions}{{11}{15}{Summary}{section.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Histogram of the residuals (errors) between reconstructed and human captured time indices. Apart from obvious noise there appears to be a tendency for the algorithm to place an index slightly earlier. Contig-static cost matrix apparently contained parameters selected through optimization that shifted it to remove some of this effect. }}{15}{figure.10}}
+\newlabel{fig:shifthistogram}{{10}{15}{Histogram of the residuals (errors) between reconstructed and human captured time indices. Apart from obvious noise there appears to be a tendency for the algorithm to place an index slightly earlier. Contig-static cost matrix apparently contained parameters selected through optimization that shifted it to remove some of this effect}{figure.10}{}}
 \bibstyle{ieeetr}
 \bibdata{bib/references,bib/refs}
-\bibcite{Matejka:2013:SIO:2470654.2466149}{{1}{}{{}}{{}}}
-\bibcite{tzanetakis1999framework}{{2}{}{{}}{{}}}
-\bibcite{eckmann1987recurrence}{{3}{}{{}}{{}}}
-\bibcite{foote1999visualizing}{{4}{}{{}}{{}}}
-\bibcite{foote1997similarity}{{5}{}{{}}{{}}}
-\bibcite{foote2000automatic}{{6}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {12}Summary}{15}{section.12}}
-\newlabel{conclusions}{{12}{15}{Summary}{section.12}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {13}Acknowledgements}{15}{section.13}}
-\newlabel{sec:acknowledgements}{{13}{15}{Acknowledgements}{section.13}{}}
-\bibcite{foote2003media}{{7}{}{{}}{{}}}
-\bibcite{foote2001visualizing}{{8}{}{{}}{{}}}
-\bibcite{goodwin2004dynamic}{{9}{}{{}}{{}}}
-\bibcite{goodwin2003audio}{{10}{}{{}}{{}}}
-\bibcite{peiszer2008automatic}{{11}{}{{}}{{}}}
-\bibcite{scarfe2013long}{{12}{}{{}}{{}}}
-\bibcite{nyquist1928certain}{{13}{}{{}}{{}}}
-\bibcite{frigo2004fftw}{{14}{}{{}}{{}}}
-\bibcite{tzanetakis1999multifeature}{{15}{}{{}}{{}}}
-\bibcite{theiler1997contiguity}{{16}{}{{}}{{}}}
+\bibcite{radu}{{1}{}{{}}{{}}}
+\bibcite{Matejka:2013:SIO:2470654.2466149}{{2}{}{{}}{{}}}
+\bibcite{tzanetakis1999framework}{{3}{}{{}}{{}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets.}}{16}{figure.12}}
+\newlabel{fig:fscores_best}{{12}{16}{Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets}{figure.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {12}Acknowledgements}{16}{section.12}}
+\newlabel{sec:acknowledgements}{{12}{16}{Acknowledgements}{section.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {13}Materials}{16}{section.13}}
+\newlabel{sec:materials}{{13}{16}{Materials}{section.13}{}}
+\bibcite{eckmann1987recurrence}{{4}{}{{}}{{}}}
+\bibcite{foote1999visualizing}{{5}{}{{}}{{}}}
+\bibcite{foote1997similarity}{{6}{}{{}}{{}}}
+\bibcite{foote2000automatic}{{7}{}{{}}{{}}}
+\bibcite{foote2003media}{{8}{}{{}}{{}}}
+\bibcite{foote2001visualizing}{{9}{}{{}}{{}}}
+\bibcite{goodwin2004dynamic}{{10}{}{{}}{{}}}
+\bibcite{goodwin2003audio}{{11}{}{{}}{{}}}
+\bibcite{peiszer2008automatic}{{12}{}{{}}{{}}}
+\bibcite{elaudio}{{13}{}{{}}{{}}}
+\bibcite{scarfe2013long}{{14}{}{{}}{{}}}
+\bibcite{nyquist1928certain}{{15}{}{{}}{{}}}
+\bibcite{frigo2004fftw}{{16}{}{{}}{{}}}
+\bibcite{tzanetakis1999multifeature}{{17}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces An illustration of the similarity matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black dotted lines. There are examples here of evolutionary repetition ($t=500,\ldots  ,550$), static contiguity everywhere where there is solid black, and symmetry on the middle two tracks.}}{17}{figure.4}}
-\newlabel{fig:simmatrix}{{4}{17}{An illustration of the similarity matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black dotted lines. There are examples here of evolutionary repetition ($t=500,\ldots ,550$), static contiguity everywhere where there is solid black, and symmetry on the middle two tracks}{figure.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Cost matrices for Magic Island episode 110. On the left is the cost matrix parameters from experiment 5 (summation only with incentive bias $0.5$) and the right the mixed cost matrix using parameters from experiment $10$. On the right, the predicted (white) and actual tracks (black) are shown in place. Note that the white space is infinite corresponding to the minimum and maximum track parameters $w$ and $W$.}}{18}{figure.5}}
-\newlabel{fig:cost_matrices}{{5}{18}{Cost matrices for Magic Island episode 110. On the left is the cost matrix parameters from experiment 5 (summation only with incentive bias $0.5$) and the right the mixed cost matrix using parameters from experiment $10$. On the right, the predicted (white) and actual tracks (black) are shown in place. Note that the white space is infinite corresponding to the minimum and maximum track parameters $w$ and $W$}{figure.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Summation cost matrices for Magic Island episode 110. The matrix on the left has an incentive bias $\Omega =1$ and therefore only contains disincentives. However the matrix on the right is the other extreme, $\Omega =1$ containing only incentives. }}{18}{figure.6}}
-\newlabel{fig:cmsumib1}{{6}{18}{Summation cost matrices for Magic Island episode 110. The matrix on the left has an incentive bias $\Omega =1$ and therefore only contains disincentives. However the matrix on the right is the other extreme, $\Omega =1$ containing only incentives}{figure.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Number of tracks estimated correctly for all six shows in the GitHub training set after a genetics algorithm was run to select a new set of configuration parameters.}}{19}{figure.8}}
-\newlabel{fig:github_trackestimation}{{8}{19}{Number of tracks estimated correctly for all six shows in the GitHub training set after a genetics algorithm was run to select a new set of configuration parameters}{figure.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces The relative performance and confidence ($\eta =10$) of two cost matrices. The left is experiment $10$ which has a mixture of cost matrices (see the main Results table) and the right is experiment $5$ which is only the summation matrix. Ostensibly the summation cost matrix struggles towards the middle of the shows.}}{20}{figure.10}}
-\newlabel{fig:overallconfs}{{10}{20}{The relative performance and confidence ($\eta =10$) of two cost matrices. The left is experiment $10$ which has a mixture of cost matrices (see the main Results table) and the right is experiment $5$ which is only the summation matrix. Ostensibly the summation cost matrix struggles towards the middle of the shows}{figure.10}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Main results. Tile size $T$ was $5$s for all results. Shift refers to the mean average of the differences in predictions versus human captured indices. $\star $; $h=1662$Hz, $b=5$Hz, $\mathaccentV {hat}05Ec=1$, $\rho =20$ $\dagger (random search);$ $h=1662$Hz, $b=5$Hz, $\mathaccentV {hat}05Ec=1.2$, $\rho =26$. Blank cells indicate no contribution from that cost matrix. }}{21}{table.2}}
-\newlabel{tab:results}{{2}{21}{Main results. Tile size $T$ was $5$s for all results. Shift refers to the mean average of the differences in predictions versus human captured indices. $\star $; $h=1662$Hz, $b=5$Hz, $\hat c=1$, $\rho =20$ $\dagger (random search);$ $h=1662$Hz, $b=5$Hz, $\hat c=1.2$, $\rho =26$. Blank cells indicate no contribution from that cost matrix}{table.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces An illustration of the similarity matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black dotted lines. There are examples here of evolutionary repetition ($t=500,\ldots  ,550$), static contiguity everywhere where there is solid black, and symmetry on the middle two tracks.}}{18}{figure.4}}
+\newlabel{fig:simmatrix}{{4}{18}{An illustration of the similarity matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black dotted lines. There are examples here of evolutionary repetition ($t=500,\ldots ,550$), static contiguity everywhere where there is solid black, and symmetry on the middle two tracks}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces lalala}}{19}{figure.11}}
+\newlabel{fig:fscores_breakdown}{{11}{19}{lalala}{figure.11}{}}

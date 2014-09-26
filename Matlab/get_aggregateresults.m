@@ -50,19 +50,7 @@ agg_results.residuals_ourmethod = zeros( length(results), 15 );
 agg_results.residuals_noveltyfixed = nan( length(results), 15 );
 agg_results.residuals_naives= zeros( length(results), 15 );
 
-function si = gsi(s)
-	if ~isempty(strfind(s,'state')) 
-		si=1;
-	elseif ~isempty(strfind(s,'around'))
-		si=3;
-    	elseif ~isempty(strfind(s,'magic'))
-		si=2;
-        elseif ~isempty(strfind(s,'lindmik'))
-		si=4;
-    	else 
-		si = 5;
-	end
-end
+
 
 agg_results.convexity_estimate = 0;
 
@@ -70,7 +58,7 @@ for i=1:length(results)
 		
 	r = results(i);
 
-	if show_type ~= gsi(r.show.showname) && show_type ~= 0
+	if show_type ~= show_getindex(r.show.showname) && show_type ~= 0
 		continue;
     end
     

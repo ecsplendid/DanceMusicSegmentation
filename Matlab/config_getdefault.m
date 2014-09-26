@@ -9,7 +9,7 @@ c.dataset = 1;
 
 % Feature Extraction Parameters
 c.sampleRate = 4000;
-c.secondsPerTile = 20;
+c.secondsPerTile = 5;
 c.minTrackLength = 134;
 c.maxExpectedTrackWidth = 641;   % (magicisland=380*2 others 350*2)
 c.bandwidth = 2; % bandwith for the width of the convolution filter
@@ -17,7 +17,7 @@ c.lowPassFilter = 1144; %Hz
 c.highPassFilter = 109; %Hz
 
 % figure drawing parameters
-c.drawSimMat = 0;
+c.drawSimMat = 1;
 c.compute_confs = 0;
 c.draw_confs = 0;
 
@@ -33,7 +33,7 @@ c.use_costgaussianwidth = 1;
 % not entirely normal, they are represented by a section on the left of the
 % distribution, I would guess a value slightly greater than 1 is optimal for
 % the symmetry and contig cost matrices. >1 shifts mean higher
-c.cosine_normalization = 0.5;
+c.cosine_normalization = 0.7;
 
 % which cost functions to use and how much weight do they have (>0)
 
