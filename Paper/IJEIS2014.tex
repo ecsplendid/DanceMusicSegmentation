@@ -9,6 +9,7 @@
 \usepackage{rotating}
 \usepackage{pseudocode}
 \usepackage{pdfpages}
+\usepackage{booktabs}
 
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
@@ -692,7 +693,7 @@ and for $m\ge2$
 	\bigskip
 
 	\includegraphics[width=0.5\textwidth]{images/posterior3}
-	\caption{A visualization of $log(P(j,s))$ ($\eta=10$) for one of the shows in the test set using the cost matrix parameters from experiment $10$. The actual tracks are overlaid as white crosses.}
+	\caption{A visualization of $log(P(j,s))$ ($\eta=10$) for one of the shows in the test set using... TODO.}
 	\label{fig:posterior3}
 \end{figure} 
 
@@ -751,74 +752,43 @@ We selected $6$ shows at random (two of each show type)  to create a training se
 	\label{table:githubset}
 	
 	\begin{tabular}{llll}
-		\#         & \textbf{Show Name}          & \textbf{Artist}  & \textbf{Date Broadcast} \\
+		\toprule
+		\#         & \textsc{Show Name}          & \textsc{Artist}  & \textsc{Date Broadcast} \\
+		\toprule
 		\textbf{1} & A State Of Trance 453       & Armin Van Buuren & April 2010              \\
 		\textbf{2} & A State Of Trance 462       & Armin Van Buuren & June 2010               \\
 		\textbf{3} & Magic Island 098            & Roger Shah       & March 2010              \\
 		\textbf{4} & Magic Island 112            & Roger Shah       & July 2010               \\
 		\textbf{5} & Trance Around The World 364 & Above \& Beyond  & March 2011              \\
-		\textbf{6} & Trance Around The World 372 & Above \& Beyond  & May 2011               
+		\textbf{6} & Trance Around The World 372 & Above \& Beyond  & May 2011 
+		\\           
+		\bottomrule   
 	\end{tabular}
 	
 \end{table*}
 
-\subsection{Finding The Best Cost Matrix}\label{sec:findingbestcostmatrix}
+\subsection{Tracks Known A Priori}\label{sec:}
 
-We used the GitHub training set to develop the cost matrices from first principles and to find robust parameters using a genetic algorithm search.
+The primary goal of this research is to reconstruct optimal track boundaries when the number of tracks is known a priori. This experiment will pass the actual number of tracks as a parameter into the algorithm input variable $m$. The advantage of this is that the number of predicted tracks will equal the number of actual tracks so intuitive measures of predictive performance can be employed. 
 
+\subsubsection{Evaluation}\label{eval_crit}
 
+The inherent challenge with quantifying the performance of our approach is that if we misplace any tracks, it may have a cascade effect. For example if we place one track too many early on in a show, many of the subsequent tracks may be correctly detected but placed out of alignment. 
 
-In our experiments we decided to fix the tile size at $5$ seconds for the sake of speed. A lower tile size does increase accuracy but only marginally. Higher tile sizes can perform more robustly (fewer catastrophic misalignments) but progressively lose out on accuracy.
+For the task of computing the best cost segmentation when the number of tracks are known a priori, we can use simple statistical descriptions of the track residuals $|P_{st}-A_{st}|$ where $P$ is the predicted track, $A$ the actual track, for show $s$ and track $t$ (for all $s$ and $t$ in the corpus). The mean average will give a good indication of the amount of misplacements (how robust the method is). The median of the residuals will indicate the actual track accuracy invariant to any catastrophic misplacements. The standard deviation of the residuals will indicate the spread of error. 
 
+\subsubsection{Finding The Best Parameters}\label{sec:findingbestcostmatrix}
 
+We used the GitHub training set to find robust algorithm parameters using a stochastic optimization (genetic algorithm) search. The genetic algorithm was selected because it allows integer constraints. We selected a population size of $50$, an elite count of $7$ and crossover fraction of $0.5$. The stopping limit for the algorithm was when the optimization objective function had stalled for $5$ generations. The \texttt{ga}\footnote{\url{http://www.mathworks.co.uk/help/gads/ga.html}} function from the MATLAB global optimization toolbox was used. 
 
+We considered two objective functions; minimizing the mean absolute track error and secondly the median absolute track error (see Section~\ref{eval_crit}).
 
+For each of these objective functions we devised $5$ conditional experiments involving a selection of cost matrices described in Section~\ref{costmatrix_sec}; sum and Gaussian, symmetry and Gaussian, contiguity and Gaussian, evolution and Gaussian, and all cost matrices allowed. When cost matrices were not allowed to participate in an experiment, their contribution variable was fixed at $0$. Therefore; there are $10$ experiments defined. Optimal parameters were found for each experiment using the genetic algorithm as described and the parameters found are listed in Table~\ref{tab:parameters}.
 
+\subsubsection{Results}\label{sec:results}
 
+		Please see Tables~\ref{tab:mean-results} and~\ref{tab:median-results} for the results and Figure~\ref{fig:shifthistogram} for a histogram of errors for 
 
-% GENETIC ALGORITHM DESCRIPTION
-\section{Estimating Segment Count}\label{sec:trackcount}
-
-The original goal of our work was providing the best possible segmentation given a fixed number of tracks $m$, rather than estimating $m$. The problem domain is reasonably unique; the number of segments is known a priori but segmentation itself is not.
-
-In the most basic setting. The number of tracks could be estimated as the variable of track lengths is Gaussian (see Figure~\ref{fig:tracklengths}). 
-
-We propose the following method of adapting our framework to estimate the number of contiguous segments in a data stream. 
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.5\textwidth]{images/trackestimate}
-		\caption{Number of tracks estimated correctly a show in the GitHub training set after a genetics algorithm was run to select a new set of configuration parameters.}
-		\label{fig:github_trackestimation}
-	\end{figure}
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.5\textwidth]{images/trackshift}
-		\caption{}
-		\label{fig:track_shift}
-	\end{figure}
-
-\section{Evaluation}\label{eval_crit}
-
-It is challenging to quantify the performance of our method because if we misplace any tracks, it may have a cascade effect. For example if we place one track too many early on in a show, many of the subsequent tracks may be correctly detected but placed out of alignment. 
-
-For the task of computing the best cost segmentation when the number of tracks are known a priori, we can use simple statistical descriptions of the track residuals $|P_{st}-A_{st}|$ where $P$ is the predicted track, $A$ the actual track, for show $s$ and track $t$ (for all $s$ and $t$ in the corpus). The mean average will give a good indication of the accuracy combined with the amount of misplacements. The median of the residuals will indicate the actual track accuracy invariant to any catastrophic misplacements. The standard deviation of the residuals will indicate the spread of error. 
-
-\section{Results}\label{sec:results}
-
-Please see Table~\ref{tab:results} for the main table of results, Figure~\ref{fig:shifthistogram} for a histogram of predicted versus actual differences for experiment $10$. 
-
-
-
-\begin{tabular}{|c|c|c|c|c|c|}
-	\hline 321 & 321 &  & dsa &  &  \\ 
-	\hline 312 & 312 & dsa & dsa &  &  \\ 
-	\hline  &  &  & d & dasd &  \\ 
-	\hline  &  &  & asdas & dsa &  \\ 
-	\hline  &  &  &  &  &  \\ 
-	\hline 
-\end{tabular} 
 
 	\begin{figure}
 		\centering
@@ -831,11 +801,43 @@ Please see Table~\ref{tab:results} for the main table of results, Figure~\ref{fi
 On our previous work we were using a disincentive only summation matrix, and found that normalizing it on the square root of the width produced the best result. This would have been necessary to encourage placement of longer tracks as no incentive was present. So experiment $11$ is roughly comparable and indeed produces the same overall mean average to that previous experiment ($\approx 20$S). Note that we no longer discard any shows from evaluation which makes the result stronger. 
 
 
+
+\begin{table*}[t]
+	\centering
+	\caption{These are the main results for all cost matrices with parameters optimized for the best mean absolute accuracy. The tuple $\langle a,b,c \rangle$ is used to indicate the results where $a$ is the median absolute error in seconds, $b$ the mean absolute error in seconds and $c$ the standard deviation in seconds (see Section~\ref{sec:results}). The experiment number is in parenthesis.}
+	\scalebox{0.9}{
+	\begin{tabular}{llllll}
+		\toprule
+		                       & \textsc{lindmik}                  & \textsc{magic}                   & \textsc{tatw}                    & \textsc{asot}                     & \textsc{all}                      \\ \midrule
+		\textsc{(2) contig}    & $\langle 14,~70.3,~133.4 \rangle$ & $\langle 9,~18.6,~52.6 \rangle$  & $\langle 11,~34.6,~93.7 \rangle$ & $\langle 13,~58.5,~121.1 \rangle$ & $\langle 12,~42.9,~102.8 \rangle$ \\
+		\textsc{(3) evolution} & $\langle 14,~54.8,~110.2 \rangle$ & $\langle 12,~27.1,~58.4 \rangle$ & $\langle 9,~23.5,~54.6 \rangle$  & $\langle 15,~50.2,~101.8 \rangle$ & $\langle 12,~37.5,~83.3 \rangle$  \\
+		\textsc{(4) sum}       & $\langle 8,~34.3,~81.1 \rangle$   & $\langle 8,~14,~34.3 \rangle$    & $\langle 6,~16.6,~50.26 \rangle$ & $\langle 8,~33.1,~77.3 \rangle$   & $\langle7,~23.7,~62.1 \rangle$    \\
+		\textsc{(5) symmetry}  & $\langle 10,~20.4,~49.8 \rangle$  & $\langle 9,~16.6,~43.7 \rangle$  & $\langle 8,~11.7,~16.8 \rangle$  & $\langle 11,~26.2,~60.4 \rangle$  & $\langle 9,~19,~46.3 \rangle$     \\ \midrule
+		\textsc{(1) all}       & $\langle 8,~19.5,~54.3 \rangle$   & $\langle 8,~16.9,~50.9 \rangle$  & $\langle 6,~8.9,~14.2 \rangle$   & $\langle 7,~24.3,~58.3 \rangle$   & $\langle 7,~17.6,~47.9 \rangle$   \\ \bottomrule
+	\end{tabular}
+}
+	\label{tab:mean-results}
+\end{table*}
+
+\begin{table*}[t]
+	\centering
+	\caption{These are the main results for all cost matrices with parameters optimized for the best median absolute accuracy.}
+	\scalebox{0.9}{
+	\begin{tabular}{llllll}
+		\toprule
+		                       & \textsc{lindmik}                  & \textsc{magic}                   & \textsc{tatw}                    & \textsc{asot}                     & \textsc{all shows}                \\ \midrule
+		\textsc{(7) contig}    & $\langle 15,~96.3,~173.7 \rangle$ & $\langle 9,~28.4,~78.8 \rangle$  & $\langle 8,~51.5,~124.6 \rangle$ & $\langle 16,~78.1,~146.7 \rangle$ & $\langle 10,~60,~131.1 \rangle$   \\
+		\textsc{(8) evolution} & $\langle 20,~96.6,~149.8 \rangle$ & $\langle 13,~33.9,~69.8 \rangle$ & $\langle 8,~30.9,~76 \rangle$    & $\langle 18,~16.6,~114.8 \rangle$ & $\langle 12,~50.3,~104.5 \rangle$ \\
+		\textsc{(9) sum}       & $\langle 8,~39.9,~95 \rangle$     & $\langle 8,~15.8,~42.5 \rangle$  & $\langle 6,~18.6,~59.7 \rangle$  & $\langle 7,~38.2,~90.2 \rangle$   & $\langle 7,~27.2,~73.0 \rangle$   \\
+		\textsc{(10) symmetry} & $\langle 12,~84.6,~161.8 \rangle$ & $\langle 9,~19.6,~51.5 \rangle$  & $\langle 9,~52.5,~127.9 \rangle$ & $\langle 18,~92.1,~171.2 \rangle$ & $\langle 11,~61,~135.5 \rangle$   \\ \midrule
+		\textsc{(6) all}       & $\langle 6,~13.1,~28.7 \rangle$   & $\langle 9,~17.6,~44.7 \rangle$  & $\langle 5,~8.9,~15 \rangle$     & $\langle 6,~25.7,~62.4 \rangle$   & $\langle 6,~17.4,~44.8 \rangle$   \\ \bottomrule
+	\end{tabular}
+}
+\label{tab:median-results}
+\end{table*}
+
 \begin{figure*}
 	\begin{center}
-		
-	
-	
 		
 		\begin{minipage}[t]{0.45\linewidth}
 			\begin{center}
@@ -862,7 +864,7 @@ On our previous work we were using a disincentive only summation matrix, and fou
 		
 	\end{center}
 	
-	\caption{lalala}
+	\caption{Comparison of the $F_1$ scores against time thresholds on the $4$ data sets.}
 	\label{fig:fscores_breakdown}
 		
 \end{figure*}
@@ -878,6 +880,30 @@ On our previous work we were using a disincentive only summation matrix, and fou
 	\caption{Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets.}
 	\label{fig:fscores_best}
 	
+\end{figure}
+
+
+% GENETIC ALGORITHM DESCRIPTION
+\section{Estimating Segment Count}\label{sec:trackcount}
+
+The original goal of our work was providing the best possible segmentation given a fixed number of tracks $m$, rather than estimating $m$. The problem domain is reasonably unique; the number of segments is known a priori but segmentation itself is not.
+
+In the most basic setting. The number of tracks could be estimated as the variable of track lengths is Gaussian (see Figure~\ref{fig:tracklengths}). 
+
+We propose the following method of adapting our framework to estimate the number of contiguous segments in a data stream. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{images/trackestimate}
+	\caption{Number of tracks estimated correctly a show in the GitHub training set after a genetics algorithm was run to select a new set of configuration parameters.}
+	\label{fig:github_trackestimation}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{images/trackshift}
+	\caption{}
+	\label{fig:track_shift}
 \end{figure}
 
 \section{Summary}\label{conclusions}
@@ -897,6 +923,54 @@ A more precise corpus where the DJ was also the cuesheet author would allow us t
 %TODO
 We would also like to implement some of the methods in the literature (which were mostly designed for scene analysis) to see if we outperform them. It would be tricky to get an exact comparison because we could not find an unsupervised deterministic algorithm which finds a fixed number of strictly contiguous clusters. We could however adapt existing algorithms to get a like for like comparison. 
 
+
+
+
+
+
+\begin{table*}[h]
+	\centering
+	
+	\scalebox{0.8}{
+	\begin{tabular}{lll@{}llllllllllllllllll@{}}
+					& \begin{sideways} \textsc{Notation} \end{sideways} & \begin{sideways}\textsc{Mean All}\end{sideways} & \begin{sideways}\textsc{Mean Contig}\end{sideways} & \begin{sideways}\textsc{Mean Evolution}\end{sideways} & \begin{sideways}\textsc{Mean Sum}\end{sideways} & \begin{sideways}\textsc{Mean Symmetry}\end{sideways} & \begin{sideways}\textsc{Median All}\end{sideways} & \begin{sideways}\textsc{Median Contig}\end{sideways} & \begin{sideways}\textsc{Median Evolution}\end{sideways} & \begin{sideways}\textsc{Median Sum}\end{sideways} & \begin{sideways}\textsc{Median Symmetry}\end{sideways} & \begin{sideways}\textsc{Track Estimation}\end{sideways} \\
+					
+		\toprule
+		\textsc{Experiment Number}             &  & 1     & 2    & 3    & 4    & 5    & 6    & 7    & 8    & 9    & 10   & 11   &  \\ \toprule
+		\textsc{Seconds Per Tile (S) }      & $M$   & 3     & 3    & 6    & 5    & 8    & 3    & 7    & 3    & 5    & 9    & 38   &  \\
+		\textsc{Min. Track Length (S) }     &  $w$   & 167   & 146  & 108  & 165  & 140  & 88   & 98   & 173  & 94   & 85   & 155  &  \\
+		\textsc{Max. Track Length (S) }     &  $W$   & 691   & 879  & 897  & 894  & 811  & 631  & 801  & 889  & 642  & 635  & 619  &  \\
+		\textsc{Bandwidth (Hz)      }       &  $b$   & 1     & 2    & 2    & 2    & 3    & 2    & 4    & 4    & 2    & 5    & 3    &  \\
+		\textsc{Low Pass Filter (Hz) }      &  $l$   & 1039~ & 1912 & 1893 & 1387 & 874  & 888  & 1065 & 1206 & 1880 & 1005 & 1019 &  \\
+		\textsc{High Pass Filter (Hz)}      &  $h$   & 62    & 73   & 81   & 69   & 54   & 55   & 54   & 70   & 75   & 51   & 201  &  \\
+		\textsc{Solution Shift (S) }        &  $ \varXi $   & -1    & 5    & -3   & -2   & 2    & -4   & -2   & -2   & -2   & -1   & 5    &  \\
+		\textsc{Gaussian Width  }           &  $\varpi$   & 1     & 1    & 1    & 4    & 1    & 1    & 2    & 1    & 1    & 2    & 4    &  \\
+		\textsc{Cosine Normalization }      &  $\hat c$   & 1.17  & 0.77 & 0.92 & 1.19 & 1.36 & 0.88 & 0.71 & 0.73 & 1.15 & 1.14 & 0.98 &  \\
+		\textsc{Sum Contribution  }         &     & 0.99  &      &      & 0.81 &      & 0.77 &      &      & 0.63 &      & 0.55 &  \\
+		\textsc{Sum Normalization }         &     & 1.36  &      &      & 0.73 &      & 1.11 &      &      & 0.47 &      & 0.71 &  \\
+		\textsc{Sum Incentive      }        &     & 0.68  &      &      & 0.52 &      & 0.23 &      &      & 0.30 &      & 0.05 &  \\
+		\textsc{Gaussian Contribution  }    &     & 0.52  & 0.08 & 0.69 & 0.17 & 0.29 & 0.63 & 0.11 & 0.51 & 0.08 & 0.02 & 0.15 &  \\
+		\textsc{Gaussian Incentive}         &     & 0.85  & 0.82 & 0.43 & 0.47 & 0.56 & 0.10 & 0.14 & 0.40 & 0.85 & 0.54 & 0.53 &  \\
+		\textsc{Evolution Contribution}     &     & 0.05  &      & 0.63 &      &      & 0.49 &      & 0.35 &      &      & 0.48 &  \\
+		\textsc{Evolution Incentive}        &     & 0.53  &      & 0.60 &      &      & 0.15 &      & 0.66 &      &      & 0.71 &  \\
+		\textsc{Evolution Normalization}    &     & 1.30  &      & 0.08 &      &      & 1.10 &      & 0.06 &      &      & 1.79 &  \\
+		\textsc{Evolution Diff. Order}      &     & 45    &      & 1    &      &      & 7    &      & 40   &      &      & 16   &  \\
+		\textsc{Contig Past Contribution}   &     & 0.50  & 0.10 &      &      &      & 0.62 & 0.69 &      &      &      & 0.27 &  \\
+		\textsc{Contig Past Diff. Order}    &     & 13    & 44   &      &      &      & 41   & 46   &      &      &      & 30   &  \\
+		\textsc{Contig Past Incentive}      &     & 0.50  & 0.24 &      &      &      & 0.95 & 0.53 &      &      &      & 0.98 &  \\
+		\textsc{Contig Normalization}       &     & 0.74  & 0.26 &      &      &      & 1.60 & 0.33 &      &      &      & 1.91 &  \\
+		\textsc{Contig Future Contribution} &     & 0.59  & 0.81 &      &      &      & 0.54 & 0.27 &      &      &      & 0.95 &  \\
+		\textsc{Contig Future Diff. Order}  &     & 35    & 3    &      &      &      & 30   & 21   &      &      &      & 45   &  \\
+		\textsc{Contig Future Incentive}    &     & 0.08  & 0.24 &      &      &      & 0.60 & 0.89 &      &      &      & 0.96 &  \\
+		\textsc{Symmetry Contribution}      &     & 0.18  &      &      &      & 0.66 & 0.11 &      &      &      & 0.98 & 0.19 &  \\
+		\textsc{Symmetry Incentive}         &     & 0.16  &      &      &      & 0.78 & 0.24 &      &      &      & 0.45 & 0.26 &  \\
+		\textsc{Symmetry Normalization}     &     & 0.73  &      &      &      & 0.77 & 0.72 &      &      &      & 0.55 & 1.09 &  \\ \bottomrule
+		                                &
+	\end{tabular}
+}
+	\caption{Results for stochastic optimization (evolutionary algorithm) search of parameter space. Note that the search space $T$ was limited to a minimum of $3$ seconds to save computation time.  }
+	\label{tab:parameters}
+\end{table*}
 
 
 \section{Acknowledgements}\label{sec:acknowledgements}

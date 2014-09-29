@@ -64,11 +64,6 @@ E.~Peiszer, T.~Lidy, and A.~Rauber, ``Automatic audio segmentation: Segment
 D.~El~Badawy, P.~Marmaroli, and H.~Lissek, ``Audio novelty-based segmentation
   of music concerts,''
 
-\bibitem{scarfe2013long}
-T.~Scarfe, W.~M. Koolen, and Y.~Kalnishkan, ``A long-range self-similarity
-  approach to segmenting dj mixed music streams,'' in {\em Artificial
-  Intelligence Applications and Innovations}, pp.~235--244, Springer, 2013.
-
 \bibitem{nyquist1928certain}
 H.~Nyquist, ``Certain topics in telegraph transmission theory,'' {\em American
   Institute of Electrical Engineers, Transactions of the}, vol.~47, no.~2,
@@ -81,5 +76,10 @@ M.~Frigo and S.~G. Johnson, ``The fftw web page,'' 2004.
 G.~Tzanetakis and P.~Cook, ``Multifeature audio segmentation for browsing and
   annotation,'' in {\em Applications of Signal Processing to Audio and
   Acoustics, 1999 IEEE Workshop on}, pp.~103--106, IEEE, 1999.
+
+\bibitem{scarfe2013long}
+T.~Scarfe, W.~M. Koolen, and Y.~Kalnishkan, ``A long-range self-similarity
+  approach to segmenting dj mixed music streams,'' in {\em Artificial
+  Intelligence Applications and Innovations}, pp.~235--244, Springer, 2013.
 
 \end{thebibliography}

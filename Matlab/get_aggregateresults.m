@@ -81,7 +81,8 @@ for i=1:length(results)
 	agg_results.mean_all = [agg_results.mean_all r.mean_score];
 	agg_results.heuristic_all = ...
 	[agg_results.heuristic_all r.heuristic_score];
-	agg_results.residuals_ourmethod_all = [agg_results.residuals_ourmethod_all r.residuals_ourmethod];
+	agg_results.residuals_ourmethod_all = [...
+        agg_results.residuals_ourmethod_all r.residuals_ourmethod];
     
 	agg_results.track_estimate_errors = ...
 	[agg_results.track_estimate_errors r.track_estimate_error];
