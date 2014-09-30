@@ -7,7 +7,7 @@ stds = nan(5,1);
 stdst = nan(5,1);
 
 notracks = nan(5,1);
-
+tracklength = nan(5,1);
 
 for sh=1:4
 
@@ -16,7 +16,7 @@ for sh=1:4
     show_lengths2 = [];
     
     for i=1:339
-        in = show_getindex(s{i}.file);
+        in = show_getindex(lower(s{i}.file));
 
         if in == sh
 
@@ -30,7 +30,8 @@ for sh=1:4
     stds(sh) = std(show_lengths);
     stdst(sh) = std(show_lengths2);
     
-    notracks(sh) = mean(show_lengths2);
+    notracks(sh) = sum(show_lengths2);
+    tracklength(sh) = mean(show_lengths);
     
     h = histc( show_lengths, 110:640 );
     h = conv( h, hamming(60), 'same' );
