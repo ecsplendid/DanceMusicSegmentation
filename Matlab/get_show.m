@@ -3,7 +3,7 @@ function [this_show] = get_show(s, config)
     if nargin < 2
         config = config_getdefault;
     end
-
+    
     % note, shows is initialised from calling /data=set/local_testset.m
     % execute that before everything else. I'm sorry it has to be like this
     % for some reason executing it twice fails

@@ -71,11 +71,11 @@
 	
 	\begin{abstract}
 		
-		We consider the problem of segmenting DJ-mixed dance music recordings (pod-casts, radio shows, live events) into their original sequence of contiguous tracks. We present an algorithm to reconstruct a fixed number of segment boundaries as close as possible to what a human domain expert would create in respect of the same task. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. We also adapt the method to estimate the number of tracks in a recording and compare our method with others. The goal of DJ-mixing is to render track boundaries invisible from human perception.
+		We consider the problem of segmenting DJ-mixed dance music recordings (pod-casts, radio shows, live events) into their original sequence of tracks. We present an algorithm to reconstruct segment boundaries as close as possible to what a human domain expert would create in respect of the same task. The algorithm is optimized for the scenario when the number of tracks is known a priori although is also capable of estimating the number of tracks and is evaluated in both situations. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. We also adapt the method to estimate the number of tracks in a recording and compare our method with others. The goal of DJ-mixing is to render track boundaries invisible from human perception.
 		
 		Segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of self-similarity, symmetry, contiguity and evolution in respect of time. 
 		
-		Our work incorporates self-similarity over a soft time horizon with a fixed upper boundary and is quantitatively assessed on a large corpus of radio show recordings which have been hand-labelled by a domain expert. The method could be used on other segmentation tasks and other domains. 
+		Our work is quantitatively assessed on a large corpus ($640$ hours) of radio show recordings which have been hand-labelled by a domain expert. The method presented could be used on other segmentation tasks and other domains. 
 		\smallskip
 		
 		\noindent \textbf{Keywords.} \noindent music,~segmentation,~DJ,~mix,~dynamic programming
@@ -87,48 +87,60 @@
 	
 	\section{Introduction}
 	
-	Electronic Dance Music tracks are usually mixed by a disc jockey (DJ). For this reason EDM music streams are unique compared to other genres of music. Mixing is the \textit{modus operandi} in electronic music. We first transform the audio file into a time series of features discretized into adjacent tiles and transform them into a domain where pairs from the same track would be distinguishable by their cosine. Our features are based on a Fourier transformation with convolution filtering to accentuate prominent instruments and self-similarity within tracks. We create a similarity matrix from these cosines and then derive cost matrices showing the costs of fitting a track at a given time with a given length. We use Dynamic Programming to create the cost matrices and again to perform the most economical segmentation of the cost matrices to fit a predetermined number of tracks. Dynamic programming means solutions to a problem are described in terms of overlapping sub-solutions to achieve a significant improvement in time complexity and therefore execution time. 
+	Electronic Dance Music tracks are usually mixed by a disc jockey (DJ). For this reason EDM music streams are unique compared to other genres of music. Mixing is the \textit{modus operandi} in electronic music. We first transform the audio file into a time series of features discretized into adjacent tiles and transform them into a domain where most pairs from the same track would be distinguishable by their cosine. Our features are based on a Fourier transformation with convolution filtering to accentuate prominent instruments and therefore self-similarity within tracks. We create a similarity matrix from these cosines and then derive cost matrices showing the costs of fitting a track at a given time with a given length. We use dynamic programming to create the cost matrices and again to perform the most economical segmentation of the cost matrices to fit a fixed and predetermined number of tracks. This number can be estimated using the same framework. Dynamic programming means solutions to a problem are described in terms of overlapping sub-solutions to achieve a significant improvement in time complexity and therefore execution time. 
 	
-	Contiguous-segmentation differs from the standard clustering problem in that the clusters arrive sequentially and are contiguous (AAABBBCCCDDD, not AAABBBCCCBBB). In the literature this may also be known as \textit{time-dependent} clustering \citep{radu}. For brevity we will use the term \textit{segmentation} from now on to describe this methodology. 
+	Contiguous-segmentation differs from the standard clustering problem in that the clusters arrive sequentially and are contiguous (\texttt{AAABBBCCCDDD}, not \texttt{AAABBBCCCBBB}). In the literature this may also be known as \textit{time-dependent} clustering or \textit{homogeneous} clustering \citep{radu}. For brevity we will use the term \textit{segmentation} from now on to describe this configuration. The intuition behind the word homogeneous is that we desire segments that have intra-segment similarity and inter-segment dissimilarity to the maximum extent possible. We essentially make the assumption that the data will be homogeneous at least on the macro scale.
 	
-	Our work mainly considers a segmentation that is globally-optimised and based upon the number and self-similarity of segments, avoiding transient points-of-change methods. Music and mixes of music have the property that they are made up of recursively repeating self-similar regions. Our method does not strictly require any training or tenuous heuristics to perform well. The distinguishing feature of our problem domain is that the number of segments is known a priori but the segmentation boundaries are not known, or ambiguous and subjective. However, computing the best solution is desirable.
+	 Music and mixes of music have the property that they are made up of recursively repeating self-similar regions. Our method does not strictly require any training or tenuous heuristics to perform well. The distinguishing feature of our problem domain is that the number of segments is known a priori but the segmentation boundaries are not known, or ambiguous and subjective. However, computing the best solution is desirable.
 	
-	The intended purpose of the algorithm is to reconstruct optimal boundaries given a fixed number of tracks known a priori. The track listing is usually published by the DJ so the number of tracks is known. This is relevant when one has recorded a show (perhaps automatically), downloaded a track list and needs to reconstruct the indices given that track list. The order of the indices reconstructed is critical so that we can align the correct track names with the reconstructed indices. 
+	The intended purpose of the algorithm is to reconstruct globally optimal boundaries given a fixed number of tracks known a priori. The self-similarity of segments is scrutinised avoiding some transient point-of-change heuristics. The track listing is usually published by the DJ which is why the number of tracks is known. The use case is when one has recorded a show (perhaps automatically), downloaded a track list and needs to reconstruct the indices given that track list. The order of the indices reconstructed is critical so that we can align the correct track names with the reconstructed indices. 
 	
-	 
+	One of the interesting features of audio is that you \textit{cannot scrub through it, and get an overview in the same way you can with video}. Audio has a reduced continuum of context when one scrubs through it, perhaps due to the lack of redundant, persistent scene-setting information or indeed a psychological reason. Even in video applications, discovery, context and scrubbing are an active area of research \cite{Matejka:2013:SIO:2470654.2466149}. Time meta-data would allow click through monetisation, and allow improved use-case scenarios (for example publishing track names to social networks, information discovery and retrieval). Capturing meta-data in audio is a time consuming and error-prone process. Tzanetakis \cite{tzanetakis1999framework} found that it took users on average $2$ hours to segment $10$ minutes of audio using standard tools. While not directly relevant we might glean from those findings that there is a strong motivation to automate this process.
 	
-	%TODO:
-	
-	We extend it to estimate the number of tracks and compare to other methods. %IN SECTION BLABLA we show that we do BLABLA
-	
-	One of the interesting features of audio is that you \textit{cannot scrub through it, and get an overview in the same way you can with video}. Audio has a reduced \textit{contextual continuum} when the user skips through it, perhaps due to the lack of redundant, persistent scene-setting information or indeed a psychological reason. Even in video applications, discovery, context and scrubbing are an active area of research \cite{Matejka:2013:SIO:2470654.2466149}. Time index meta-data would allow click through monetisation, and allow improved use-case scenarios (for example publishing track names to social networks, information discovery and retrieval). Capturing meta-data in audio is a time consuming and error-prone process. Tzanetakis \cite{tzanetakis1999framework} found that it took users on average $2$ hours to segment $10$ minutes of audio using standard tools. While not directly relevant we might glean from those findings that there is a strong motivation to automate this process.
-	
-	DJs always match the speed or beats per minute (BPM) of each adjacent track during a transition and align the major percussive elements in the time domain. This is the central concept of removing any dissonance from overlapping tracks. Tracks can overlap by any amount. DJs increase adjacent track compatibility further by selecting adjacent pairs that are harmonically compatible and by applying spectral transformations (EQ).
+	DJs always match the speed or beats per minute (BPM) of each adjacent track during a transition and align the major percussive elements in the time domain. This is the central concept of removing any cognitive dissonance from playing overlapping tracks. Tracks can overlap by any amount. DJs increase adjacent track compatibility further by selecting adjacent pairs that are harmonically compatible (aligned and congruent in the frequency domain) and by applying spectral transformations; equalizer filters (EQ).
 	
 	\subsection{Literature Review}
 	
-	Audio segmentation in the literature is colloquially implemented in the context of structural analysis. Music structure denotes the organization of a composition by its melody, harmony, timbre and rhythm. Repetitions, transformations and evolutions of music structure also contribute to its identity and it is this semantic information that structural analysis algorithms aim to extract from music. An example structure for a song might be ``Common'' $\rightarrow$ ``Verse'' $\rightarrow$ ``Chorus'' $\rightarrow$ ``Common''. Speaker diarization is another example of structural analysis 
+	Audio segmentation in the literature colloquially is often implemented in the context of structural analysis. Music structure denotes the organization of a composition by its melody, harmony, timbre and rhythm. Repetitions, transformations and evolutions of music structure also contribute to its identity and it is this semantic information that structural analysis algorithms aim to extract from music. An example structure for a song might be \texttt{ABCABA}. Speaker diarization is another example of structural analysis 
 	
-	Segmentation in the context of structural analysis has been thus far been concerned with creating a novelty function to find points-of-change using distance-based metrics, rather than trying to find a fixed number of segments. Heuristics with hard decision boundaries have been used to find the best change points, for example Tzanetakis \cite{tzanetakis1999framework} used first-order derivatives of a time series of audio features. 
+	Segmentation in the context of structural analysis has been thus far been concerned with creating a novelty function to find points-of-change using distance-based metrics, rather than trying to find a fixed number of segments in the most optimal way. Heuristics with hard decision boundaries have been used to find the best change points, for example Tzanetakis \cite{tzanetakis1999framework} used first-order derivatives of a time series of audio features. 
 	
-	The use of a similarity matrix to visualize and analyse local time dependencies (then called ``Recurrence Plots'') was first proposed by Eckmann\citep{eckmann1987recurrence}.
+	The use of a similarity matrix to visualize and analyse local time dependencies (at the time referred to as \textit{recurrence plots}) was first proposed by Eckmann\citep{eckmann1987recurrence}.
 	
-	J.\ Foote et al \citep{foote1999visualizing,foote1997similarity,foote2000automatic,foote2003media,foote2001visualizing} were the first to use self-similarity matrices to visualise and exploit time dependencies in music data. Foote evaluated a Gaussian `tapered' checker board kernel along the diagonal of a music self similarity matrix to create a 1-dimensional novelty function that had the notion of self-similarity over a fixed time horizon. The kernel was `tapered' down to zero on the top right and bottom left edges to reduce edge effects. The dynamic program in this paper allows any self-similarity time horizon up to a fixed limit (Foote's work had a fixed kernel size).
+	J.\ Foote \citep{cooper2002automatic, foote1999visualizing,foote1997similarity,foote2000automatic,foote2003media,foote2001visualizing} was the first to use local self-similarity to spot musically	significant changes in music. The distance or cosine angle between feature vectors can be used to construct a self-similarity matrix to visualise and exploit time dependencies in music data. The key assumption is that there is some kind of repetition in the audio that can be spotted. The similarity matrix contains the distance between all feature vectors and a characteristic pattern develops where the diagonal elements are maximally self-similar and regions emerge representing segments of interest in the audio.  
 	
-	Goodwin et al.\ used a dynamic program for segmentation \citep{goodwin2004dynamic}. Their intriguing supervised approach was to perform Linear Discriminant Analysis (LDA) on the features to transform them into a domain where segmentation boundaries would be emphasised and the feature weights normalized. Afterwards, Goodwin formulated the problem into one of finding the globally minimum cost path through a state graph (`cluster space trajectory') modelling local and transition costs. Goodwin already demonstrated in \citep{goodwin2003audio} that novelty peaks often exist within segments, not only on the boundary of segments and took the approach of modelling all possible sequential transitions between all possible clusters.
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.45\textwidth]{images/novelty}
+			
+			
+			\caption{Foote's novelty function for one of the radio shows in the corpus. The actual track indices are shown with dotted lines, and the predicted tracks are shown with the markers. Some of the parameters are drawn from our own method of constructing the self-similarity matrix (see Section~\ref{sec:feature-extraction})}
+			
+			\bigskip
+			
+			\includegraphics[width=0.5\textwidth]{images/checker}
+			
+				\caption{An example of Foote's Gaussian tapered checkerboard kernel, width 50.}
+				
+			
+			\label{fig:novelty}
+		\end{figure} 
 	
-	A potential drawback of the approach by Goodwin and all other approaches in scene analysis segmentation that we are aware of; is that they are somewhat local methods that focus on points-of-change rather than optimizing for the best possible results for a fixed number of segments. 
+	 Foote correlated a Gaussian tapered checkerboard kernel\citep{foote2003media} along the diagonal of a music self similarity (cosine) matrix to create a 1-dimensional novelty function that had the notion of self-similarity over a fixed time horizon. The kernel was `tapered' down to zero towards the edges by multiplication with a Gaussian kernel to reduce edge noise. The dynamic program in this paper can be thought of as having a \textit{soft} time horizon up to a fixed limit (Foote's work had a fixed kernel size). The drawback of our method however is that we find a fixed number of tracks. Naturally; the width of the kernel strongly determines the shape of the resulting novelty function. Small kernels will highlight transient changes in the audio while larger kernels will operate over a larger time horizon.  
 	
-	All contiguous segmentation algorithms that we looked at do not know a priori how many segments to find. In almost all applications, the number of known segments derives from knowledge of where boundaries are. 
+	Goodwin et al.\ used a dynamic program for segmentation \citep{goodwin2004dynamic}. Their approach was to perform linear discriminant analysis to project features into an a priori learned feature space. Afterwards, Goodwin formulated the problem into one of finding the globally minimum cost path through a state graph (`cluster space trajectory') modelling local and transition costs. Goodwin already demonstrated in \citep{goodwin2003audio} that novelty peaks often exist within segments, not only on the boundary of segments and took the approach of modelling all possible sequential transitions between all possible clusters.
+	
+	A possible drawback of the approach by Goodwin and all other approaches in scene analysis segmentation that; is that they are somewhat local methods that focus on points-of-change rather than optimizing for the best possible results for a fixed number of segments. As Goodwin did not provide any results, we can not conclude that a new distance function derived from learning a feature subspace improves segmentation accuracy.
+	
+	All contiguous segmentation algorithms that we looked at do not know a priori how many segments to find. 
+	
+	In almost all applications, the number of known segments derives from knowledge of where boundaries are. 
 	
 	 \texttt{TODO...}
 	
-% no no no totally wrong, viterbi was for scene analysis 
-%they used some dumb pocmethod for segmentation	Peeters et al \citep{peeters2002toward,peeters2004deriving} did some %interesting work combining k-means and a transformation of the segmentation %problem into Viterbi (a dynamic program).
-	
+
 	\citep{hauptmann1998story}
 	
-	% ADD HERE THAT WE ALSO USE LINDMIKS DATASET, so its the true'er' index
 	A distinguishing feature of our approach is that we evaluate how well we are doing compared to humans in respect of the same task. We compare our reconstructed indices to the ones created by a human domain expert and the algorithm itself is optimised for the domain of mixed music. 
 	
 	% Our method is not specialised for the domain of music segmentation. It would work in other domains.. ?
@@ -140,17 +152,41 @@
 	We have been supplied with several broadcasts from three popular radio shows. These are: Magic Island, by Roger Shah ($106$ shows); A State of Trance with Armin Van Buuren ($109$ shows); and Trance Around The World with Above and Beyond ($88$ shows). The show genres are a mix of Progressive Trance, Uplifting Trance and Tech-Trance. 
 	
 	There are no silent gaps after the introduction. 
-	The shows come in $44100$ samples per second, $16$ bit stereo MP3 files sampled at $192$Kbs. We resampled these to $4000$Hz $16$ bit mono (left+right channel) WAV files to allow us to process them faster. We have used the ``Sound eXchange''\footnote{\url{http://sox.sourceforge.net}}  program to do this. These shows are all $2$ hours long. The overall average track length is $5$ and a half minutes (slightly less for Magic Island (see Figure~\ref{fig:tracklengths})) and normally distributed. The average number of tracks is $23$ for ASOT and TATW, $19$ for Magic Island. There is a guest mix on the second half of each show. The guest mix DJs show off their skills with technically convoluted mixing, so it is fair to say that the boundary ``complexity'' increases during the guest mix and is at least not fixed throughout the shows.
+	The shows come in $44100$ samples per second, $16$ bit stereo MP3 files sampled at $192$Kbs. We resampled these to $4000$Hz $16$ bit mono (left+right channel) WAV files to allow us to process them faster. We have used the \textit{Sound eXchange}\footnote{\url{http://sox.sourceforge.net}}  program to do this. These shows are all $2$ hours long. The overall average track length is $5$ and a half minutes (slightly less for Magic Island (see Figure~\ref{fig:tracklengths})) and normally distributed. See Table~\ref{tab:corpus} for some descriptive statistics). There is a guest mix on the second half of each show. The guest mix DJs show off their skills with technically convoluted mixing, so it is fair to say that the boundary complexity increases during the guest mix and is at least not constant throughout the shows.
 	
-	An additional dataset of $36$ radio shows have been mixed by and annotated by Mikael Lindgren (the so called \textit{lindmik} dataset). These shows are extremely useful because the DJ is the same person that created the ground truth time indices. Also there is less noise, for example voice-overs, guest mixes, radio show sounds, introductions etc. These shows also vary significantly in length from $1$ hour to nearly $5$ hours. There are $339$ shows in total.
+	An additional dataset of $36$ radio shows have been mixed by and annotated by Mikael Lindgren (the so called \texttt{lindmik} dataset). These shows are extremely useful because the DJ is the same person that created the ground truth time indices. Also there is less noise, for example voice-overs, guest mixes, radio show sounds, introductions etc. These shows also vary significantly in length from $1$ hour to nearly $5$ hours. There are $339$ shows in total.
 	
-	We believe this corpus is the largest of its kind used in the literature going on the comparative table of segmentation corpora listed by Peiszer et al in their literature review of audio segmentation \cite{peiszer2008automatic}. More recently Badawy et al \citep{elaudio} used a corpus of $61$ hours. The corpus we are using is longer than $680$ hours in length. 
+	We believe this corpus is the largest of its kind used in the literature going on the comparative table of segmentation corpora listed by Peiszer et al in their literature review of audio segmentation \cite{peiszer2008automatic}. More recently Badawy et al \citep{elaudio} used a corpus of $61$ hours. The corpus we are using is longer than $640$ hours in length. 
 	
+\begin{table*}
+	\centering
+	\label{tab:corpus}
+	\caption{Descriptive statistics about the corpus.}
+	\bigskip
+	\scalebox{0.7}{
+		
+		
+	\begin{tabular}{llllllll}
+	\textsc{Reference}        &	 \textsc{Name}                       &  \textsc{DJ}               & \textsc{Hours} & \textsc{Mean Tracks} & \textsc{Sum Tracks} & \textsc{Shows} & \textsc{Trk.~Length (S)} \\ \toprule
+	\texttt{ASOT}    &	A State of Trance       &  Armin van Buuren & 198   & 20.6        & 2247       & 109   & 317.9           \\
+	\texttt{MAGIC}   &	Magic Island            &  Roger Shah       & 198   & 17.3        & 1839       & 106   & 388.2           \\
+	\texttt{TATW}    &	Trance Around The World &  Above \& Beyond  & 162   & 20.1        & 1771       & 88    & 329.8           \\
+	\texttt{LINDMIK} &	On Cue                  &  Mikael Lindgren  & 83    & 25          & 900        & 36    & 331.1           \\ \toprule
+	                 &	                        &                   & 641   & 20.7        & 6757       & 339   & 341.7
+	\end{tabular}
+}
+\end{table*}
+
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.45\textwidth]{images/tracklength}
+		\includegraphics[width=0.45\textwidth]{images/trackhist}
 		
-		\caption{The track length distribution for all three radio shows. The \textit{bump} of short tracks (less than $3$ minutes) is often introductions or otherwise extraneous.}
+		\caption{Track length histogram for all shows in the corpus.}
+		
+		\bigskip
+		\includegraphics[width=0.45\textwidth]{images/numtracks}
+		
+		\caption{Number of tracks in each show for each dataset. The \texttt{lindmik} dataset is highly variable.}
 		\label{fig:tracklengths}
 	\end{figure} 
 	
@@ -192,7 +228,7 @@
 	
 	The lindmik dataset which was noise-free did not require any preprocessing. 
 	
-	\subsection{Feature Extraction}
+	\subsection{Feature Extraction}\label{sec:feature-extraction}
 	
 	\subsubsection{Music}\label{feat_ex} % Fourier/xcorr
 	
@@ -752,7 +788,7 @@ We selected $6$ shows at random (two of each show type)  to create a training se
 	\centering
 	\caption{The shows randomly selected for inclusion in the \textit{GitHub training set}.}
 	\label{table:githubset}
-	
+	\scalebox{0.8}{
 	\begin{tabular}{llll}
 		\toprule
 		\#         & \textsc{Show Name}          & \textsc{Artist}  & \textsc{Date Broadcast} \\
@@ -766,6 +802,7 @@ We selected $6$ shows at random (two of each show type)  to create a training se
 		\\           
 		\bottomrule   
 	\end{tabular}
+}
 	
 \end{table*}
 
@@ -807,16 +844,17 @@ On our previous work we were effectively using a disincentive-only summation mat
 
 \begin{table*}[t]
 	\centering
-	\caption{These are the main results for all cost matrices with parameters optimized for the best mean absolute accuracy. The tuple $\langle a,b,c \rangle$ is used to indicate the results where $a$ is the median absolute error in seconds, $b$ the mean absolute error in seconds and $c$ the standard deviation in seconds (see Section~\ref{sec:results}). The experiment number is in parenthesis.}
+	\caption{These are the main results for all cost matrices with parameters optimized for the best mean absolute accuracy. The tuple $\langle a,b,c \rangle$ is used to indicate the results where $a$ is the median absolute error in seconds, $b$ the mean absolute error in seconds and $c$ the standard deviation in seconds (see Section~\ref{sec:results}). The experiment number is shown on the left.}
 	\scalebox{0.9}{
-	\begin{tabular}{llllll}
+	\begin{tabular}{lllllll}
 		\toprule
-		                       & \textsc{lindmik}                  & \textsc{magic}                   & \textsc{tatw}                    & \textsc{asot}                     & \textsc{all}                      \\ \midrule
-		\textsc{(2) contig}    & $\langle 14,~70.3,~133.4 \rangle$ & $\langle 9,~18.6,~52.6 \rangle$  & $\langle 11,~34.6,~93.7 \rangle$ & $\langle 13,~58.5,~121.1 \rangle$ & $\langle 12,~42.9,~102.8 \rangle$ \\
-		\textsc{(3) evolution} & $\langle 14,~54.8,~110.2 \rangle$ & $\langle 12,~27.1,~58.4 \rangle$ & $\langle 9,~23.5,~54.6 \rangle$  & $\langle 15,~50.2,~101.8 \rangle$ & $\langle 12,~37.5,~83.3 \rangle$  \\
-		\textsc{(4) sum}       & $\langle 8,~34.3,~81.1 \rangle$   & $\langle 8,~14,~34.3 \rangle$    & $\langle 6,~16.6,~50.26 \rangle$ & $\langle 8,~33.1,~77.3 \rangle$   & $\langle7,~23.7,~62.1 \rangle$    \\
-		\textsc{(5) symmetry}  & $\langle 10,~20.4,~49.8 \rangle$  & $\langle 9,~16.6,~43.7 \rangle$  & $\langle 8,~11.7,~16.8 \rangle$  & $\langle 11,~26.2,~60.4 \rangle$  & $\langle 9,~19,~46.3 \rangle$     \\ \midrule
-		\textsc{(1) all}       & $\langle 8,~19.5,~54.3 \rangle$   & $\langle 8,~16.9,~50.9 \rangle$  & $\langle 6,~8.9,~14.2 \rangle$   & $\langle 7,~24.3,~58.3 \rangle$   & $\langle 7,~17.6,~47.9 \rangle$   \\ \bottomrule
+		  &                        & \texttt{lindmik}                  & \texttt{magic}                   & \texttt{tatw}                    & \texttt{asot}                     & \texttt{all}                      \\ \midrule
+		2 & \textsc{contig}        & $\langle 14,~70.3,~133.4 \rangle$ & $\langle 9,~18.6,~52.6 \rangle$  & $\langle 11,~34.6,~93.7 \rangle$ & $\langle 13,~58.5,~121.1 \rangle$ & $\langle 12,~42.9,~102.8 \rangle$ \\
+		3 & \textsc{evolution}     & $\langle 14,~54.8,~110.2 \rangle$ & $\langle 12,~27.1,~58.4 \rangle$ & $\langle 9,~23.5,~54.6 \rangle$  & $\langle 15,~50.2,~101.8 \rangle$ & $\langle 12,~37.5,~83.3 \rangle$  \\
+		4 & \textsc{sum}           & $\langle 8,~34.3,~81.1 \rangle$   & $\langle 8,~14,~34.3 \rangle$    & $\langle 6,~16.6,~50.26 \rangle$ & $\langle 8,~33.1,~77.3 \rangle$   & $\langle7,~23.7,~62.1 \rangle$    \\
+		5 & \textsc{symmetry}      & $\langle 10,~20.4,~49.8 \rangle$  & $\langle 9,~16.6,~43.7 \rangle$  & $\langle 8,~11.7,~16.8 \rangle$  & $\langle 11,~26.2,~60.4 \rangle$  & $\langle 9,~19,~46.3 \rangle$     \\ \midrule
+		1 & \textsc{all}           & $\langle 8,~19.5,~54.3 \rangle$   & $\langle 8,~16.9,~50.9 \rangle$  & $\langle 6,~8.9,~14.2 \rangle$   & $\langle 7,~24.3,~58.3 \rangle$   & $\langle 7,~17.6,~47.9 \rangle$   \\ \bottomrule
+		  &
 	\end{tabular}
 }
 	\label{tab:mean-results}
@@ -826,14 +864,14 @@ On our previous work we were effectively using a disincentive-only summation mat
 	\centering
 	\caption{These are the main results for all cost matrices with parameters optimized for the best median absolute accuracy.}
 	\scalebox{0.9}{
-	\begin{tabular}{llllll}
+	\begin{tabular}{lllllll}
 		\toprule
-		                       & \textsc{lindmik}                  & \textsc{magic}                   & \textsc{tatw}                    & \textsc{asot}                     & \textsc{all shows}                \\ \midrule
-		\textsc{(7) contig}    & $\langle 15,~96.3,~173.7 \rangle$ & $\langle 9,~28.4,~78.8 \rangle$  & $\langle 8,~51.5,~124.6 \rangle$ & $\langle 16,~78.1,~146.7 \rangle$ & $\langle 10,~60,~131.1 \rangle$   \\
-		\textsc{(8) evolution} & $\langle 20,~96.6,~149.8 \rangle$ & $\langle 13,~33.9,~69.8 \rangle$ & $\langle 8,~30.9,~76 \rangle$    & $\langle 18,~16.6,~114.8 \rangle$ & $\langle 12,~50.3,~104.5 \rangle$ \\
-		\textsc{(9) sum}       & $\langle 8,~39.9,~95 \rangle$     & $\langle 8,~15.8,~42.5 \rangle$  & $\langle 6,~18.6,~59.7 \rangle$  & $\langle 7,~38.2,~90.2 \rangle$   & $\langle 7,~27.2,~73.0 \rangle$   \\
-		\textsc{(10) symmetry} & $\langle 12,~84.6,~161.8 \rangle$ & $\langle 9,~19.6,~51.5 \rangle$  & $\langle 9,~52.5,~127.9 \rangle$ & $\langle 18,~92.1,~171.2 \rangle$ & $\langle 11,~61,~135.5 \rangle$   \\ \midrule
-		\textsc{(6) all}       & $\langle 6,~13.1,~28.7 \rangle$   & $\langle 9,~17.6,~44.7 \rangle$  & $\langle 5,~8.9,~15 \rangle$     & $\langle 6,~25.7,~62.4 \rangle$   & $\langle 6,~17.4,~44.8 \rangle$   \\ \bottomrule
+		  &                        & \texttt{lindmik}                  & \texttt{magic}                   & \texttt{tatw}                    & \texttt{asot}                     & \texttt{all shows}                \\ \midrule
+		7 & \textsc{contig}        & $\langle 15,~96.3,~173.7 \rangle$ & $\langle 9,~28.4,~78.8 \rangle$  & $\langle 8,~51.5,~124.6 \rangle$ & $\langle 16,~78.1,~146.7 \rangle$ & $\langle 10,~60,~131.1 \rangle$   \\
+		8 & \textsc{evolution}     & $\langle 20,~96.6,~149.8 \rangle$ & $\langle 13,~33.9,~69.8 \rangle$ & $\langle 8,~30.9,~76 \rangle$    & $\langle 18,~16.6,~114.8 \rangle$ & $\langle 12,~50.3,~104.5 \rangle$ \\
+		9 & \textsc{sum}           & $\langle 8,~39.9,~95 \rangle$     & $\langle 8,~15.8,~42.5 \rangle$  & $\langle 6,~18.6,~59.7 \rangle$  & $\langle 7,~38.2,~90.2 \rangle$   & $\langle 7,~27.2,~73.0 \rangle$   \\
+		10 & \textsc{symmetry}      & $\langle 12,~84.6,~161.8 \rangle$ & $\langle 9,~19.6,~51.5 \rangle$  & $\langle 9,~52.5,~127.9 \rangle$ & $\langle 18,~92.1,~171.2 \rangle$ & $\langle 11,~61,~135.5 \rangle$   \\ \midrule
+		6 & \textsc{all}           & $\langle 6,~13.1,~28.7 \rangle$   & $\langle 9,~17.6,~44.7 \rangle$  & $\langle 5,~8.9,~15 \rangle$     & $\langle 6,~25.7,~62.4 \rangle$   & $\langle 6,~17.4,~44.8 \rangle$   \\ \bottomrule
 	\end{tabular}
 }
 \label{tab:median-results}
@@ -947,34 +985,34 @@ We would like to write an online version of the algorithm \texttt{TODO: more dis
 			& \begin{sideways} \textsc{Interval} \end{sideways}	& \begin{sideways} \textsc{Notation} \end{sideways} & \begin{sideways}\textsc{Mean All}\end{sideways} & \begin{sideways}\textsc{Mean Contig}\end{sideways} & \begin{sideways}\textsc{Mean Evolution}\end{sideways} & \begin{sideways}\textsc{Mean Sum}\end{sideways} & \begin{sideways}\textsc{Mean Symmetry}\end{sideways} & \begin{sideways}\textsc{Median All}\end{sideways} & \begin{sideways}\textsc{Median Contig}\end{sideways} & \begin{sideways}\textsc{Median Evolution}\end{sideways} & \begin{sideways}\textsc{Median Sum}\end{sideways} & \begin{sideways}\textsc{Median Symmetry}\end{sideways} & \begin{sideways}\textsc{Track Estimation}\end{sideways} \\
 		\toprule
 		\textsc{Experiment Number}          &                   &            & 1     & 2    & 3    & 4    & 5    & 6    & 7    & 8    & 9    & 10   & 11   &  \\ \toprule
-		\textsc{Seconds Per Tile (S) }      & $3,\ldots,50$     & $M$        & 3     & 3    & 6    & 5    & 8    & 3    & 7    & 3    & 5    & 9    & 38   &  \\
-		\textsc{Min. Track Length (S) }     & $80,\ldots,180$   & $w$        & 167   & 146  & 108  & 165  & 140  & 88   & 98   & 173  & 94   & 85   & 155  &  \\
-		\textsc{Max. Track Length (S) }     & $600,\ldots,900$  & $W$        & 691   & 879  & 897  & 894  & 811  & 631  & 801  & 889  & 642  & 635  & 619  &  \\
-		\textsc{Bandwidth (Hz)      }       & $1,\ldots,15$     & $b$        & 1     & 2    & 2    & 2    & 3    & 2    & 4    & 4    & 2    & 5    & 3    &  \\
-		\textsc{Low Pass Filter (Hz) }      & $800,\ldots,1950$ & $l$        & 1039~ & 1912 & 1893 & 1387 & 874  & 888  & 1065 & 1206 & 1880 & 1005 & 1019 &  \\
-		\textsc{High Pass Filter (Hz)}      & $50,\ldots,500$   & $h$        & 62    & 73   & 81   & 69   & 54   & 55   & 54   & 70   & 75   & 51   & 201  &  \\
-		\textsc{Solution Shift (S) }        & $-3,\ldots,5$     & $ \varXi $ & -1    & 5    & -3   & -2   & 2    & -4   & -2   & -2   & -2   & -1   & 5    &  \\
-		\textsc{Cosine Normalization }      & $[0.4,1.4]$       & $\hat c$   & 1.17  & 0.77 & 0.92 & 1.19 & 1.36 & 0.88 & 0.71 & 0.73 & 1.15 & 1.14 & 0.98 &  \\ \midrule
-		\textsc{Sum Contribution  }         & $[0,1]$           &            & 0.99  &      &      & 0.81 &      & 0.77 &      &      & 0.63 &      & 0.55 &  \\
-		\textsc{Sum Normalization }         & $[0,1]$           &            & 1.36  &      &      & 0.73 &      & 1.11 &      &      & 0.47 &      & 0.71 &  \\
-		\textsc{Sum Incentive      }        & $[0,1]$           &            & 0.68  &      &      & 0.52 &      & 0.23 &      &      & 0.30 &      & 0.05 &  \\ \midrule
-		\textsc{Gaussian Contribution  }    & $[0,1]$           &            & 0.52  & 0.08 & 0.69 & 0.17 & 0.29 & 0.63 & 0.11 & 0.51 & 0.08 & 0.02 & 0.15 &  \\
-		\textsc{Gaussian Incentive}         & $[0,1]$           &            & 0.85  & 0.82 & 0.43 & 0.47 & 0.56 & 0.10 & 0.14 & 0.40 & 0.85 & 0.54 & 0.53 &  \\
-		\textsc{Gaussian Width  }           & $1,\ldots,4$      & $\varpi$   & 1     & 1    & 1    & 4    & 1    & 1    & 2    & 1    & 1    & 2    & 4    &  \\ \midrule
-		\textsc{Evolution Contribution}     & $[0,1]$           &            & 0.05  &      & 0.63 &      &      & 0.49 &      & 0.35 &      &      & 0.48 &  \\
-		\textsc{Evolution Incentive}        & $[0,1]$           &            & 0.53  &      & 0.60 &      &      & 0.15 &      & 0.66 &      &      & 0.71 &  \\
-		\textsc{Evolution Normalization}    & $[0.1,3]$         &            & 1.30  &      & 0.08 &      &      & 1.10 &      & 0.06 &      &      & 1.79 &  \\
-		\textsc{Evolution Diff. Order}      & $1,\ldots,50$     &            & 45    &      & 1    &      &      & 7    &      & 40   &      &      & 16   &  \\ \midrule
-		\textsc{Contig Past Contribution}   & $[0,1]$           &            & 0.50  & 0.10 &      &      &      & 0.62 & 0.69 &      &      &      & 0.27 &  \\
-		\textsc{Contig Past Diff. Order}    & $1,\ldots,50$     &            & 13    & 44   &      &      &      & 41   & 46   &      &      &      & 30   &  \\
-		\textsc{Contig Past Incentive}      & $[0,1]$           &            & 0.50  & 0.24 &      &      &      & 0.95 & 0.53 &      &      &      & 0.98 &  \\
-		\textsc{Contig Normalization}       & $[0.1,3]$         &            & 0.74  & 0.26 &      &      &      & 1.60 & 0.33 &      &      &      & 1.91 &  \\
-		\textsc{Contig Future Contribution} & $[0,1]$           &            & 0.59  & 0.81 &      &      &      & 0.54 & 0.27 &      &      &      & 0.95 &  \\
-		\textsc{Contig Future Diff. Order}  & $1,\ldots,50$     &            & 35    & 3    &      &      &      & 30   & 21   &      &      &      & 45   &  \\
-		\textsc{Contig Future Incentive}    & $[0,1]$           &            & 0.08  & 0.24 &      &      &      & 0.60 & 0.89 &      &      &      & 0.96 &  \\ \midrule
-		\textsc{Symmetry Contribution}      & $[0,1]$           &            & 0.18  &      &      &      & 0.66 & 0.11 &      &      &      & 0.98 & 0.19 &  \\
-		\textsc{Symmetry Incentive}         & $[0,1]$           &            & 0.16  &      &      &      & 0.78 & 0.24 &      &      &      & 0.45 & 0.26 &  \\
-		\textsc{Symmetry Normalization}     & $[0.1,3]$         &            & 0.73  &      &      &      & 0.77 & 0.72 &      &      &      & 0.55 & 1.09 &  \\ \bottomrule
+		\texttt{Seconds Per Tile (S) }      & $3,\ldots,50$     & $M$        & 3     & 3    & 6    & 5    & 8    & 3    & 7    & 3    & 5    & 9    & 38   &  \\
+		\texttt{Min. Track Length (S) }     & $80,\ldots,180$   & $w$        & 167   & 146  & 108  & 165  & 140  & 88   & 98   & 173  & 94   & 85   & 155  &  \\
+		\texttt{Max. Track Length (S) }     & $600,\ldots,900$  & $W$        & 691   & 879  & 897  & 894  & 811  & 631  & 801  & 889  & 642  & 635  & 619  &  \\
+		\texttt{Bandwidth (Hz)      }       & $1,\ldots,15$     & $b$        & 1     & 2    & 2    & 2    & 3    & 2    & 4    & 4    & 2    & 5    & 3    &  \\
+		\texttt{Low Pass Filter (Hz) }      & $800,\ldots,1950$ & $l$        & 1039~ & 1912 & 1893 & 1387 & 874  & 888  & 1065 & 1206 & 1880 & 1005 & 1019 &  \\
+		\texttt{High Pass Filter (Hz)}      & $50,\ldots,500$   & $h$        & 62    & 73   & 81   & 69   & 54   & 55   & 54   & 70   & 75   & 51   & 201  &  \\
+		\texttt{Solution Shift (S) }        & $-3,\ldots,5$     & $ \varXi $ & -1    & 5    & -3   & -2   & 2    & -4   & -2   & -2   & -2   & -1   & 5    &  \\
+		\texttt{Cosine Normalization }      & $[0.4,1.4]$       & $\hat c$   & 1.17  & 0.77 & 0.92 & 1.19 & 1.36 & 0.88 & 0.71 & 0.73 & 1.15 & 1.14 & 0.98 &  \\ \midrule
+		\texttt{Sum Contribution  }         & $[0,1]$           &            & 0.99  &      &      & 0.81 &      & 0.77 &      &      & 0.63 &      & 0.55 &  \\
+		\texttt{Sum Normalization }         & $[0,1]$           &            & 1.36  &      &      & 0.73 &      & 1.11 &      &      & 0.47 &      & 0.71 &  \\
+		\texttt{Sum Incentive      }        & $[0,1]$           &            & 0.68  &      &      & 0.52 &      & 0.23 &      &      & 0.30 &      & 0.05 &  \\ \midrule
+		\texttt{Gaussian Contribution  }    & $[0,1]$           &            & 0.52  & 0.08 & 0.69 & 0.17 & 0.29 & 0.63 & 0.11 & 0.51 & 0.08 & 0.02 & 0.15 &  \\
+		\texttt{Gaussian Incentive}         & $[0,1]$           &            & 0.85  & 0.82 & 0.43 & 0.47 & 0.56 & 0.10 & 0.14 & 0.40 & 0.85 & 0.54 & 0.53 &  \\
+		\texttt{Gaussian Width  }           & $1,\ldots,4$      & $\varpi$   & 1     & 1    & 1    & 4    & 1    & 1    & 2    & 1    & 1    & 2    & 4    &  \\ \midrule
+		\texttt{Evolution Contribution}     & $[0,1]$           &            & 0.05  &      & 0.63 &      &      & 0.49 &      & 0.35 &      &      & 0.48 &  \\
+		\texttt{Evolution Incentive}        & $[0,1]$           &            & 0.53  &      & 0.60 &      &      & 0.15 &      & 0.66 &      &      & 0.71 &  \\
+		\texttt{Evolution Normalization}    & $[0.1,3]$         &            & 1.30  &      & 0.08 &      &      & 1.10 &      & 0.06 &      &      & 1.79 &  \\
+		\texttt{Evolution Diff. Order}      & $1,\ldots,50$     &            & 45    &      & 1    &      &      & 7    &      & 40   &      &      & 16   &  \\ \midrule
+		\texttt{Contig Past Contribution}   & $[0,1]$           &            & 0.50  & 0.10 &      &      &      & 0.62 & 0.69 &      &      &      & 0.27 &  \\
+		\texttt{Contig Past Diff. Order}    & $1,\ldots,50$     &            & 13    & 44   &      &      &      & 41   & 46   &      &      &      & 30   &  \\
+		\texttt{Contig Past Incentive}      & $[0,1]$           &            & 0.50  & 0.24 &      &      &      & 0.95 & 0.53 &      &      &      & 0.98 &  \\
+		\texttt{Contig Normalization}       & $[0.1,3]$         &            & 0.74  & 0.26 &      &      &      & 1.60 & 0.33 &      &      &      & 1.91 &  \\
+		\texttt{Contig Future Contribution} & $[0,1]$           &            & 0.59  & 0.81 &      &      &      & 0.54 & 0.27 &      &      &      & 0.95 &  \\
+		\texttt{Contig Future Diff. Order}  & $1,\ldots,50$     &            & 35    & 3    &      &      &      & 30   & 21   &      &      &      & 45   &  \\
+		\texttt{Contig Future Incentive}    & $[0,1]$           &            & 0.08  & 0.24 &      &      &      & 0.60 & 0.89 &      &      &      & 0.96 &  \\ \midrule
+		\texttt{Symmetry Contribution}      & $[0,1]$           &            & 0.18  &      &      &      & 0.66 & 0.11 &      &      &      & 0.98 & 0.19 &  \\
+		\texttt{Symmetry Incentive}         & $[0,1]$           &            & 0.16  &      &      &      & 0.78 & 0.24 &      &      &      & 0.45 & 0.26 &  \\
+		\texttt{Symmetry Normalization}     & $[0.1,3]$         &            & 0.73  &      &      &      & 0.77 & 0.72 &      &      &      & 0.55 & 1.09 &  \\ \bottomrule
 		                                    &                   &
 	\end{tabular}
 }

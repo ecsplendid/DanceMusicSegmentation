@@ -1,7 +1,7 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: IJEIS2014.aux
 The style file: ieeetr.bst
 Database file #1: bib/references.bib
-I was expecting a `,' or a `}'---line 45 of file bib/references.bib
+I was expecting a `,' or a `}'---line 68 of file bib/references.bib
  :  
  :  booktitle={Acoustics 2013 New Delhi Conference},
 (Error may have been on previous line)
@@ -55,7 +55,6 @@ Repeated entry---line 258 of file bib/refs.bib
  : @article{peiszer2008automatic
  :                              ,
 I'm skipping whatever remains of this entry
-Warning--I didn't find a database entry for "hauptmann1998story"
 Warning--empty journal in radu
 Warning--empty year in radu
 Warning--empty journal in elaudio

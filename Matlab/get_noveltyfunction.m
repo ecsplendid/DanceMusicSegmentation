@@ -42,11 +42,13 @@ novelty = nan(T,1);
 
 C(isnan(C)) = 0;
 
+%%
 k = kron( [1 -1; -1 1], ones(kernel_size/2,kernel_size/2) );
 g = fspecial('gaussian', [kernel_size kernel_size], kernel_size);
 g = (g-min(min(g)))./(max(max(g))-min(min(g)));
 k = k.*g;
-
+k(k<0)=0;
+%%
 % we need to make a bigger C, zero pad it
 % so that we can slide the kernel from start to end
 C2 = zeros( size(C)+kernel_size );

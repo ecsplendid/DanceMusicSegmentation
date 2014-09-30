@@ -18,6 +18,10 @@ G.~Tzanetakis and F.~Cook, ``A framework for audio analysis based on
 J.-P. Eckmann, S.~O. Kamphorst, and D.~Ruelle, ``Recurrence plots of dynamical
   systems,'' {\em EPL (Europhysics Letters)}, vol.~4, no.~9, p.~973, 1987.
 
+\bibitem{cooper2002automatic}
+M.~L. Cooper and J.~Foote, ``Automatic music summarization via similarity
+  analysis.,'' in {\em ISMIR}, 2002.
+
 \bibitem{foote1999visualizing}
 J.~Foote, ``Visualizing music and audio using self-similarity,'' in {\em
   Proceedings of the seventh ACM international conference on Multimedia (Part
@@ -54,6 +58,12 @@ M.~M. Goodwin and J.~Laroche, ``Audio segmentation by feature-space clustering
   using linear discriminant analysis and dynamic programming,'' in {\em
   Applications of Signal Processing to Audio and Acoustics, 2003 IEEE Workshop
   on.}, pp.~131--134, IEEE, 2003.
+
+\bibitem{hauptmann1998story}
+A.~G. Hauptmann and M.~J. Witbrock, ``Story segmentation and detection of
+  commercials in broadcast news video,'' in {\em Research and Technology
+  Advances in Digital Libraries, 1998. ADL 98. Proceedings. IEEE International
+  Forum on}, pp.~168--179, IEEE, 1998.
 
 \bibitem{peiszer2008automatic}
 E.~Peiszer, T.~Lidy, and A.~Rauber, ``Automatic audio segmentation: Segment
