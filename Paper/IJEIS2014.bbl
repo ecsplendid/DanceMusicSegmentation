@@ -59,20 +59,29 @@ M.~M. Goodwin and J.~Laroche, ``Audio segmentation by feature-space clustering
   Applications of Signal Processing to Audio and Acoustics, 2003 IEEE Workshop
   on.}, pp.~131--134, IEEE, 2003.
 
-\bibitem{hauptmann1998story}
-A.~G. Hauptmann and M.~J. Witbrock, ``Story segmentation and detection of
-  commercials in broadcast news video,'' in {\em Research and Technology
-  Advances in Digital Libraries, 1998. ADL 98. Proceedings. IEEE International
-  Forum on}, pp.~168--179, IEEE, 1998.
+\bibitem{elaudio}
+D.~El~Badawy, P.~Marmaroli, and H.~Lissek, ``Audio novelty-based segmentation
+  of music concerts,''
+
+\bibitem{levy2008structural}
+M.~Levy and M.~Sandler, ``Structural segmentation of musical audio by
+  constrained clustering,'' {\em Audio, Speech, and Language Processing, IEEE
+  Transactions on}, vol.~16, no.~2, pp.~318--326, 2008.
+
+\bibitem{levy2006new}
+M.~Levy and M.~Sandler, ``New methods in structural segmentation of musical
+  audio,'' in {\em Proceedings of the European Signal Processing Conference
+  (EUSIPCO), Florence, Italy}, 2006.
+
+\bibitem{levy2006extraction}
+M.~Levy, M.~B. Sandler, and M.~A. Casey, ``Extraction of high-level musical
+  structure from audio data and its application to thumbnail generation.,'' in
+  {\em ICASSP (5)}, pp.~13--16, Citeseer, 2006.
 
 \bibitem{peiszer2008automatic}
 E.~Peiszer, T.~Lidy, and A.~Rauber, ``Automatic audio segmentation: Segment
   boundary and structure detection in popular music,'' {\em Proc. of LSAS},
   2008.
-
-\bibitem{elaudio}
-D.~El~Badawy, P.~Marmaroli, and H.~Lissek, ``Audio novelty-based segmentation
-  of music concerts,''
 
 \bibitem{nyquist1928certain}
 H.~Nyquist, ``Certain topics in telegraph transmission theory,'' {\em American

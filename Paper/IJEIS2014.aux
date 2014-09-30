@@ -27,28 +27,32 @@
 \citation{foote2003media}
 \citation{goodwin2004dynamic}
 \citation{goodwin2003audio}
+\citation{radu}
+\citation{elaudio}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Foote's novelty function for one of the radio shows in the corpus. The actual track indices are shown with dotted lines, and the predicted tracks are shown with the markers. Some of the parameters are drawn from our own method of constructing the self-similarity matrix (see Section\nobreakspace  {}\ref  {sec:feature-extraction})}}{3}{figure.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces An example of Foote's Gaussian tapered checkerboard kernel, width 50.}}{3}{figure.2}}
 \newlabel{fig:novelty}{{2}{3}{An example of Foote's Gaussian tapered checkerboard kernel, width 50}{figure.2}{}}
-\citation{hauptmann1998story}
+\citation{levy2008structural}
+\citation{levy2006new,levy2006extraction}
+\citation{foote2003media}
 \citation{peiszer2008automatic}
 \citation{elaudio}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Corpus}{4}{section.2}}
 \newlabel{dataset}{{2}{4}{Corpus}{section.2}{}}
 \newlabel{tab:corpus}{{2}{5}{Corpus}{section.2}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Descriptive statistics about the corpus.}}{5}{table.1}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Human Accuracy}{5}{section.3}}
-\newlabel{human_acc}{{3}{5}{Human Accuracy}{section.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Track length histogram for all shows in the corpus.}}{6}{figure.3}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Number of tracks in each show for each dataset. The \texttt  {lindmik} dataset is highly variable.}}{6}{figure.4}}
 \newlabel{fig:tracklengths}{{4}{6}{Number of tracks in each show for each dataset. The \texttt {lindmik} dataset is highly variable}{figure.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Illustration of the `human disagreement' random variable (zoomed in at the bottom), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($\approx 14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section\nobreakspace  {}\ref  {dataset}. }}{6}{figure.5}}
-\newlabel{fig:human_muchconfuse}{{5}{6}{Illustration of the `human disagreement' random variable (zoomed in at the bottom), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($\approx 14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section~\ref {dataset}}{figure.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Human Accuracy}{6}{section.3}}
+\newlabel{human_acc}{{3}{6}{Human Accuracy}{section.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Data Handling}{6}{section.4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Preprocessing}{6}{subsection.4.1}}
 \newlabel{proprocessing}{{4.1}{6}{Preprocessing}{subsection.4.1}{}}
 \citation{nyquist1928certain}
 \citation{frigo2004fftw}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Illustration of the `human disagreement' random variable (zoomed in at the bottom), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($\approx 14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section\nobreakspace  {}\ref  {dataset}. }}{7}{figure.5}}
+\newlabel{fig:human_muchconfuse}{{5}{7}{Illustration of the `human disagreement' random variable (zoomed in at the bottom), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($\approx 14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section~\ref {dataset}}{figure.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Feature Extraction}{7}{subsection.4.2}}
 \newlabel{sec:feature-extraction}{{4.2}{7}{Feature Extraction}{subsection.4.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Music}{7}{subsubsection.4.2.1}}
@@ -56,61 +60,67 @@
 \citation{tzanetakis1999multifeature}
 \citation{tzanetakis1999framework}
 \citation{foote1999visualizing}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Self Similarity}{8}{subsubsection.4.2.2}}
-\newlabel{costmatrix_sec}{{4.2.2}{8}{Self Similarity}{subsubsection.4.2.2}{}}
 \citation{scarfe2013long}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Illustration of the effect of normalization parameter $\mathaccentV {hat}05Ec=0.7$ on the values in $S$ on radio show Magic Island $110$. The small raised section on the left correspond to the tracks.}}{9}{figure.6}}
 \newlabel{fig:cosine_norm}{{6}{9}{Illustration of the effect of normalization parameter $\hat c=0.7$ on the values in $S$ on radio show Magic Island $110$. The small raised section on the left correspond to the tracks}{figure.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Self Similarity}{9}{subsubsection.4.2.2}}
+\newlabel{costmatrix_sec}{{4.2.2}{9}{Self Similarity}{subsubsection.4.2.2}{}}
 \@writefile{toc}{\contentsline {paragraph}{Summation}{9}{section*.2}}
 \@writefile{toc}{\contentsline {paragraph}{Symmetry}{10}{section*.3}}
 \@writefile{toc}{\contentsline {paragraph}{Static Contiguity}{10}{section*.4}}
-\@writefile{toc}{\contentsline {paragraph}{Evolutionary Contiguity}{10}{section*.5}}
+\@writefile{toc}{\contentsline {paragraph}{Evolutionary Contiguity}{11}{section*.5}}
 \@writefile{toc}{\contentsline {paragraph}{Gaussian}{11}{section*.6}}
 \@writefile{toc}{\contentsline {paragraph}{Normalization}{11}{section*.7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =1$ and therefore containing disincentives. }}{11}{figure.8}}
-\newlabel{fig:cmsumib1}{{8}{11}{Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =1$ and therefore containing disincentives}{figure.8}{}}
 \@writefile{toc}{\contentsline {paragraph}{Mixing Cost Functions}{11}{section*.8}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Computing Best Segmentation}{11}{section.5}}
-\newlabel{best_cost}{{5}{11}{Computing Best Segmentation}{section.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =1$ and therefore containing disincentives. }}{12}{figure.8}}
+\newlabel{fig:cmsumib1}{{8}{12}{Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =1$ and therefore containing disincentives}{figure.8}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =0$ and therefore containing incentives. }}{12}{figure.9}}
 \newlabel{fig:cmsumib1}{{9}{12}{Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega =0$ and therefore containing incentives}{figure.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Computing Best Segmentation}{12}{section.5}}
+\newlabel{best_cost}{{5}{12}{Computing Best Segmentation}{section.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Confidence Intervals}{13}{section.6}}
 \newlabel{sec:confidence-intervals}{{6}{13}{Confidence Intervals}{section.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Posterior Marginal of Song Boundary}{13}{subsection.6.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Posterior Marginal of Song Position}{13}{subsection.6.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Track Index Confidence}{13}{subsection.6.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Posterior Marginal of Song Position}{14}{subsection.6.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Track Index Confidence}{14}{subsection.6.3}}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces A visualization of $log(P(j,s))$ ($\eta =10$) for one of the shows in the test set using... TODO.}}{14}{figure.10}}
 \newlabel{fig:posterior3}{{10}{14}{A visualization of $log(P(j,s))$ ($\eta =10$) for one of the shows in the test set using... TODO}{figure.10}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Track Time Confidence}{14}{subsection.6.4}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Experiments}{14}{section.7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Training Set}{14}{subsection.7.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Tracks Known A Priori}{14}{subsection.7.2}}
-\newlabel{sec:apriori}{{7.2}{14}{Tracks Known A Priori}{subsection.7.2}{}}
-\citation{scarfe2013long}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces The shows randomly selected for inclusion in the \textit  {GitHub training set}.}}{15}{table.2}}
-\newlabel{table:githubset}{{2}{15}{The shows randomly selected for inclusion in the \textit {GitHub training set}}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Track Time Confidence}{15}{subsection.6.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Experiments}{15}{section.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Training Set}{15}{subsection.7.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Tracks Known A Priori}{15}{subsection.7.2}}
+\newlabel{sec:apriori}{{7.2}{15}{Tracks Known A Priori}{subsection.7.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.1}Evaluation}{15}{subsubsection.7.2.1}}
 \newlabel{eval_crit}{{7.2.1}{15}{Evaluation}{subsubsection.7.2.1}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.2}Finding The Best Parameters}{15}{subsubsection.7.2.2}}
 \newlabel{sec:findingbestcostmatrix}{{7.2.2}{15}{Finding The Best Parameters}{subsubsection.7.2.2}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.3}Results}{15}{subsubsection.7.2.3}}
-\newlabel{sec:results}{{7.2.3}{15}{Results}{subsubsection.7.2.3}{}}
+\citation{scarfe2013long}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces The shows randomly selected for inclusion in the \textit  {GitHub training set}.}}{16}{table.2}}
+\newlabel{table:githubset}{{2}{16}{The shows randomly selected for inclusion in the \textit {GitHub training set}}{table.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.3}Results}{16}{subsubsection.7.2.3}}
+\newlabel{sec:results}{{7.2.3}{16}{Results}{subsubsection.7.2.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Histogram of the residuals (errors) between reconstructed and human captured time indices. Apart from obvious noise there appears to be a tendency for the algorithm to place an index slightly earlier. Contig-static cost matrix apparently contained parameters selected through optimization that shifted it to remove some of this effect. }}{16}{figure.11}}
 \newlabel{fig:shifthistogram}{{11}{16}{Histogram of the residuals (errors) between reconstructed and human captured time indices. Apart from obvious noise there appears to be a tendency for the algorithm to place an index slightly earlier. Contig-static cost matrix apparently contained parameters selected through optimization that shifted it to remove some of this effect}{figure.11}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets.}}{16}{figure.13}}
-\newlabel{fig:fscores_best}{{13}{16}{Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets}{figure.13}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Estimating Segment Count}{16}{section.8}}
-\newlabel{sec:trackcount}{{8}{16}{Estimating Segment Count}{section.8}{}}
 \citation{foote2003media}
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces These are the main results for all cost matrices with parameters optimized for the best mean absolute accuracy. The tuple $\langle a,b,c \rangle $ is used to indicate the results where $a$ is the median absolute error in seconds, $b$ the mean absolute error in seconds and $c$ the standard deviation in seconds (see Section\nobreakspace  {}\ref  {sec:results}). The experiment number is shown on the left.}}{17}{table.3}}
 \newlabel{tab:mean-results}{{3}{17}{These are the main results for all cost matrices with parameters optimized for the best mean absolute accuracy. The tuple $\langle a,b,c \rangle $ is used to indicate the results where $a$ is the median absolute error in seconds, $b$ the mean absolute error in seconds and $c$ the standard deviation in seconds (see Section~\ref {sec:results}). The experiment number is shown on the left}{table.3}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces These are the main results for all cost matrices with parameters optimized for the best median absolute accuracy.}}{17}{table.4}}
 \newlabel{tab:median-results}{{4}{17}{These are the main results for all cost matrices with parameters optimized for the best median absolute accuracy}{table.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Comparison of Methods}{17}{section.9}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Estimating Segment Count}{17}{section.8}}
+\newlabel{sec:trackcount}{{8}{17}{Estimating Segment Count}{section.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets.}}{18}{figure.13}}
+\newlabel{fig:fscores_best}{{13}{18}{Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets}{figure.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Comparison of Methods}{18}{section.9}}
 \@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Number of tracks estimated correctly a show in the GitHub training set after a genetics algorithm was executed to select a robust set of algorithm parameters.}}{18}{figure.14}}
 \newlabel{fig:github_trackestimation}{{14}{18}{Number of tracks estimated correctly a show in the GitHub training set after a genetics algorithm was executed to select a robust set of algorithm parameters}{figure.14}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Track estimation error on our method as described in Section \ref  {sec:trackcount}, Foote's novelty function and Naive guessing. }}{18}{figure.15}}
-\newlabel{fig:track_shift}{{15}{18}{Track estimation error on our method as described in Section \ref {sec:trackcount}, Foote's novelty function and Naive guessing}{figure.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Track estimation error on our method as described in Section \ref  {sec:trackcount}, Foote's novelty function and Naive guessing. }}{19}{figure.15}}
+\newlabel{fig:track_shift}{{15}{19}{Track estimation error on our method as described in Section \ref {sec:trackcount}, Foote's novelty function and Naive guessing}{figure.15}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{19}{section.10}}
+\newlabel{conclusions}{{10}{19}{Conclusion}{section.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {11}Acknowledgements}{19}{section.11}}
+\newlabel{sec:acknowledgements}{{11}{19}{Acknowledgements}{section.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {12}Materials}{19}{section.12}}
+\newlabel{sec:materials}{{12}{19}{Materials}{section.12}{}}
 \bibstyle{ieeetr}
 \bibdata{bib/references,bib/refs}
 \bibcite{radu}{{1}{}{{}}{{}}}
@@ -121,27 +131,23 @@
 \bibcite{foote1999visualizing}{{6}{}{{}}{{}}}
 \bibcite{foote1997similarity}{{7}{}{{}}{{}}}
 \bibcite{foote2000automatic}{{8}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{19}{section.10}}
-\newlabel{conclusions}{{10}{19}{Conclusion}{section.10}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {11}Acknowledgements}{19}{section.11}}
-\newlabel{sec:acknowledgements}{{11}{19}{Acknowledgements}{section.11}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {12}Materials}{19}{section.12}}
-\newlabel{sec:materials}{{12}{19}{Materials}{section.12}{}}
 \bibcite{foote2003media}{{9}{}{{}}{{}}}
 \bibcite{foote2001visualizing}{{10}{}{{}}{{}}}
 \bibcite{goodwin2004dynamic}{{11}{}{{}}{{}}}
 \bibcite{goodwin2003audio}{{12}{}{{}}{{}}}
-\bibcite{hauptmann1998story}{{13}{}{{}}{{}}}
-\bibcite{peiszer2008automatic}{{14}{}{{}}{{}}}
-\bibcite{elaudio}{{15}{}{{}}{{}}}
-\bibcite{nyquist1928certain}{{16}{}{{}}{{}}}
-\bibcite{frigo2004fftw}{{17}{}{{}}{{}}}
-\bibcite{tzanetakis1999multifeature}{{18}{}{{}}{{}}}
-\bibcite{scarfe2013long}{{19}{}{{}}{{}}}
+\bibcite{elaudio}{{13}{}{{}}{{}}}
+\bibcite{levy2008structural}{{14}{}{{}}{{}}}
+\bibcite{levy2006new}{{15}{}{{}}{{}}}
+\bibcite{levy2006extraction}{{16}{}{{}}{{}}}
+\bibcite{peiszer2008automatic}{{17}{}{{}}{{}}}
+\bibcite{nyquist1928certain}{{18}{}{{}}{{}}}
+\bibcite{frigo2004fftw}{{19}{}{{}}{{}}}
+\bibcite{tzanetakis1999multifeature}{{20}{}{{}}{{}}}
+\bibcite{scarfe2013long}{{21}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces An illustration of the similarity matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black dotted lines. There are examples here of evolutionary repetition ($t=500,\ldots  ,550$), static contiguity everywhere where there is solid black, and symmetry on the middle two tracks.}}{21}{figure.7}}
-\newlabel{fig:simmatrix}{{7}{21}{An illustration of the similarity matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black dotted lines. There are examples here of evolutionary repetition ($t=500,\ldots ,550$), static contiguity everywhere where there is solid black, and symmetry on the middle two tracks}{figure.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Comparison of the $F_1$ scores against time thresholds on the $4$ data sets.}}{22}{figure.12}}
-\newlabel{fig:fscores_breakdown}{{12}{22}{Comparison of the $F_1$ scores against time thresholds on the $4$ data sets}{figure.12}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Results for stochastic optimization (evolutionary algorithm) search of parameter space. Note that the search space $T$ was limited to a minimum of $3$ seconds to save computation time. }}{23}{table.5}}
-\newlabel{tab:parameters}{{5}{23}{Results for stochastic optimization (evolutionary algorithm) search of parameter space. Note that the search space $T$ was limited to a minimum of $3$ seconds to save computation time}{table.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces An illustration of the similarity matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black dotted lines. There are examples here of evolutionary repetition ($t=500,\ldots  ,550$), static contiguity everywhere where there is solid black, and symmetry on the middle two tracks.}}{22}{figure.7}}
+\newlabel{fig:simmatrix}{{7}{22}{An illustration of the similarity matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black dotted lines. There are examples here of evolutionary repetition ($t=500,\ldots ,550$), static contiguity everywhere where there is solid black, and symmetry on the middle two tracks}{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Comparison of the $F_1$ scores against time thresholds on the $4$ data sets.}}{23}{figure.12}}
+\newlabel{fig:fscores_breakdown}{{12}{23}{Comparison of the $F_1$ scores against time thresholds on the $4$ data sets}{figure.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Results for stochastic optimization (evolutionary algorithm) search of parameter space. Note that the search space $T$ was limited to a minimum of $3$ seconds to save computation time. }}{24}{table.5}}
+\newlabel{tab:parameters}{{5}{24}{Results for stochastic optimization (evolutionary algorithm) search of parameter space. Note that the search space $T$ was limited to a minimum of $3$ seconds to save computation time}{table.5}{}}

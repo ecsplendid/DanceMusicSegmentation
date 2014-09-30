@@ -1,10 +1,14 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: IJEIS2014.aux
 The style file: ieeetr.bst
 Database file #1: bib/references.bib
-I was expecting a `,' or a `}'---line 68 of file bib/references.bib
+I was expecting a `,' or a `}'---line 95 of file bib/references.bib
  :  
  :  booktitle={Acoustics 2013 New Delhi Conference},
 (Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Repeated entry---line 493 of file bib/references.bib
+ : @article{levy2008structural
+ :                            ,
 I'm skipping whatever remains of this entry
 Database file #2: bib/refs.bib
 Repeated entry---line 4 of file bib/refs.bib
@@ -55,8 +59,12 @@ Repeated entry---line 258 of file bib/refs.bib
  : @article{peiszer2008automatic
  :                              ,
 I'm skipping whatever remains of this entry
+Repeated entry---line 372 of file bib/refs.bib
+ : @article{levy2008structural
+ :                            ,
+I'm skipping whatever remains of this entry
 Warning--empty journal in radu
 Warning--empty year in radu
 Warning--empty journal in elaudio
 Warning--empty year in elaudio
-(There were 13 error messages)
+(There were 15 error messages)
