@@ -22,6 +22,9 @@ agr1 = run_experiments( c.config, 'meancont', config_getdefaultsegcalculation, .
     config_getbestnoveltyconfig, 1 )
 save( sprintf( 'results/agres_mean_contig_%s', date ), 'agr1' );
 
+% bugs here?
+% Error using find_posterior (line 230)
+% Attempted to access ix(2); index out of bounds because numel(ix)=0.
 c = load('config/mean/config_evo-gauss_22-Sep-2014.mat');
 c.config.compute_confs = 1;
 agr2 = run_experiments( c.config, 'meanev', config_getdefaultsegcalculation, ...

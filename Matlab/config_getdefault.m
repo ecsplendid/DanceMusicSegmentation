@@ -2,7 +2,7 @@ function [c] = config_getdefault()
 
 c = segmentation_configuration();
 
-c.memory_efficient = 1;
+c.memory_efficient = 0;
 
 % 1== github, 2==denis, 3==lindmik
 c.dataset = 1;

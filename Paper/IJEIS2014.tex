@@ -71,11 +71,11 @@
 	
 	\begin{abstract}
 		
-		We consider the problem of segmenting DJ-mixed dance music recordings (pod-casts, radio shows, live events). We present an algorithm to reconstruct segment boundaries as close as possible to what a human domain expert would create in respect of the same task given a fixed number of boundaries. The algorithm is optimized for the scenario when the number of tracks is known a priori although is also capable of estimating the number of tracks and is evaluated in both circumstances. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. 
-		
-		 The goal of DJ-mixing is to render track boundaries effectively invisible from human perception. Segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of general self-similarity and also specific notions such as; symmetry, contiguity and evolution in respect of time. 
-		
-		Our work is quantitatively assessed on a large corpus ($640$ hours) of radio show recordings which have been hand-labelled by a domain expert. The method presented could be used on other segmentation tasks and other domains. 
+We consider the problem of annotating song changes in DJ-mixed dance music recordings (pod-casts, radio shows, live events). It is an extremely laborious process to perform this task manually. We present an algorithm to reconstruct segment boundaries as close as possible to what a human domain expert would create in respect of the same task given a fixed number of boundaries. The algorithm is optimized for the scenario when the number of tracks is known a priori although is also capable of estimating the number of tracks and is evaluated in both circumstances. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. 
+
+The goal of DJ-mixing is to render track boundaries effectively invisible from human perception. Segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of general self-similarity and also specific notions such as; symmetry, contiguity and evolution in respect of time. The segmentation configuration is parametrised and an evolutionary algorithm is executed on a small test set to find optimal parameters for the tasks of segmentation. 
+
+Our work is quantitatively assessed on a large corpus ($640$ hours) of radio show recordings which have been hand-labelled by a domain expert. The method presented could be used on other segmentation tasks and other domains. 
 		\smallskip
 		
 		\noindent \textbf{Keywords.} \noindent music,~segmentation,~DJ,~mix,~dynamic programming
@@ -138,25 +138,21 @@
 	
 	Clustering algorithms do exist that find a fixed number of segments but we have the added constraint that these segments need to be homogeneous, contiguous and time-dependent. Radu \citep{radu} demonstrated a time-dependent modification of agglomerative (hierarchical) clustering for segmentation of music. A constraint was added such that during the algorithm clusters could only be merged if they were adjacent in time. Radu preprocessed the feature vectors to increase the homogeneity by averaging them over a sliding window of fixed size. Radu used a fixed number of clusters found as a stopping condition. The approach is model-free but by Radu's own admission lacks any form of regularization, possibly producing clusters that vary in size significantly. Radu modelled the segmentation as a binary classification problem (later also used by Badawy et al \citep{elaudio}) subject to error intervals allowing standard performance metrics such as precision, recall and $F_1$ score to be used. 
 	
-	Statistical, model-based approaches to segmentation also have been devised. Levy et al use hidden Markov models in their approach to music segmentation in \citep{levy2008structural}, building on their previous work \citep{levy2006new, levy2006extraction}. They HMM is based upon a generative Gaussian mixture model where each segment has a set of states, each generating a Gaussian distribution of feature vectors. A musical audio file can then be regarded as having an underlying sequence of states that generates the observed feature sequence. The HMM can then be trained with a priori knowledge. 
+	Stochastic model-based approaches to segmentation also have been devised. Levy et al use hidden Markov models in their approach to music segmentation in \citep{levy2008structural}, building on their previous work \citep{levy2006new, levy2006extraction}. They HMM is based upon a generative Gaussian mixture model where each segment has a set of states, each generating a Gaussian distribution of feature vectors. A musical audio file can then be regarded as having an underlying sequence of states that generates the observed feature sequence. The HMM can then be trained with a priori knowledge. 
 	
-	Badawy implemented a Foote \citep{foote2003media} segmentation style scheme to segment $61$ hours of recorded Montreux jazz festival concerts and compared to human captured ground truth meta-data. 
+	Plotz et al also used a an HMM for segmenting DJ mixed music streams, further developing the concept of generic acoustic generators first described in \citep{batlle2002automatic}. Unfortunately Plotz only evaluated his method against a small corpus of unknown origin ($222$ minutes with $65$ song changes, compared to our $640$ hours with $6757$ song changes) and did not elaborate on the ground truth annotation methodology. 
 	
-	A distinguishing feature of our approach is that we evaluate how well we are doing compared to humans in respect of the same task. We compare our reconstructed indices to the ones created by a human domain expert and the algorithm itself is optimised for the domain of mixed music. 
-	
-	
-	
+	Badawy implemented a Foote (\citep{foote2003media}) inspired segmentation scheme to segment $61$ hours of recorded Montreux jazz festival concerts and compared to human captured ground truth meta-data. 
 	
 	In the coming sections we describe the corpus (see Section~\ref{dataset}), human accuracy (see Section~\ref{human_acc}),  the evaluation criteria (see Section~\ref{eval_crit}), how we pre-process the data (see Section~\ref{proprocessing}), how we perform feature extraction (see Section~\ref{feat_ex}), designing the cost matrices using observed phenomena in the domain (see Section~\ref{costmatrix_sec}), computing the best segmentation (see Section~\ref{best_cost}), discussion of confidence intervals (see Section~\ref{sec:confidence-intervals}), our methodology (see Section~\ref{sec:methodology}), materials used (see Section~\ref{sec:materials}), results (see Section~\ref{sec:results}) and finally the summary (see Section~\ref{conclusions}).
 	
 	\section{Corpus}\label{dataset}
 	
-	We have been supplied with several broadcasts from three popular radio shows. These are: Magic Island, by Roger Shah ($106$ shows); A State of Trance with Armin Van Buuren ($109$ shows); and Trance Around The World with Above and Beyond ($88$ shows). The show genres are a mix of Progressive Trance, Uplifting Trance and Tech-Trance. 
+	We have been supplied with several broadcasts from three popular radio shows. See Table~\ref{tab:corpus} for a description. The show genres are a mix of progressive trance, Uplifting Trance and Tech-Trance. 
 	
-	There are no silent gaps after the introduction. 
-	The shows come in $44100$ samples per second, $16$ bit stereo MP3 files sampled at $192$Kbs. We resampled these to $4000$Hz $16$ bit mono (left+right channel) WAV files to allow us to process them faster. We have used the \textit{Sound eXchange}\footnote{\url{http://sox.sourceforge.net}}  program to do this. These shows are all $2$ hours long. The overall average track length is $5$ and a half minutes (slightly less for Magic Island (see Figure~\ref{fig:tracklengths})) and normally distributed. See Table~\ref{tab:corpus} for some descriptive statistics). There is a guest mix on the second half of each show. The guest mix DJs show off their skills with technically convoluted mixing, so it is fair to say that the boundary complexity increases during the guest mix and is at least not constant throughout the shows.
+	There are no silent gaps in the recordings. The shows come in $44100$ samples per second, $16$ bit stereo MP3 files sampled at $192$Kbs. We re-sampled these to $4000$Hz $16$ bit mono (left+right channel) WAV files to allow us to process them faster. We have used the \textit{Sound eXchange}\footnote{\url{http://sox.sourceforge.net}} program to do this. These shows are all $2$ hours long. The overall average track length is $5$ and a half minutes (slightly less for Magic Island (see Figure~\ref{fig:tracklengths})) and normally distributed.  There is a guest mix on the second half of each show. The guest mix DJs show off their skills with technically convoluted mixing, so it is fair to say that the boundary complexity increases during the guest mix and is at least not constant throughout the shows.
 	
-	An additional dataset of $36$ radio shows have been mixed by and annotated by Mikael Lindgren (the so called \texttt{lindmik} dataset). These shows are extremely useful because the DJ is the same person that created the ground truth time indices. Also there is less noise, for example voice-overs, guest mixes, radio show sounds, introductions etc. These shows also vary significantly in length from $1$ hour to nearly $5$ hours. There are $339$ shows in total.
+	An additional dataset of $36$ radio shows have been mixed by and annotated by Mikael Lindgren (the so called \texttt{lindmik} dataset). These shows are extremely useful because the DJ is the same person that created the ground truth time indices which should in theory reduce the amount of human confusion present in the annotation. Also there is less noise, for example voice-overs, guest mixes, radio show sounds, introductions etc. These shows also vary significantly in length from $1$ hour to nearly $5$ hours. There are $339$ shows in total.
 	
 	We believe this corpus is the largest of its kind used in the literature going on the comparative table of segmentation corpora listed by Peiszer et al in their literature review of audio segmentation \cite{peiszer2008automatic}. More recently Badawy et al \citep{elaudio} used a corpus of $61$ hours. The corpus we are using is longer than $640$ hours in length. 
 	
@@ -192,29 +188,29 @@
 		\label{fig:tracklengths}
 	\end{figure} 
 	
-	There is already a large community of people interested in getting track/time meta-data for DJ sets. ``CueNation''\footnote{\url{http://www.cuenation.com}} is an example of this. CueNation is a website allowing people to submit \textit{cue-sheets} for popular DJ Mixes and radio shows. A cue-sheet is a text file containing time meta-data (indices) for a media file.
+	There is already a large community of people interested in getting time annotations for DJ sets. \textit{CueNation}\footnote{\url{http://www.cuenation.com}} is an example of this. CueNation is a website allowing people to submit \textit{cue-sheets} for popular DJ mixes and radio shows. A cue-sheet is a text file containing time annotation meta-data (indices) for a media file.
 	
-	The three main radio shows in the corpus were hand captured by Denis Goncharov; a domain expert and one of the principal contributors to \textit{CueNation}. One of the significant problems with this task is that there is a random error variable associated with the human captured indices themselves. On some tracks, it is unclear where to place the optimal index and when analysing our results, we have noticed some obvious human errors. Regrettably, there is no clear way of quantifying this. Many of the cue-sheet authors themselves reject the idea of automating the task, citing the poor precision of any such result (they often place indices on the exact MP3 frame). However this sentiment seems misplaced given that they frequently make mistakes or that it is a matter of opinion where to place the track and some consistent method may be preferential. A potential outcome of our method could be an assistance mechanism to help them with initial placements. Our results demonstrate that it is indeed possible to automate this task and that while there is some uncertainty attached to the optimal placement, it is still largely predictable. Indeed on the majority of track indices the uncertainty is ostensibly small. 
+	The three main radio shows in the corpus were hand captured by Denis Goncharov; a domain expert and one of the principal contributors to \textit{CueNation}. One of the significant problems with this task is that there is a small but apparent random confusion variable associated with the human captured indices in general (see Section~\ref{human_acc} for details) where 5\% of tracks get placed on a different bar. On some tracks, it is unclear where to place the optimal index on the macro scale and when analysing our results, we have noticed what we assume to be obvious human errors. Regrettably, there is no clear way of quantifying this. Many of the cue-sheet authors themselves reject the idea of automating the task, citing the poor precision of any such result (they often place indices on the exact MP3 frame). However this sentiment seems misplaced given that they frequently make mistakes or that it is a matter of opinion where to place the track and some consistent method may be preferential. A potential outcome of our method could be an assistance mechanism to help them with initial placements. Our results demonstrate that it is indeed possible to automate this task and that while there is some uncertainty attached to the optimal placement, it is still very predictable. Indeed on the majority of track indices the uncertainty is ostensibly small. 
 	
 	Denis Goncharov provided us with the following description of how he captures the indices. To quote from a personal email exchange with Denis:
 	
 	\begin{quote}
-		Trance music is made in slices of $8$ bars ($1$ bar is $4$ beats. At $135$ beats per minute, $8$ bars is $\frac{60}{135} ( 4 \cdot 8 ) \approx 14.8$ sec). Trance music tends to be around $130$-$135$ BPM. It is a matter of personal preference which point of the transition to call the index. My preference is to consider the index to be the point at which the second track becomes the focus of attention and the first track is sent to the background. Most of the time the index is the point at which the bass line ($400$Hz and lower) of the previous track is cut and the bass line of the second track is introduced. If the DJ decides to exchange the adjacent tracks gradually over the time instead of mixing them abruptly then it is up to the cue-sheet maker to listen further into the second track noting the musical qualities of both tracks and then go back and choose at which point the second track actually becomes the focus of attention.
+		Trance music is made in slices of $8$ bars. $1$ bar is $4$ beats. At $135$ beats per minute, $8$ bars is $(~60~/~135~)~\times~4 \times 8 = 14.8$ sec. Trance music tends to be around $130$-$135$ BPM. It is a matter of personal preference which point of the transition to call the index. My preference is to consider the index to be the point at which the second track becomes the focus of attention and the first track is sent to the background. Most of the time the index is the point at which the bass line ($400$Hz and lower) of the previous track is cut and the bass line of the second track is introduced. If the DJ decides to exchange the adjacent tracks gradually over the time instead of mixing them abruptly then it is up to the cue-sheet maker to listen further into the second track noting the musical qualities of both tracks and then go back and choose at which point the second track actually becomes the focus of attention.
 	\end{quote}
 	
-	The most obvious and pervasive element in dance music is the percussion (the beats). We believe on balance that ignoring the percussive information is advantageous, because DJs use percussion primarily to blur boundaries between tracks.  We tried to capture percussive based features and found that the transitions between tracks and indeed groups of tracks appeared as stronger self-similar regions than the actual tracks. The percussive feature extractor transformed the autocorrelation of the audio samples in the time domain tiles, and compared the cosine of their absolute values. It was reasonably clear from that  research that track boundaries are revealed with less uncertainty between instruments and harmonic content. However. We do not rule out looking at percussive features again in future research because we are currently ignoring potentially useful features.
+	The most obvious and pervasive element in dance music is the percussion (the beats). We believe on balance that ignoring the percussive information is advantageous, because DJs use percussion primarily to blur boundaries between tracks.  We tried to capture percussive based features and found that the transitions between tracks and indeed groups of tracks appeared as stronger self-similar regions than the actual tracks. The percussive feature extractor transformed the autocorrelation of the audio samples in the time domain tiles, and compared the cosine of their absolute values. It was reasonably clear from that research that track boundaries are revealed with less uncertainty between instruments and harmonic content. However. We do not rule out looking at percussive features again the future because we are currently ignoring potentially useful information.
 	
-	Some DJs ``mix harmonically'' (by matching instruments as opposed to percussion) but this preys on human hearing and perception. An algorithm capturing the harmonic information would most likely be able to distinguish two harmonically compatible tracks. 
+	Some DJs mix \textit{harmonically} (by matching instruments instead of percussion) but this preys on human hearing and perception. An algorithm capturing the harmonic information would still be able to distinguish two harmonically compatible tracks. 
 	
 	\section{Human Accuracy}\label{human_acc}
 	
-	We did some analysis on how accurate the humans themselves are at creating indices. In the absence of a perfect data set our analysis instead hinged on the amount to which the humans disagreed with each other aggregated over a large amount of historical data. Mikael Lindgren was kind enough to send us a dump of his cuesheet database to experiment with. As ASOT is such a popular show there were many independently captured cuesheets to compare against for all of the historical shows. We selected all the shows having at least $3$ distinct cuesheets (not copies or shifted/misaligned copies of each other)  and such that all the cuesheets had the same number of tracks. The first track was ignored (as it was always $0$ seconds). We ended up with $115$ shows with $3$ authors. $65$ shows with $4$ authors and $30$ shows with $5$ authors.  We generated a histogram of distances from the median time for each track, for each cuesheet and assumed values greater than $100$ seconds or less than $-100$ seconds were outliers. The standard deviation of the `human disagreement' variable is $9.13$ seconds. See Figure~\ref{fig:human_muchconfuse} for an illustration. So at this stage it does not seem feasible for us to achieve a higher accuracy when we are evaluating against a method which is intrinsically error prone. An important caveat here is that ASOT turned out to be the most error-prone show to segment out of our corpus. The standard deviation of the bumps could be reduced if we normalized the times by the BPM of each transition. 
+	We did some analysis on how accurate the humans themselves are at creating indices. In the absence of a perfect data set our analysis instead hinged on the amount to which the humans disagreed with each other aggregated over a large amount of historical data. Mikael Lindgren was kind enough to send us a dump of his cuesheet database to experiment with. As ASOT is such a popular show there were many independently captured cuesheets to compare against for all of the historical shows. We selected all the shows having at least $3$ distinct cuesheets (not copies or shifted/misaligned copies of each other)  and such that all the cuesheets had the same number of tracks. The first track was ignored (as it was always $0$ seconds). We ended up with $115$ shows with $3$ authors. $65$ shows with $4$ authors and $30$ shows with $5$ authors.  We generated a histogram of distances from the median time for each track, for each cuesheet and assumed values greater than $100$ seconds or less than $-100$ seconds were outliers. The standard deviation of the \textit{human disagreement} variable is $9.13$ seconds. See Figure~\ref{fig:human_muchconfuse} for an illustration. So at this stage it does not seem feasible for us to achieve a higher accuracy when we are evaluating against a method which is intrinsically error prone. An important caveat here is that ASOT turned out to be the most error-prone show to segment out of our corpus. The standard deviation of the bumps could be reduced if we normalized the times by the BPM of each transition. The \textit{bar-scale} confusion peaks centered around $\pm14.8$ seconds, and $\pm29.6$ seconds represented $5$ percent of the total annotations.
 	
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.45\textwidth]{images/human_confusion}
 		
-		\caption{Illustration of the `human disagreement' random variable (zoomed in at the bottom), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($\approx 14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section~\ref{dataset}. }
+		\caption{Illustration of the `human disagreement' random variable (zoomed in at the bottom, the peak at $0$ seconds is $4708$ tracks), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section~\ref{dataset}. The $4$ adjacent error clusters account for roughly 5 percent of the total number of tracks. The variance around the peaks represents the BPM variance in \texttt{asot}. }
 		\label{fig:human_muchconfuse}
 	\end{figure} 
 	
@@ -222,21 +218,21 @@
 	
 	\subsection{Preprocessing}\label{proprocessing} % Fourier/xcorr
 	
-	The corpus had some outliers that may have slightly distorted the analysis of our method. Many of the ``tracks'' in our data set (of indices) were in fact not tracks at all but rather introductions or voice-overs. Almost all of these outlier tracks were short in length. These are quite clearly visible on the distribution of track lengths on Figure~\ref{fig:tracklengths}. To ameliorate the situation we removed any tracks that were shorter than $180$ seconds. We also removed any end tracks that were shorter than $240$ seconds as very often the end tracks on a radio show contain strange elements (for example voice-overs, interviews, show-related `jingles'). This required some manipulation of the cue-sheets and audio files. The undesired segments of the audio files were chopped out, and the cue-sheets were re-flowed so that the time indices point to the correct location in the file. 
+	The corpus had some outliers that may have slightly distorted the analysis of our method. Many of the ``tracks'' in the ground truth annotations for our corpus were in fact not tracks at all but rather introductions or voice-overs. Almost all of these outlier tracks were short in length. To ameliorate the situation we removed any tracks that were shorter than $180$ seconds (which are clearly not normal according to Figure~\ref{fig:tracklengths}). We also removed any end tracks that were shorter than $240$ seconds as very often the end tracks on a radio show contain strange elements (for example voice-overs, interviews, show-related `jingles'). This required some manipulation of the cue-sheets and audio files. The undesired segments of the audio files were chopped out, and the cue-sheets were re-flowed so that the time indices point to the correct location in the file. 
 	
 	The algorithm still performs similarly when removing just these indices and leaving the audio intact underneath, so it would not significantly affect any real-world implementation. 
 	
 	For those wishing to use this algorithm in practice with pre-recorded shows; the introductions at the start of the shows are often fixed length or at least predictable so error would be small on average.
 	
-	The lindmik dataset which was noise-free did not require any preprocessing. 
+	The \texttt{lindmik} dataset which was noise-free did not require any preprocessing whatsoever. 
 	
 	\subsection{Feature Extraction}\label{sec:feature-extraction}
 	
 	\subsubsection{Music}\label{feat_ex} % Fourier/xcorr
 	
-	We used SoX (see Sect.~\ref{dataset}) to downsample the shows to $4000$Hz. We are not particularly interested in frequencies above around and above $2000$Hz because instrument harmonics become less visible in the spectrum as the frequency increases. The Nyquist theorem \cite{nyquist1928certain} states that the highest representable frequency is half the sampling rate, so this explains our reason to use $4000$Hz. We will refer to the sample rate as $R$. Let $L$ be the length of the show in samples.
+	We used \textit{Sound eXchange} (see Section~\ref{dataset}) to downsample the shows to $4000$Hz. We are not interested in frequencies above around and above $2000$Hz because instrument harmonics become less visible in the spectrum as the frequency increases. The Nyquist theorem \cite{nyquist1928certain} states that the highest representable frequency is half the sampling rate, so this explains our reason to use $4000$Hz. We will refer to the sample rate as $R$. Let $L$ be the length of the show in samples.
 	
-	Fourier analysis allows one to represent a time domain process as a set of integer oscillations of trigonometric functions. We transform the tiles into the frequency domain using the discrete Fourier transform
+	Fourier analysis facilitates the representation of a time domain process as a set of integer oscillations of trigonometric functions. We transform the tiles into the frequency domain using the discrete Fourier transform
 \[
 F(x_k) = X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i 2 \pi \frac{k}{N} n}
 \] which transforms a sequence of complex numbers $x_0,\ldots,x_N$ into another sequence of complex numbers $X_0,\ldots,X_N$ where $$e^{-i 2 \pi \frac{k}{N} n}$$ are points on the complex unit circle. Note that the fftw algorithm \cite{frigo2004fftw} that we used to perform this computation operates significantly faster when $N$ is a power of $2$ so we zero pad the input to the next power of $2$. We denote the tile width by $M$ in seconds (an algorithm parameter). Note that
@@ -305,16 +301,16 @@ matrices as some of them depend on the sign of the value in $S$.
 	
 		\begin{figure}
 			\centering
-			\includegraphics[width=0.45\textwidth]{images/cosinesmagic110}
+			\includegraphics[width=0.35\textwidth]{images/cosine_histogram}
 			
-			\caption{Illustration of the effect of normalization parameter $\hat c=0.7$ on the values in $S$ on radio show Magic Island $110$. The small raised section on the left correspond to the tracks.}
+			\caption{Illustration of the effect of normalization parameter $\hat c=0.7$ on the values in $S$ on radio show \texttt{asot} $453$. The small raised section on the left correspond to the tracks down the diagonal.}
 			\label{fig:cosine_norm}
 		\end{figure} 
 	
 	\begin{figure*}[t]
 		\centering
-		\includegraphics[width=1.08\textwidth]{images/S}
-		\caption{An illustration of the similarity matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black dotted lines. There are examples here of evolutionary repetition ($t=500,\ldots,550$), static contiguity everywhere where there is solid black, and symmetry on the middle two tracks.}
+		\includegraphics[width=1.08\textwidth]{images/cosines}
+		\caption{An illustration of the similarity (cosines) matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black lines. Note that to save time on the computation we do not calculate the entire matrix which is why there are some empty regions on the corners.}
 		\label{fig:simmatrix}
 	\end{figure*} 
 	
@@ -907,7 +903,7 @@ On our previous work we were effectively using a disincentive-only summation mat
 		
 	\end{center}
 	
-	\caption{Comparison of the $F_1$ scores against time thresholds on the $4$ data sets.}
+	\caption{Comparison of the $F_1$ scores against time thresholds on the $4$ data sets. On the \texttt{lindmik} dataset where the number of tracks is highly unpredictable, our method combined with track estimation beats Foote's novelty method at higher thresholds.}
 	\label{fig:fscores_breakdown}
 		
 \end{figure*}
@@ -919,15 +915,40 @@ On our previous work we were effectively using a disincentive-only summation mat
 			\includegraphics[scale=0.5]{images/fscores/fall}
 		\end{center}
 
-	
 	\caption{Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets.}
 	\label{fig:fscores_best}
 	
 \end{figure}
 
+\subsubsection{Confidence Interval Analysis}
+
+See Figure~\ref{fig:confidence_intervals} for illustrations of the time index confidence, index placement confidence and track error residuals averaged and shown as a function of progression through the shows. See Section~\ref{sec:confidence-intervals} for definitions. 
+
+We can conclude from these illustrations that the likelihood of placing the correct index statistically declines towards the middle of the shows. Perhaps this means that the summation matrix would have performed increasingly poorly as show lengths got longer. But mixing the cost matrices together in the optimal way (as dictated by the results of the evolutionary algorithm) apparently removes this tendency to a large extent. 
+
+A low index confidence would increase the probability of a \textit{catastrophic misplacement} causing a significant deterioration on the overall mean performance metric. So these illustrations give us some insight on why mixing the cost matrices together significantly affected the overall mean evaluation metric as described in Section~\ref{sec:results}.    
+
+Mixing the cost matrices had little effect on the time placement of indices. 
+
+\begin{figure}
+	
+	\centering
+	\includegraphics[scale=0.4]{images/conf/timeplacementconfidence}
+	\bigskip
+	
+	\includegraphics[scale=0.4]{images/conf/indexplacementconfidence}
+	\bigskip
+	
+	\includegraphics[scale=0.4]{images/conf/residualsagainstprogress}
+	
+	\caption{Confidence intervals and error residuals averaged over show progression.}
+	\label{fig:confidence_intervals}
+	
+\end{figure}
+
 
 % GENETIC ALGORITHM DESCRIPTION
-\section{Estimating Segment Count}\label{sec:trackcount}
+\subsection{Tracks Not Known A Priori}\label{sec:trackcount}
 
 The main goal of our research is providing the best possible time dependent contiguous segmentation given a fixed number of tracks $m$, rather than estimating $m$. This problem has not been addressed before to our knowledge; namely that the number of segments is known a priori but segmentation itself is not. However, the number of tracks could be estimated in a naive sense because the variable of track lengths is Gaussian (see Figure~\ref{fig:tracklengths}). 
 
@@ -940,6 +961,7 @@ To improve upon Foote's method; we introduces a radius parameter $\hat R$ which 
 We also compared to a naive method of guessing how many tracks were in a show, by diving the show length by the average track size ($377$ seconds).
 
 See Figure~\ref{fig:track_shift} for an comparison of these three methods of track estimation. Our method estimates the correct number of tracks $45.7$\% of the time, the novelty peak finding approach $44.5$\% of the time and the naive approach $11.5$\% of cases. There is not a significant different in performance between the enhanced version of Foote's approach and ours. An interesting feature of Foote's enhanced algorithm is that it almost never overestimates the number of tracks. It seems likely that some combination of the methods would yield improved results. 
+
 
 \begin{figure}
 	\centering
@@ -955,7 +977,7 @@ See Figure~\ref{fig:track_shift} for an comparison of these three methods of tra
 	\label{fig:track_shift}
 \end{figure}
 
-\section{Comparison of Methods}
+\subsubsection{Comparison of Methods}
 
 It is useful to compare our algorithm for reconstructing track boundaries with Foote's novelty peak finding method in a general sense. The drawback of Foote's method is that it is problematic to find a fixed number of novelty peaks. It is clearly adaptable to find a \textit{maximum} number of peaks but this does not help because it already has the apparently interest feature that it rarely overestimates the number of tracks, it mainly underestimates.
 
@@ -967,9 +989,15 @@ See Figure~\ref{fig:fscores_breakdown} for a break down of $F_1$ scores for each
 
 When the number of tracks is known a priori, we significantly out perform Foote's method. And there is no obvious way to modify Foote's method to select the correct number of tracks even if it is known a priori. 
 
+\subsubsection{Results}
+
+
+Plotz \citep{plotz2006automatic} achieved a true positive rate of 81\% within $10$ second boundaries from ground truth for a similar task which sounds almost too good to be true considering the standard deviation of human disagreement on annotations for dance music can be over $9$ seconds (see Section~\ref{human_acc}). Our overall true positive average is 63\% at the $10$ seconds threshold. For \texttt{tatw} we achieve 72.2\% which may be more like the corpora Plotz worked with.
+
+
 \section{Conclusion}\label{conclusions}
 
-We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. It would be excellent if Sound Cloud\footnote{\url{http://www.soundcloud.com}} for example started to do something similar. Sound Cloud is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to reliably segment the shows, and they could display an interactive segmentation in the music player. 
+We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. It would be excellent if \textit{SoundCloud}\footnote{\url{http://www.soundcloud.com}} for example started to do something similar. \textit{SoundCloud} is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to reliably segment the shows, and they could display an interactive segmentation in the music player. 
 
 The new cost matrices in combination improve robustness significantly. The new cost matrices improve on many drawbacks of our previous work. Most importantly they are partly immunised against dissimilar regions within tracks. 
 
