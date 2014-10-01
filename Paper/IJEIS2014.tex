@@ -144,7 +144,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	Badawy implemented a Foote (\citep{foote2003media}) inspired segmentation scheme to segment $61$ hours of recorded Montreux jazz festival concerts and compared to human captured ground truth meta-data. 
 	
-	In the coming sections we describe the corpus (see Section~\ref{dataset}), human accuracy (see Section~\ref{human_acc}),  the evaluation criteria (see Section~\ref{eval_crit}), how we pre-process the data (see Section~\ref{proprocessing}), how we perform feature extraction (see Section~\ref{feat_ex}), designing the cost matrices using observed phenomena in the domain (see Section~\ref{costmatrix_sec}), computing the best segmentation (see Section~\ref{best_cost}), discussion of confidence intervals (see Section~\ref{sec:confidence-intervals}), our methodology (see Section~\ref{sec:methodology}), materials used (see Section~\ref{sec:materials}), results (see Section~\ref{sec:results}) and finally the summary (see Section~\ref{conclusions}).
+	In the coming sections we describe the corpus (Section~\ref{dataset}), human annotation accuracy (Section~\ref{human_acc}), how we handle data and deal with feature extraction and cost matrices (Section~\ref{sec:data-handling}), computing the best segmentation (Section~\ref{best_cost}), discussion of confidence intervals (Section~\ref{sec:confidence-intervals}), experiments (Section~\ref{sec:experiments}), and finally the conclusion (Section~\ref{conclusions}).
 	
 	\section{Corpus}\label{dataset}
 	
@@ -214,7 +214,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 		\label{fig:human_muchconfuse}
 	\end{figure} 
 	
-	\section{Data Handling}
+	\section{Data Handling}\label{sec:data-handling}
 	
 	\subsection{Preprocessing}\label{proprocessing} % Fourier/xcorr
 	
@@ -310,7 +310,7 @@ matrices as some of them depend on the sign of the value in $S$.
 	\begin{figure*}[t]
 		\centering
 		\includegraphics[width=1.08\textwidth]{images/cosines}
-		\caption{An illustration of the similarity (cosines) matrix $S$ with the actual indices drawn on with white crosses, and our reconstructed indices indicated with the black lines. Note that to save time on the computation we do not calculate the entire matrix which is why there are some empty regions on the corners.}
+		\caption{An illustration of the similarity matrix $S$ (cosines) with the actual indices drawn on with black crosses, and our reconstructed annotations indicated with the dotted white lines. Note that to save time on the computation we do not calculate the entire matrix which is why there are some empty regions on the corners.}
 		\label{fig:simmatrix}
 	\end{figure*} 
 	
@@ -395,9 +395,9 @@ illustration:
 %C(f,t) \leftarrow \hat N_\Omega \left( \frac{ C(f,t) }{ t-f+1 } \right)
 %\] for all $t,f \in \tilde C$.
 	
+	See Figures~\ref{fig:cmsumib1} and \ref{fig:cmsumib2} for a image visualization of the summation cost matrix with different incentive biases.
+	
 	\paragraph{Symmetry}	
-
-
 	
 A common feature on dance music tracks is partial mirror-symmetry. We build a cost matrix to capture that.
 	
@@ -437,14 +437,12 @@ calculate $\tilde C_{ft}$ this saving computation time.
 	
 	\paragraph{Static Contiguity}
 
-% check my writing; I am not sure I understood you correctly
-	
 Horizontal contiguous traces in $S$ indicate that the track is
 self-similar (negative values) or self-dissimilar (positive values)
 due to repetition. If a given tile is the same as a set of contiguous
 tiles following it, then there is some static contiguous region in the
 show. The word \textit{static} denotes that the music is not evolving in
-respect of time.
+respect of time (which would instead create a diagonal trace in $S$).
 
 Let $\Gamma(f,t,h)$ be the horizontal segment in the matrix $S$
 showing the similarity of tile $f+h-1$ to `future' tiles $f+h,
@@ -525,7 +523,7 @@ shorter intervals to save calculation time for longer intervals.
 	\paragraph{Gaussian}
 	Let \[
 	G( \varpi, N )_{tw} = e^{ - \frac{1}{2} \frac{\varpi n}{ \frac{1}{2} W}^2  }
-	\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularising the others and for use on its own for comparison against a `naive' competitor. Increasing values of $\varpi$ will tighten up the Gaussian although after experimentation we observed that $1$ was always the best value and stuck with that.
+	\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularising the others and for use on its own for comparison against a `naive' competitor. Increasing values of $\varpi$ will tighten up the Gaussian. Note that we used values of $\varpi \in \{1,2,\ldots,5\}$
 	
 	\paragraph{Normalization}
 
@@ -568,10 +566,6 @@ for all $f$ and $t$.
 	
 	We mix cost matrices together by adding them. In our experiments we will have a parameter for each cost matrix $\in [0,1]$ to show its contribution to the mixture. The cost matrices will be multiplied by this number before being mixed. 
 	
-	See Figure~\ref{fig:cost_matrices} for an illustration of a single cost matrix and a mixture. 
-
-	
-	
 		\begin{figure}
 			\centering
 			\includegraphics[width=0.45\textwidth]{images/cmsumib0}
@@ -583,11 +577,13 @@ for all $f$ and $t$.
 			\centering
 			\includegraphics[width=0.45\textwidth]{images/cmsumib1}
 			\caption{Summation cost matrices for Magic Island episode 110 with an incentive bias $\Omega=0$ and therefore containing incentives. }
-			\label{fig:cmsumib1}
+			\label{fig:cmsumib2}
 		\end{figure} 
 		
 		
+	\paragraph{Solution Shift}
 	
+	We devised another parameter which is to shift the estimated solution in time by $\varXi$ seconds $\in \{-1,-2,\ldots,5\}$.
 	
 	\section{Computing Best Segmentation}\label{best_cost}
 	
@@ -775,7 +771,7 @@ Let
 \end{align*} where $Peaks(s_i)$ is a peak finding algorithm that returns the peaks in descending order of magnitude (we used the \texttt{findpeaks} function in MatLab).
 
 
-\section{Experiments}
+\section{Experiments}\label{sec:experiments}
 
 \subsection{Training Set}
 
@@ -954,9 +950,9 @@ The main goal of our research is providing the best possible time dependent cont
 
 We propose the following method of adapting our framework to estimate the number of contiguous segments in a data stream. For every possible candidate number of tracks $\hbar$, compute the cost of fitting $\hbar$ tracks using the algorithm described in Section~\ref{best_cost} and normalize it by $\hbar$ and take the solution on the saddle point. We ran the same genetic algorithm as described in Section~\ref{sec:findingbestcostmatrix} to find the best set of parameters for this task. This is referred to as experiment $11$ in Table~\ref{tab:parameters}. See Figure~\ref{fig:github_trackestimation} for a visual example of estimating the number of tracks using this method. 
 
-For comparison; we have implemented Footes method of segmentation \citep{foote2003media}. Foote correlated a Gaussian tapered checkerboard kernel of a fixed width $\beta$ down the diagonal of S to produce a novelty function. Any peaks found to be above a threshold $\iota$ are counted as novelty peaks. The kernel can be constructed with the Kronecker tensor product ... \texttt{TODO: more to come on this} 
+For comparison; we have implemented Footes method of segmentation \citep{foote2003media}. Foote correlated a Gaussian tapered checkerboard kernel of a fixed width $\beta$ down the diagonal of S to produce a novelty function. Any peaks found to be above a threshold $\iota$ are counted as novelty peaks. The kernel can be constructed with the Kronecker tensor product.
 
-To improve upon Foote's method; we introduces a radius parameter $\hat R$ which adds the constraint that no two peaks are allowed to be within a radius $\hat R$ of each other. The peaks are found in the (time) order of the dataset. A genetic search as described in Section~\ref{sec:findingbestcostmatrix} was executed to find parameters that perform robustly for this task. The parameters found were $\beta=120, \iota=0.3, \hat R=50$.
+To improve upon Foote's method; we introduced a radius parameter $\hat R$ which adds the constraint that no two peaks are allowed to be within a radius $\hat R$ of each other. The peaks are found in the (time) order of the dataset. A genetic search as described in Section~\ref{sec:findingbestcostmatrix} was executed to find parameters that perform robustly for this task. The parameters found were $\beta=120, \iota=0.3, \hat R=50$.
 
 We also compared to a naive method of guessing how many tracks were in a show, by diving the show length by the average track size ($377$ seconds).
 
@@ -979,11 +975,22 @@ See Figure~\ref{fig:track_shift} for an comparison of these three methods of tra
 
 \subsubsection{Comparison of Methods}
 
-It is useful to compare our algorithm for reconstructing track boundaries with Foote's novelty peak finding method in a general sense. The drawback of Foote's method is that it is problematic to find a fixed number of novelty peaks. It is clearly adaptable to find a \textit{maximum} number of peaks but this does not help because it already has the apparently interest feature that it rarely overestimates the number of tracks, it mainly underestimates.
+It is useful to compare our algorithm for reconstructing track boundaries with Foote's novelty peak finding method in a general sense. The drawback of Foote's method is that it is problematic to find a fixed number of novelty peaks. It is clearly adaptable to find a \textit{maximum} number of peaks but this does not help because it already has the interesting feature that it apparently rarely overestimates the number of tracks, it almost always underestimates.
 
-We will transform the problem into one of binary classification subject to a variable threshold. When a predicted boundary is within a threshold $\tilde t$ of an actual boundary, it will be called a true positive. Otherwise, a true negative. 
+We will henceforth transform the problem into one of binary classification subject to a variable threshold. When a predicted boundary is within a threshold time horizon $\tilde t$ of an actual boundary, it will be called a true positive. Otherwise, a true negative. We can borrow machine learning evaluators for binary classification problems; precision, recall and $F_1$ score.
 
-\texttt{TODO: discussion of precision, recall, f-score. Basically recall is |TP|/|Actual| Precision=|TP|/Predicted and F-Score is 2*((P*R)/(P+R))}
+Let
+
+\[
+F_1 = 2\frac{P \cdot R}{P+R}
+\] be the harmonic mean of precision 
+\[
+P = \frac{|TP|}{|P|}
+\]
+ and recall 
+\[
+R=\frac{|TP|}{|A|}
+\] subject to threshold time horizon $\tilde t$.
 
 See Figure~\ref{fig:fscores_breakdown} for a break down of $F_1$ scores for each data set and Figure~\ref{fig:fscores_best} for the overall $F_1$ scores for the entire corpus, for all time thresholds. Note that guessing refers to placing tracks every $377$ seconds until no more can be placed. What is clear is that adding the radius enhancement to Foote's method significantly improves its performance and it slightly out performs our algorithm when we estimate the number of tracks apart from on the \texttt{lindmik} dataset. 
 
@@ -991,9 +998,7 @@ When the number of tracks is known a priori, we significantly out perform Foote'
 
 \subsubsection{Results}
 
-
-Plotz \citep{plotz2006automatic} achieved a true positive rate of 81\% within $10$ second boundaries from ground truth for a similar task which sounds almost too good to be true considering the standard deviation of human disagreement on annotations for dance music can be over $9$ seconds (see Section~\ref{human_acc}). Our overall true positive average is 63\% at the $10$ seconds threshold. For \texttt{tatw} we achieve 72.2\% which may be more like the corpora Plotz worked with.
-
+Plotz \citep{plotz2006automatic} achieved a true positive rate of 81\% within $10$ second boundaries from ground truth for a similar task. Considering the standard deviation of human disagreement on annotations for dance music can be over $9$ seconds (see Section~\ref{human_acc}), this seems unobtainable with the corpus we have. Our overall true positive average is 63\% at the $10$ seconds threshold. For \texttt{tatw} we achieve 72.2\% which may be more like the corpora Plotz worked with.
 
 \section{Conclusion}\label{conclusions}
 
@@ -1003,9 +1008,9 @@ The new cost matrices in combination improve robustness significantly. The new c
 
 A weakness that we are aware of is the rare instances when there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements. 
 
-We would like to write an online version of the algorithm \texttt{TODO: more discussion}
+We are planning to write an on-line version of the algorithm in the future which will operate on a sliding lagged window of audio where the number of tracks could be estimated and the algorithm executed on the window.
 
-Would like to do;;;	agglomerative (hierarchical) clustering
+Would like to implement a regularised version of Radu's time dependent agglomerative (hierarchical) clustering algorithm \citep{radu} to see if it is suitable for this task. 
 
 \begin{table*}[h]
 	\centering
