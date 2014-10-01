@@ -10,11 +10,13 @@
 \usepackage{pseudocode}
 \usepackage{pdfpages}
 \usepackage{booktabs}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 
 \usepackage{tikz}
+\usetikzlibrary{arrows,positioning}
 \usetikzlibrary{shapes.geometric,calc}
 \usetikzlibrary{patterns}
 
@@ -73,7 +75,7 @@
 		
 We consider the problem of annotating song changes in DJ-mixed dance music recordings (pod-casts, radio shows, live events). It is an extremely laborious process to perform this task manually. We present an algorithm to reconstruct segment boundaries as close as possible to what a human domain expert would create in respect of the same task given a fixed number of boundaries. The algorithm is optimized for the scenario when the number of tracks is known a priori although is also capable of estimating the number of tracks and is evaluated in both circumstances. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. 
 
-The goal of DJ-mixing is to render track boundaries effectively invisible from human perception. Segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of general self-similarity and also specific notions such as; symmetry, contiguity and evolution in respect of time. The segmentation configuration is parametrised and an evolutionary algorithm is executed on a small test set to find optimal parameters for the tasks of segmentation. 
+The goal of DJ-mixing is to render track boundaries effectively invisible from human perception. Segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of general self-similarity and also specific notions such as; symmetry, contiguity and evolution in respect of time. The segmentation configuration is parametrized and an evolutionary algorithm is executed on a small test set to find optimal parameters for the tasks of segmentation. 
 
 Our work is quantitatively assessed on a large corpus ($640$ hours) of radio show recordings which have been hand-labelled by a domain expert. The method presented could be used on other segmentation tasks and other domains. 
 		\smallskip
@@ -89,7 +91,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	Electronic Dance Music tracks are usually mixed by a disc jockey (DJ). For this reason EDM music streams are unique compared to other genres of music. Mixing is the \textit{modus operandi} in electronic music. We first transform the audio file into a time series of features discretized into adjacent tiles and transform them into a domain where most pairs from the same track would be distinguishable by their cosine. 
 	
-	\textit{Contiguous-segmentation} differs from the standard clustering problem in that the clusters arrive sequentially and are contiguous (\texttt{AAABBBCCCDDD}, not \texttt{AAABBBCCCBBB}). In the literature this may also be known as \textit{time-dependent} clustering or \textit{homogeneous} clustering \citep{radu}. For brevity we will use the term \textit{segmentation} from now on to describe this configuration. The intuition behind the word homogeneous is that we desire segments that have intra-segment similarity and inter-segment dissimilarity to the maximum extent possible. We essentially make the assumption that the data will be homogeneous at least on the macro scale.
+	\textit{Contiguous-segmentation} differs from the standard clustering problem in that the clusters arrive sequentially and are contiguous (\texttt{AAABBBCCCDDD}, not \texttt{AAABBBCCCBBB}). This may also be known as \textit{time-dependent} clustering and is related to \textit{homogeneous} clustering. For brevity we will use the term \textit{segmentation} from now on to describe this configuration. The intuition behind the word homogeneous is that we desire segments that have intra-segment similarity and inter-segment dissimilarity to the maximum extent possible. We essentially make the assumption that the data will be homogeneous at least on the macro scale.
 	
 	Music and mixes of music have the property that they are made up of recursively repeating self-similar regions within segments. Our method does not strictly require any training or tenuous heuristics to perform well. The distinguishing feature of our problem domain is that the number of segments is known a priori but the segmentation boundaries are not known, or ambiguous and subjective. However, computing the best solution is desirable.
 	
@@ -136,7 +138,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	A possible drawback of the approach by Goodwin and all other approaches in scene analysis segmentation that; is that they are somewhat local methods that focus on points-of-change rather than optimizing for the best possible results given a fixed number of segments to find. As Goodwin did not provide any results, we can not conclude that a new distance function derived from learning a feature subspace improves segmentation accuracy. 
 	
-	Clustering algorithms do exist that find a fixed number of segments but we have the added constraint that these segments need to be homogeneous, contiguous and time-dependent. Radu \citep{radu} demonstrated a time-dependent modification of agglomerative (hierarchical) clustering for segmentation of music. A constraint was added such that during the algorithm clusters could only be merged if they were adjacent in time. Radu preprocessed the feature vectors to increase the homogeneity by averaging them over a sliding window of fixed size. Radu used a fixed number of clusters found as a stopping condition. The approach is model-free but by Radu's own admission lacks any form of regularization, possibly producing clusters that vary in size significantly. Radu modelled the segmentation as a binary classification problem (later also used by Badawy et al \citep{elaudio}) subject to error intervals allowing standard performance metrics such as precision, recall and $F_1$ score to be used. 
+	Clustering algorithms do exist that find a fixed number of segments but we have the added constraint that these segments need to be homogeneous, contiguous and time-dependent. Radu \citep{radu} demonstrated a time-dependent modification of agglomerative (hierarchical) clustering for segmentation of music. A constraint was added such that during the algorithm clusters could only be merged if they were adjacent in time. Radu preprocessed the feature vectors to increase the homogeneity by averaging them over a sliding window of fixed size. Radu used a fixed number of clusters found as a stopping condition. The approach is model-free but by Radu's own admission lacks any form of regularization, possibly producing clusters that vary in size significantly. Radu modelled the segmentation as a binary classification problem (later also used by Badawy et al \citep{elaudio}) subject to threshold time horizons allowing standard performance metrics such as precision, recall and $F_1$ score to be used. 
 	
 	Stochastic model-based approaches to segmentation also have been devised. Levy et al use hidden Markov models in their approach to music segmentation in \citep{levy2008structural}, building on their previous work \citep{levy2006new, levy2006extraction}. They HMM is based upon a generative Gaussian mixture model where each segment has a set of states, each generating a Gaussian distribution of feature vectors. A musical audio file can then be regarded as having an underlying sequence of states that generates the observed feature sequence. The HMM can then be trained with a priori knowledge. 
 	
@@ -258,7 +260,7 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 \]
  selecting the part of the spectrum between the high and low pass filters $h$ and $f$.  We take the absolute values of the complex result of $F(x_k)$ (defined as its distance in the complex plane from the origin using the Pythagorean theorem).
 	
-	To accentuate instrument harmonics we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection/transient filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution from having such large inputs into $F(t_i)$. For example with a tile size of $10$ seconds and a sample rate of $4000$ we have a frequency resolution of $\frac{1}{2}10 \cdot 4000 = 20$KHz. 
+	To accentuate instrument harmonics we perform convolution filtering on the feature vectors in $D$, using a Gaussian first derivative filter. This works like an edge detection/transient filter but also expands the width of the transients (instrument harmonics) to ensure that feature vectors from the same song appear similar because their harmonics are aligned on any distance measure (we use the cosines). This is an issue because of the extremely high frequency resolution from having such large inputs into $F(t_i)$. For example with a tile size of $10$ seconds and a sample rate of $4000$ we have a frequency resolution of $0.5 \cdot 10 \cdot 4000 = 20$KHz. 
 	
 	Typically a `short-time discrete Fourier transform' is used which has smaller sized inputs (windows) into $F(t_i)$ which are usually overlapping and are multiplied by a window function, attenuating the tails to reduce spectral leakage. Usually these window functions look similar to a Gaussian, for example;  
 	\[
@@ -273,10 +275,12 @@ D_{\bar{i}}^{1,\ldots,\hat{l}-\hat{h}+1} = \left|~F(Q_{\bar{i}}^{1,\ldots,\tilde
 	
 	Because the application domain is well defined in this setting, we can design features that look specifically for what we are interested in (musical instruments). Typically in the literature; algorithms use an amalgam of general purpose feature extractors. For example; spectral centroid, spectral moments, pitch, harmonicity \cite{tzanetakis1999framework}. We construct a dissimilarity matrix of cosines as is common in the literature for similar applications \cite{foote1999visualizing}. The cosines are computable easily because they are the the inner products of the respective features (the features have been normalized to unit length).
 	
+		\subsubsection{Self-Similarity Matrix}\label{sec:self-similarity}
+	
 	Let
 	\[
 	S_{ij} ~=~ 1-\langle D_{i}, D_{j}\rangle,
-	\] define the dissimilarity matrix.
+	\] define the dissimilarity matrix of cosines.
 	
 Then we apply some normalizing transformations. First we center $S$
 around $0.5$ by raising each element to the power $2s$, where
@@ -314,11 +318,9 @@ matrices as some of them depend on the sign of the value in $S$.
 		\label{fig:simmatrix}
 	\end{figure*} 
 	
-	\subsubsection{Self Similarity}\label{costmatrix_sec} % dynamic recursion
+	\subsubsection{Cost Matrices}\label{sec:cost-matrices}
 	
-	We now have a similarity matrix $S_{ij}$ as described in Section~\ref{feat_ex}. 
-	
-	Let $w$ and $W$ denote the minimum and maximum track length in seconds, these will be parameters of the algorithm that improve the time complexity while not significantly harming the results. 
+	Let $w$ and $W$ denote the minimum and maximum track length in seconds, these are be parameters of the algorithm that will help improve the time complexity. 
 	
 We proceed to constructing a cost matrix $C(f,t)$ that describes the
 cost of placing a track starting at $f$ and finishing at $t$ (and
@@ -329,7 +331,7 @@ function centred around the mean track length for all times which can
 be used to regularise the other $7$ matrices or used on its own as a
 comparator to a more naive method of placement.
 	
-	The cost matrices exploit themes such as contiguity, symmetry, evolution and change as well as simple summation of $S$ as was presented in our last paper \citep{scarfe2013long}. In our previous work $S$ was on the interval $[0,1]$ and the summation method could only consider disincentives. The new cost matrices have a parameter to shift the consideration of incentive versus disincentive and values on the interval $[-1,1]$.
+	The cost matrices described in this section exploit themes such as contiguity, symmetry, evolution and change as well as simple summation of $S$ as was presented in our last paper \citep{scarfe2013long}. In our previous work $S$ was on the interval $[0,1]$ and the summation method could only consider disincentives. The new cost matrices have a parameter to shift the consideration of incentive versus disincentive and values on the interval $[-1,1]$.
 	
 	On the whole, a significant number of tile pairs within one track are similar to each other. Pairs of tiles that do not belong to the same track are expected to be dissimilar, most of the time. However, tracks have contiguous regions within them that are dissimilar to each other. Transitions between songs may appear as a self-similar region but usually also similar to each adjacent track to varying degrees.  
 	
@@ -339,28 +341,27 @@ comparator to a more naive method of placement.
 %it will be normalized at the end; it is easier to explain recursion without normalization
 
 	\begin{dmath*}
-		\tilde C(f,t, \Omega) =  \sum_{i,j=f}^{t} \hat S_{ij}
+	\tilde C(f,t, \Omega) =	\sum_{i,j=f}^{t} \hat S_{ij}(\Omega)
 	\end{dmath*}
 where
 	\begin{dmath*}
-		\hat S_{ij}=	{ \left\{
+		\hat S_{ij}(\Omega)=	{ \left\{
 			\begin{array}{ll}
 				\Omega S_{ij},  & \text{~if~}S_{ij} > 0   \\
 				 \left( 1-\Omega \right) S_{ij}, & \mbox{~otherwise~}\\
 			\end{array}
 			\right.} 
 	\end{dmath*} 
-for all $i,j \in S$ (the parameter $\Omega$ control the balance of
-positive and negative values). Direct computation using the definition
+for all $i,j \in S$. The \textit{incentive bias} parameter $\Omega$ controls the balance of
+positive and negative values. Direct computation using the definition
 takes $O(TW^3)$ time. We can improve this to
-$O(TW)$ by using the following recursion (assume that $f+1 \le t-1$):
+$O(TW)$ by using the following recursion (assume that $f+1 \le t-1$, and note that the incentive bias parameter $\Omega$ has been temporarily removed for clarity):
 	\begin{dmath*}
 		\tilde C(f,t) = \tilde C(f+1,t) + \tilde C(f,t-1) - \tilde C(f+1,t-1) + \hat S_{ft} + \hat S_{tf}.
 	\end{dmath*} 
 The recursion implies that the cost of a track of length $L=t-f+1$ can
 be calculated from the costs of shorter tracks using a constant number
-of operations. The following picture (where the middle cell
-corresponds to $\Upsilon = \tilde{C}(f+1,t-1)$) provides an
+of operations. The following picture provides an
 illustration:
 	
 	\begin{center}
@@ -368,27 +369,38 @@ illustration:
 		\draw[step=1cm,color=gray] (0,0) grid (3,3);
 		
 		\draw[fill=gray!90, fill opacity=0.8] (1,1) -- (1,2) -- (2,2) -- (2,1) -- (1,1);
-		\draw[fill=gray!10, fill opacity=1] (0,2) -- (0,3) -- (1,3) -- (1,2) -- (0,2);
-		\draw[fill=black!10, fill opacity=0.8] (2,0) -- (3,0) -- (3,1) -- (2,1) -- (2,0);
 		
+		\draw[fill=gray!30, fill opacity=0.8] (1,1) -- (1,3) -- (3,3) -- (3,1) -- (1,1);
 		
 	\draw [step=0.5cm, pattern=north east lines] (0,0) rectangle (2,2);
 	
 		
-		\node[color=black] at (0.5,2.5) {$\hat S_\Omega^{(f,t)}$};
-		\node[color=black] at (2.5,0.5) {$\hat S_\Omega^{(f,t)}$};
+		\node[color=black] at (0.5,2.5) {$\hat S_{f,t}$};
+		\node[color=black] at (2.5,0.5) {$\hat S_{f,t}$};
 		
+		\draw[color=black!70,->, >=latex', shorten >=2pt, shorten <=2pt, bend left=5, thick, dashed] 
+		(2,2) to node[auto, swap] {}(4,2.5); 
+		
+		\draw[color=black!70,->, >=latex', shorten >=2pt, shorten <=2pt, bend right=5, thick, dashed] 
+		(1,1) to node[auto, swap] {}(4,0.5); 
+		
+		\draw[color=black!70,->, >=latex', shorten >=2pt, shorten <=2pt, bend left=0, thick, dashed] 
+		(1.5,1.5) to node[auto, swap] {}(3.5,1.5); 
+		
+		\node[color=black] at (-0.2,3.2) {$\hat S$};
 		
 		\draw[color=black] (0,0) -- (0,2) -- (2,2) -- (2,0) -- (0,0);
 		\draw[color=black] (3,3) -- (1,3) -- (1,1) -- (3,1) -- (3,3);
 		
-		\node[color=black,fill=white, fill opacity=0.8] at (1,1) {$\tilde{C}(f,t-1)$};
-		\node[color=black,fill=white, fill opacity=0.8] at (2,2) {$\tilde{C}(f+1,t)$};
+		\node[color=black] at (5,0.5) {$\tilde{C}(f,t-1)$};
+		\node[color=black] at (5,1.5) {$\tilde{C}(f+1,t-1)$};
+		\node[color=black] at (5,2.5) {$\tilde{C}(f+1,t)$};
 		
-		\node[color=white] at (1.5,1.5) {$\Upsilon$};
 		
 		\end{tikzpicture}.
 	\end{center} 
+	
+	\bigskip
 
 %	The final cost matrix is normalized by width and incentive bias
 %\[
@@ -432,10 +444,62 @@ Clearly, one can reuse the cost for shorter intervals to calculate the
 cost of longer ones, namely, $\tilde C_{f+1,t-1}$ can be used to
 calculate $\tilde C_{ft}$ this saving computation time.
 
+		\begin{center}
+			\begin{tikzpicture}
+			\draw[step=1cm,color=gray] (0,0) grid (3,3);
+			
+			\draw[fill=gray!90, fill opacity=0.5] (0,0) -- (0,1) -- (1,1) -- (1,0) -- (0,0);
+			\draw[fill=gray!90, fill opacity=0.5] (2,3) -- (3,3) -- (3,2) -- (2,2) -- (2,3);
+			
+			\draw[fill=gray!40, fill opacity=0.5] (1,0) -- (1,1) -- (2,1) -- (2,0) -- (1,0);
+			\draw[fill=gray!40, fill opacity=0.5] (2,1) -- (2,2) -- (3,2) -- (3,1) -- (2,1);
+			
+			\node[color=black] at (-0.2,3.2) {$\hat S$};
+			
+			\node[color=black] at (0.5,0.5) {$p$};
+			\node[color=black] at (2.5,2.5) {$q$};
+				\node[color=black] at (1.5,0.5) {$p$};
+				\node[color=black] at (2.5,1.5) {$q$};
+			\node[color=black] at (2.5,0.5) {$pq$};
+			\node[color=black] at (1.5,1.5) {$pq$};
+			
+			\node[color=black] at (-1,-2.2) { \begin{sideways}$\Lambda(f,t,d=0)$\end{sideways} };
+			\node[color=black] at (0,-2.2) { \begin{sideways}$\Lambda(f,t,d=1)$\end{sideways} };
+			\node[color=black] at (1,-2.2) { \begin{sideways}$\Lambda(f,t,d=2)$\end{sideways} };
+				
+			
+			
+			\node[color=black] at (5.2,2.8) { $ 
+				\left\{ \begin{array}{ll}
+				                   &  \\
+				                   &  \\
+				\delta(p,q,\Omega) &  \\
+				                   &  \\
+				                   &
+			\end{array} \right. $  };
+			
+			\draw[<->, >=latex', shorten >=2pt, shorten <=2pt, bend left=45, thick, dashed] 
+			(0.5,0.5) to node[auto, swap] {}(2.5,2.5); 
+			
+			
+			\draw[<->, >=latex', shorten >=2pt, shorten <=2pt, bend left=45, thick, dashed] 
+			(1.5,0.5) to node[auto, swap] {}(2.5,1.5); 
+			
+			
+			\draw[color=gray!60,->, >=latex', shorten >=2pt, shorten <=2pt, bend left=0, thick, dashed] (-1,-1) to node[auto, swap] {}(4,4); 
+			
+			\draw[color=gray!60,->, >=latex', shorten >=2pt, shorten <=2pt, bend left=0, thick, dashed] (0,-1) to node[auto, swap] {}(4,3); 
+			
+			\draw[color=gray!60,->, >=latex', shorten >=2pt, shorten <=2pt, bend left=0, thick, dashed] (1,-1) to node[auto, swap] {}(4,2); 
+			
+			\end{tikzpicture}.
+		\end{center}
+	
+	
 	
 %	Finally, the symmetry change matrix is defined where $\hat \delta$ is the same as the \textit{symmetry summation}, the width normalization is removed and the inner sum of the definition becomes the first order differences. For the sake of brevity we have omitted the dynamic programming formulations which run in $O(TW^2)$ time but they have been implemented in code and are available on-line (see Section~\ref{sec:materials}). This is also the case for all the following cost matrices.
 	
-	\paragraph{Static Contiguity}
+\paragraph{Static Contiguity}
 
 Horizontal contiguous traces in $S$ indicate that the track is
 self-similar (negative values) or self-dissimilar (positive values)
@@ -443,6 +507,12 @@ due to repetition. If a given tile is the same as a set of contiguous
 tiles following it, then there is some static contiguous region in the
 show. The word \textit{static} denotes that the music is not evolving in
 respect of time (which would instead create a diagonal trace in $S$).
+
+
+\[
+\tilde C(f,t, \Omega) =  \sum_{i,j=f}^{t} {S}_{ij}
+\]
+
 
 Let $\Gamma(f,t,h)$ be the horizontal segment in the matrix $S$
 showing the similarity of tile $f+h-1$ to `future' tiles $f+h,
@@ -1017,7 +1087,7 @@ Would like to implement a regularised version of Radu's time dependent agglomera
 	
 	\scalebox{0.75}{
 	\begin{tabular}{llll@{}llllllllllllllllll@{}}
-			& \begin{sideways} \textsc{Interval} \end{sideways}	& \begin{sideways} \textsc{Notation} \end{sideways} & \begin{sideways}\textsc{Mean All}\end{sideways} & \begin{sideways}\textsc{Mean Contig}\end{sideways} & \begin{sideways}\textsc{Mean Evolution}\end{sideways} & \begin{sideways}\textsc{Mean Sum}\end{sideways} & \begin{sideways}\textsc{Mean Symmetry}\end{sideways} & \begin{sideways}\textsc{Median All}\end{sideways} & \begin{sideways}\textsc{Median Contig}\end{sideways} & \begin{sideways}\textsc{Median Evolution}\end{sideways} & \begin{sideways}\textsc{Median Sum}\end{sideways} & \begin{sideways}\textsc{Median Symmetry}\end{sideways} & \begin{sideways}\textsc{Track Estimation}\end{sideways} \\
+			& \begin{sideways} \textsc{Domain} \end{sideways}	& \begin{sideways} \textsc{Notation} \end{sideways} & \begin{sideways}\textsc{Mean All}\end{sideways} & \begin{sideways}\textsc{Mean Contig}\end{sideways} & \begin{sideways}\textsc{Mean Evolution}\end{sideways} & \begin{sideways}\textsc{Mean Sum}\end{sideways} & \begin{sideways}\textsc{Mean Symmetry}\end{sideways} & \begin{sideways}\textsc{Median All}\end{sideways} & \begin{sideways}\textsc{Median Contig}\end{sideways} & \begin{sideways}\textsc{Median Evolution}\end{sideways} & \begin{sideways}\textsc{Median Sum}\end{sideways} & \begin{sideways}\textsc{Median Symmetry}\end{sideways} & \begin{sideways}\textsc{Track Estimation}\end{sideways} \\
 		\toprule
 		\textsc{Experiment Number}          &                   &            & 1     & 2    & 3    & 4    & 5    & 6    & 7    & 8    & 9    & 10   & 11   &  \\ \toprule
 		\texttt{Seconds Per Tile (S) }      & $3,\ldots,50$     & $M$        & 3     & 3    & 6    & 5    & 8    & 3    & 7    & 3    & 5    & 9    & 38   &  \\

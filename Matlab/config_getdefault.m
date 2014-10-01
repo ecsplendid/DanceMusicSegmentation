@@ -39,8 +39,8 @@ c.cosine_normalization = 0.7;
 
 % USE THESE>>>
 c.use_costsymmetry        = 0;       c.costsymmetry_incentivebalance = 0.1238;
-c.use_costcontigpast      = 0;     c.costcontigpast_incentivebalance = 0.5295;
-c.use_costcontigfuture    = 0;   c.costcontigfuture_incentivebalance = 0.5227;
+c.use_costcontigpast      = 1;     c.costcontigpast_incentivebalance = 0.5295;
+c.use_costcontigfuture    = 1;   c.costcontigfuture_incentivebalance = 0.5227;
 c.use_costsum             = 1;             c.costsum_incentivebalance = 0.5;
 c.use_costgaussian        = 1;           c.costgauss_incentivebalance = 0.5;
 c.use_costcontigevolution = 0;      c.costevolution_incentivebalance = 0.4;

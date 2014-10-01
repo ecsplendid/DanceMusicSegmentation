@@ -30,8 +30,11 @@ for w=1:W
 end
 
 C(isnan(C)) = 0;
+
+% take a recording of the original signs
 sg = sign(C);
 
+% incentive bias transformation
 CP = C;
 CP(CP<=0) = CP(CP<=0) .* ibp;
 CP(CP>0) = CP(CP>0) * (1-ibp);
@@ -43,11 +46,17 @@ CF(CF>0) = CF(CF>0) * (1-ibf);
 dpa = config.costcontig_pastdiffwindow;
 dfa = config.costcontig_futurediffwindow;
 
+% take nth order differences
 Cpast = diff(CP, dpa, 2);
 
+% normalize
 Cpast = normalize_costmatrix( Cpast );
+
+%place all values on [0,1]
 Cpast(Cpast<=0) = 1-abs(Cpast(Cpast<=0));
 Cpast(Cpast>0) = 1-Cpast(Cpast>0);
+
+% apply the "usage" coefficient
 Cpast = Cpast .* config.use_costcontigpast;
 
 Cfuture = diff(CF,dfa,1);
