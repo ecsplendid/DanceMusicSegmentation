@@ -296,8 +296,7 @@ Secondly we raise each value $S_{ij}$ to a power $\hat c \in
 [0.5,1.5]$ and then rescale and translate them to $[0,1]$ using
 $S_{i,j}\to 2S_{ij}-1$.  The parameter $\hat c$ is tuned so as to
 achieve the right balance between negative \textit{incentives} and
-positive \textit{disincentives} for meaningful track placement. The
-distribution of values in $S$ after the transformations will have a
+positive \textit{disincentives} for meaningful track placement. We discovered in \citep{scarfe2013long}  that there was a pitfall of self-dissimilar regions within tracks negatively affecting the cost of placement. The distribution of values in $S$ after the transformations will have a
 raised tail on left. This will become relevant when we discuss cost
 matrices as some of them depend on the sign of the value in $S$.
 	
@@ -741,7 +740,7 @@ P(j,s,f) ~=~ \frac{\head^{s-1}_{j-1} \cdot e^{-\eta C(s, f-s+1)} \cdot \tail^{f+
 
 \subsection{Track Index Confidence}
 
-We can use the posterior marginal of song boundary to give estimates of confidence on track index placement and time accuracy.
+We can use the posterior marginal of song boundary to give estimates of confidence on track index placement and time accuracy. To be clear; the \textit{index placement} for an estimated track time might be $4$ to indicate that this track should come $4$th in the sequence of tracks.
 
 To estimate the uncertainty of correct track alignment, we select the next highest probability of other track placements at the same time of the optimal placement from $P(j,s)$ and normalize them by the probability of the optimal placement.
 
@@ -760,10 +759,11 @@ Let
 \tilde I( j ) = 1-\frac{ \mathrm{Peaks}( P(j, 1,\ldots,T ) )_2 } { \mathrm{Peaks}( P(j, 1,\ldots,T ))_1 }
 \end{align*} where $Peaks(s_i)$ is a peak finding algorithm that returns the peaks in descending order of magnitude (we used the \texttt{findpeaks} function in MatLab).
 
+So this measure estimates how certain we are that the time estimated (for example $455$ seconds) is correct.
 
 \section{Experiments}\label{sec:experiments}
 
-\subsection{Training Set}
+\subsection{Training Set}\label{sec:training-set}
 
 We selected $6$ shows at random (two of each show type)  to create a training set, which we will refer to as the \textit{GitHub training set}. See Table~\ref{table:githubset} to see the shows we selected.
 
@@ -790,7 +790,7 @@ We selected $6$ shows at random (two of each show type)  to create a training se
 	
 \end{table*}
 
-\subsection{Tracks Known A Priori}\label{sec:apriori}
+\subsection{Number Of Tracks Known A Priori}\label{sec:apriori}
 
 The primary goal of this research is to reconstruct optimal track boundaries when the number of tracks is known a priori. This experiment will pass the actual number of tracks as a parameter into the algorithm input variable $m$. The advantage of this is that the number of predicted tracks will equal the number of actual tracks so intuitive measures of predictive performance can be employed. 
 
@@ -798,11 +798,11 @@ The primary goal of this research is to reconstruct optimal track boundaries whe
 
 The inherent challenge with quantifying the performance of our approach is that if we misplace any tracks, it may have a cascade effect. For example if we place one track too many early on in a show, many of the subsequent tracks may be correctly detected but placed out of alignment. 
 
-For the task of computing the best cost segmentation when the number of tracks are known a priori, we can use simple statistical descriptions of the track residuals $|P_{st}-A_{st}|$ where $P$ is the predicted track, $A$ the actual track, for show $s$ and track $t$ (for all $s$ and $t$ in the corpus). The mean average will give a good indication of the amount of misplacements (how robust the method is). The median of the residuals will indicate the actual track accuracy invariant to any catastrophic misplacements. The standard deviation of the residuals will indicate the spread of error. 
+For the task of computing the best cost segmentation when the number of tracks are known a priori, we can use simple statistical descriptions of the track residuals $|P_{st}-A_{s't'}|$ where $P$ is the predicted track, $A$ the actual track, for show $s$ and track $t$ (for all $s$,$t$ and $s'$,$t'$ in the corpus). The mean average will give a good indication of the amount of misplacements (how robust the method is). The median of the residuals will indicate the actual track accuracy invariant to any catastrophic misplacements. The standard deviation of the residuals will indicate the spread of error. 
 
 \subsubsection{Finding The Best Parameters}\label{sec:findingbestcostmatrix}
 
-We used the GitHub training set to find robust algorithm parameters using a stochastic optimization (genetic algorithm) search. The genetic algorithm was selected because it allows integer constraints. We selected a population size of $50$, an elite count of $7$ and crossover fraction of $0.5$. The stopping limit for the algorithm was when the optimization objective function had stalled for $5$ generations. The \texttt{ga}\footnote{\url{http://www.mathworks.co.uk/help/gads/ga.html}} function from the MATLAB global optimization toolbox was used. 
+We used the GitHub (see Section \ref{sec:training-set}) training set to find robust algorithm parameters using a stochastic optimization (genetic algorithm) search. The genetic algorithm was selected because it allows integer constraints. We selected a population size of $50$, an elite count of $7$ and crossover fraction of $0.5$. The stopping limit for the algorithm was when the optimization objective function had stalled for $5$ generations. The \texttt{ga}\footnote{\url{http://www.mathworks.co.uk/help/gads/ga.html}} function from the MATLAB global optimization toolbox was used. 
 
 We considered two objective functions; minimizing the mean absolute track error and secondly the median absolute track error (see Section~\ref{eval_crit}).
 
@@ -810,22 +810,30 @@ For each of these objective functions we devised $5$ conditional experiments inv
 
 \subsubsection{Results}\label{sec:results}
 
-Please see Tables~\ref{tab:mean-results} and~\ref{tab:median-results} for the results and Figure~\ref{fig:shifthistogram} for a histogram comparing track errors for experiments $1,2,3,\ldots,5$.
+Please see Tables~\ref{tab:mean-results} and~\ref{tab:median-results} for the results and Figure~\ref{fig:shifthistogram} for a histogram comparing track errors for experiments $1$ to $5$.
 
-We notice that the \textit{contig-static}, \textit{evolution} and \textit{symmetry} cost matrices fail to perform well on their own. It was not really our intention to design these cost matrices to work well on their own but rather to augment the summation matrix. The Gaussian cost matrix then adds regularization. As reported in our last paper \cite{scarfe2013long}, the sum cost matrix performs robustly independently. When we consider the best combination of all cost matrices as defined by the results of the genetic algorithm (experiments $1$, $6$); the overall mean performance is improved substantially which means there are fewer catastrophic misplacements. 
+We notice that the \textit{contig-static}, \textit{evolution} and \textit{symmetry} cost matrices fail to perform well on their own. It was not really our intention to design these cost matrices to work well on their own but rather to augment the summation matrix. The Gaussian cost matrix then adds regularization. As reported in \cite{scarfe2013long}, the sum cost matrix performs robustly independently. When we consider the best combination of all cost matrices as defined by the results of the genetic algorithm (experiments $1$, $6$); the overall mean performance is improved substantially which means there are fewer catastrophic misplacements. 
 
-\texttt{TATW} has the best overall performance (median 5 seconds on experiment $6$) and this likely indicates it has, on average a lower transitional complexity between adjacent tracks. 
+\texttt{TATW} has the best overall performance (median 5 seconds on experiment $6$) and this likely indicates it has an overall lower DJ-mixing complexity of transitions between adjacent tracks. 
 
 We can conclude from these results that taking the best mixture of cost matrices significantly improves the robustness (mean-absolute of track errors) and spread (standard deviation of track errors) of the results. 
 
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.5\textwidth]{images/shift_histogram}
-		\caption{Histogram of the residuals (errors) between reconstructed and human captured time indices. Apart from obvious noise there appears to be a tendency for the algorithm to place an index slightly earlier. Contig-static cost matrix apparently contained parameters selected through optimization that shifted it to remove some of this effect.    }
+		
+		\moveright 0.24cm \hbox{
+		\includegraphics[width=0.46\textwidth]{images/shift_histogram}
+		}
+	
+		\includegraphics[width=0.5\textwidth]{images/residuals_byshow}
+		
+		
+		
+		\caption{Histogram of the residuals (errors) between reconstructed and human captured time indices per experiment (top) and with best mean-optimized mixture broken down by show (bottom). Apart from obvious noise there appears to be a tendency for the algorithm to place an index slightly earlier.    }
 		\label{fig:shifthistogram}
 	\end{figure} 
 
-On our previous work we were effectively using a disincentive-only summation matrix, and found that normalizing costs on the square root of track length produced the best result. Something similar is happening here as the genetic algorithm has selected values less than $1$ on the sum normalization (experiments $4$,$9$) which would encourage placement of longer tracks. Note that we no longer discard any shows from evaluation which makes this result stronger.
+On \citep{scarfe2013long} we were effectively using a disincentive-only summation matrix, and found that normalizing costs on the square root of track length produced the best result. Something similar is happening here as the genetic algorithm has selected values less than $1$ on the sum normalization (experiments $4$,$9$) which would encourage placement of longer tracks. As opposed to \citep{scarfe2013long}, we no longer discard any shows from evaluation.
 
 \begin{table*}[t]
 	\centering
@@ -935,17 +943,18 @@ Mixing the cost matrices had little effect on the time placement of indices.
 
 
 % GENETIC ALGORITHM DESCRIPTION
-\subsection{Tracks Not Known A Priori}\label{sec:trackcount}
+\subsection{Number Of Tracks Not Known A Priori}\label{sec:trackcount}
 
 The main goal of our research is providing the best possible time dependent contiguous segmentation given a fixed number of tracks $m$, rather than estimating $m$. This problem has not been addressed before to our knowledge; namely that the number of segments is known a priori but segmentation itself is not. However, the number of tracks could be estimated in a naive sense because the variable of track lengths is Gaussian (see Figure~\ref{fig:tracklengths}). 
 
-We propose the following method of adapting our framework to estimate the number of contiguous segments in a data stream. For every possible candidate number of tracks $\hbar$, compute the cost of fitting $\hbar$ tracks using the algorithm described in Section~\ref{best_cost} and normalize it by $\hbar$ and take the solution on the saddle point. We ran the same genetic algorithm as described in Section~\ref{sec:findingbestcostmatrix} to find the best set of parameters for this task. This is referred to as experiment $11$ in Table~\ref{tab:parameters}. See Figure~\ref{fig:github_trackestimation} for a visual example of estimating the number of tracks using this method. 
+
+We propose the following method of adapting our framework to estimate the number of contiguous segments in a data stream. For every possible candidate number of tracks $\dag$, compute the cost of fitting $\dag$ tracks using the algorithm described in Section~\ref{best_cost} and normalize it by $\dag$ and take the solution $n$ on the saddle point where the normalized quantity achieves the minimum (see Figure~\ref{fig:github_trackestimation} for an illustration). We ran the same genetic algorithm as described in Section~\ref{sec:findingbestcostmatrix} to find the best set of parameters for this task. This is referred to as experiment $11$ in Table~\ref{tab:parameters}.
 
 For comparison; we have implemented Footes method of segmentation \citep{foote2003media}. Foote correlated a Gaussian tapered checkerboard kernel of a fixed width $\beta$ down the diagonal of S to produce a novelty function. Any peaks found to be above a threshold $\iota$ are counted as novelty peaks. The kernel can be constructed with the Kronecker tensor product.
 
-To improve upon Foote's method; we introduced a radius parameter $\hat R$ which adds the constraint that no two peaks are allowed to be within a radius $\hat R$ of each other. The peaks are found in the (time) order of the dataset. A genetic search as described in Section~\ref{sec:findingbestcostmatrix} was executed to find parameters that perform robustly for this task. The parameters found were $\beta=120, \iota=0.3, \hat R=50$.
+To improve upon Foote's method; we introduced a radius parameter $\hat R$ which adds the constraint that no two peaks are allowed to be within a radius $\hat R$ of each other. The peaks are found in the (time) order of the dataset. A genetic search as described in Section~\ref{sec:findingbestcostmatrix} was executed to find parameters that perform robustly for this task. The parameters found were $\beta=120, \iota=0.3, \hat R=50$. We will henceforth refer to this algorithm as the \textit{enhanced} Foote novelty peak approach.
 
-We also compared to a naive method of guessing how many tracks were in a show, by diving the show length by the average track size ($377$ seconds).
+We also compared to a naive method of guessing how many tracks were in a show, by diving the show length by the overall average track size.
 
 See Figure~\ref{fig:track_shift} for an comparison of these three methods of track estimation. Our method estimates the correct number of tracks $45.7$\% of the time, the novelty peak finding approach $44.5$\% of the time and the naive approach $11.5$\% of cases. There is not a significant different in performance between the enhanced version of Foote's approach and ours. An interesting feature of Foote's enhanced algorithm is that it almost never overestimates the number of tracks. It seems likely that some combination of the methods would yield improved results. 
 
@@ -978,10 +987,10 @@ F_1 = 2\frac{P \cdot R}{P+R}
 \[
 P = \frac{|TP|}{|P|}
 \]
- and recall 
+ and recall (true positive rate)
 \[
 R=\frac{|TP|}{|A|}
-\] subject to threshold time horizon $\tilde t$.
+\] subject to threshold time horizon $\tilde t$. Note $|P|$ denotes the number of predicted tracks tracks and $|A|$ the number of actual tracks in a given show.
 
 See Figure~\ref{fig:fscores_breakdown} for a break down of $F_1$ scores for each data set and Figure~\ref{fig:fscores_best} for the overall $F_1$ scores for the entire corpus, for all time thresholds. Note that guessing refers to placing tracks every $377$ seconds until no more can be placed. What is clear is that adding the radius enhancement to Foote's method significantly improves its performance and it slightly out performs our algorithm when we estimate the number of tracks apart from on the \texttt{lindmik} dataset. 
 
@@ -995,13 +1004,13 @@ Plotz \citep{plotz2006automatic} achieved a true positive rate of 81\% within $1
 
 We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. It would be excellent if \textit{SoundCloud}\footnote{\url{http://www.soundcloud.com}} for example started to do something similar. \textit{SoundCloud} is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to reliably segment the shows, and they could display an interactive segmentation in the music player. 
 
-The new cost matrices in combination improve robustness significantly over a summation cost matrix alone. They are also partly immunised against dissimilar regions within tracks which was a weakness on our previous paper \citep{scarfe2013long}. One problem that we are aware of is the rare instances when there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements.
+The new cost matrices in combination improve robustness significantly over a summation cost matrix alone. They are also partly immunised against dissimilar regions within tracks which was a weakness in \citep{scarfe2013long}. One problem that we are aware of is the rare instances when there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements.
 
-We are able to operate in the scenario when the number of tracks is not known a priori and perform comparably with our \textit{enhanced} version of Foote's \citep{foote2003media} method for both segmentation and estimation of how many tracks exist in a recording. On the \texttt{lindmik} dataset, we out-perform the enhanced Foote method. Our method comes into its own however in the scenario when the number of tracks is known a priori. We significantly out perform Foote's method for this as there is no reasonable to adapt Foote's method to find a fixed number of tracks in an optimal configuration. 
+We are able to operate in the scenario when the number of tracks is not known a priori and perform comparably with our \textit{enhanced} version of Foote's \citep{foote2003media} method for both segmentation and estimation of how many tracks exist in a recording. On the \texttt{lindmik} dataset, we out-perform the enhanced Foote method. Our method comes into its own however in the scenario when the number of tracks is known a priori. We significantly out perform Foote's method for this and there is no constructive way to adapt Foote's method to find a fixed number of tracks. 
 
-We are planning to write an on-line version of the algorithm in the future which will operate on a sliding lagged window of audio where the number of tracks could be estimated and the algorithm executed on the window.
+Further work includes the plan to write an on-line version of the algorithm in the future which will operate on a sliding lagged window of audio where the number of tracks could be estimated and the algorithm executed on the window. We would also like to implement a regularised version of Radu's time dependent agglomerative (hierarchical) clustering algorithm \citep{radu} to see if it is suitable for this task. 
 
-Would like to implement a regularised version of Radu's time dependent agglomerative (hierarchical) clustering algorithm \citep{radu} to see if it is suitable for this task. 
+One of the apparently unique properties of our method is that is it does not directly consider inter-segment dissimilarity. The costs are computed only from intra-segment similarity and there is only an implied notion if any of the dissimilarity between segments. Therefore, an interesting direction would be reformulating the algorithm to consider transitional \textit{switching} and \textit{sticking} costs through a state graph where the number of switches was fixed in advance. This would be a somewhat similar direction to \citep{goodwin2003audio,goodwin2004dynamic} apart from fixing the number of segments a priori if they were known would possibly improve the accuracy of the annotations as we have demonstrated here.
 
 \begin{table*}[h]
 	\centering
