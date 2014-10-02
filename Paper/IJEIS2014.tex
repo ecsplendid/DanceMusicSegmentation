@@ -136,7 +136,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	Goodwin et al.\ used a dynamic program for segmentation \citep{goodwin2004dynamic}. Their approach was to perform linear discriminant analysis to project features into an a priori learned feature space. Afterwards, Goodwin formulated the problem into one of finding the globally minimum cost path through a state graph (the so called `cluster space trajectory') modelling local and transition costs between segments. Goodwin already demonstrated in \citep{goodwin2003audio} that novelty peaks often exist within segments, not only on the boundary of segments and took the approach of modelling all possible sequential transitions between all possible segments.
 	
-	A possible drawback of the approach by Goodwin and all other approaches in scene analysis segmentation that; is that they are somewhat local methods that focus on points-of-change rather than optimizing for the best possible results given a fixed number of segments to find. As Goodwin did not provide any results, we can not conclude that a new distance function derived from learning a feature subspace improves segmentation accuracy. 
+	A possible drawback to the approach by Goodwin and all other approaches in scene analysis segmentation that; is that they are somewhat local methods that focus on points-of-change rather than optimizing for the best possible results given a fixed number of segments to find. As Goodwin did not provide any results, we cannot conclude that a new distance function derived from learning a feature subspace improves segmentation accuracy. 
 	
 	Clustering algorithms do exist that find a fixed number of segments but we have the added constraint that these segments need to be homogeneous, contiguous and time-dependent. Radu \citep{radu} demonstrated a time-dependent modification of agglomerative (hierarchical) clustering for segmentation of music. A constraint was added such that during the algorithm clusters could only be merged if they were adjacent in time. Radu preprocessed the feature vectors to increase the homogeneity by averaging them over a sliding window of fixed size. Radu used a fixed number of clusters found as a stopping condition. The approach is model-free but by Radu's own admission lacks any form of regularization, possibly producing clusters that vary in size significantly. Radu modelled the segmentation as a binary classification problem (later also used by Badawy et al \citep{elaudio}) subject to threshold time horizons allowing standard performance metrics such as precision, recall and $F_1$ score to be used. 
 	
@@ -154,7 +154,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	There are no silent gaps in the recordings. The shows come in $44100$ samples per second, $16$ bit stereo MP3 files sampled at $192$Kbs. We re-sampled these to $4000$Hz $16$ bit mono (left+right channel) WAV files to allow us to process them faster. We have used the \textit{Sound eXchange}\footnote{\url{http://sox.sourceforge.net}} program to do this. These shows are all $2$ hours long. The overall average track length is $5$ and a half minutes (slightly less for Magic Island (see Figure~\ref{fig:tracklengths})) and normally distributed.  There is a guest mix on the second half of each show. The guest mix DJs show off their skills with technically convoluted mixing, so it is fair to say that the boundary complexity increases during the guest mix and is at least not constant throughout the shows.
 	
-	An additional dataset of $36$ radio shows have been mixed by and annotated by Mikael Lindgren (the so called \texttt{lindmik} dataset). These shows are extremely useful because the DJ is the same person that created the ground truth time indices which should in theory reduce the amount of human confusion present in the annotation. Also there is less noise, for example voice-overs, guest mixes, radio show sounds, introductions etc. These shows also vary significantly in length from $1$ hour to nearly $5$ hours. There are $339$ shows in total.
+	An additional dataset of $36$ radio shows have been mixed by and annotated by Mikael Lindgren (the so called \texttt{lindmik} dataset). These shows are extremely useful because the DJ is the same person who created the ground truth time indices which should in theory reduce the amount of human confusion present in the annotation. Also there is less noise, for example voice-overs, guest mixes, radio show sounds, introductions etc. These shows also vary significantly in length from $1$ hour to nearly $5$ hours. There are $339$ shows in total.
 	
 	We believe this corpus is the largest of its kind used in the literature going on the comparative table of segmentation corpora listed by Peiszer et al in their literature review of audio segmentation \cite{peiszer2008automatic}. More recently Badawy et al \citep{elaudio} used a corpus of $61$ hours. The corpus we are using is longer than $640$ hours in length. 
 	
@@ -522,7 +522,7 @@ Note that this algorithm introduces new parameters: $\dot p$ for the past nth or
 
 \begin{algorithm}
 	\DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
-	$\dot s = \mathrm{sign}(S_{ij})$ \\
+	$\dot s_{ij} = \mathrm{sign}(S_{ij})$ \\
 	$P_{ij} \gets \mathrm{diff}( \hat S( \overleftarrow{\Omega} )^\intercal, \dot p )^\intercal$ \\
 	$P_{ij} \gets \hat N( P )$ \\
 	$ P(P < 0) \gets 1-|P(P < 0)|$ \\
@@ -552,6 +552,7 @@ $\dot S$ is then transformed into a cost matrix $\vec{C}(f,t,\bar n,\dot s,\dot 
 \paragraph{Evolutionary Contiguity}
 
 Any diagonal traces in $S$ that are parallel to the main diagonal are partial copies of the track in the future which evolve in respect of time. Evolutionary contiguity is a diagonal version of the static contiguity cost matrix described in Section~\ref{sec:static-contiguity}.
+
 
 
 \begin{algorithm}
@@ -840,7 +841,7 @@ Please see Tables~\ref{tab:mean-results} and~\ref{tab:median-results} for the re
 
 We notice that the \textit{contig-static}, \textit{evolution} and \textit{symmetry} cost matrices fail to perform well on their own. It was not really our intention to design these cost matrices to work well on their own but rather to augment the summation matrix. The Gaussian cost matrix then adds regularization. As reported in \cite{scarfe2013long}, the sum cost matrix performs robustly independently. When we consider the best combination of all cost matrices as defined by the results of the genetic algorithm (experiments $1$, $6$); the overall mean performance is improved substantially which means there are fewer catastrophic misplacements. 
 
-\texttt{TATW} has the best overall performance (median 5 seconds on experiment $6$) and this likely indicates it has an overall lower DJ-mixing complexity of transitions between adjacent tracks. 
+\texttt{TATW} has the best overall performance (median 5 seconds on experiment $6$) and this is likely to indicate that it has an overall lower `complexity' of DJ-mixing.
 
 We can conclude from these results that taking the best mixture of cost matrices significantly improves the robustness (mean-absolute of track errors) and spread (standard deviation of track errors) of the results. 
 
@@ -974,15 +975,15 @@ Mixing the cost matrices had little effect on the time placement of indices.
 The main goal of our research is providing the best possible time dependent contiguous segmentation given a fixed number of tracks $m$, rather than estimating $m$. This problem has not been addressed before to our knowledge; namely that the number of segments is known a priori but segmentation itself is not. However, the number of tracks could be estimated in a naive sense because the variable of track lengths is Gaussian (see Figure~\ref{fig:tracklengths}). 
 
 
-We propose the following method of adapting our framework to estimate the number of contiguous segments in a data stream. For every possible candidate number of tracks $\dag$, compute the cost of fitting $\dag$ tracks using the algorithm described in Section~\ref{best_cost} and normalize it by $\dag$ and take the solution $n$ on the saddle point where the normalized quantity achieves the minimum (see Figure~\ref{fig:github_trackestimation} for an illustration). We ran the same genetic algorithm as described in Section~\ref{sec:findingbestcostmatrix} to find the best set of parameters for this task. This is referred to as experiment $11$ in Table~\ref{tab:parameters}.
+We propose the following method of adapting our framework to estimate the number of contiguous segments in a data stream. For every possible candidate number of tracks $\vartriangle$, compute the cost of fitting $\vartriangle$ tracks using the algorithm described in Section~\ref{best_cost} and normalize it by $\vartriangle$ and take the solution $n$ on the saddle point where the normalized quantity achieves the minimum (see Figure~\ref{fig:github_trackestimation} for an illustration). We ran the same genetic algorithm as described in Section~\ref{sec:findingbestcostmatrix} to find the best set of parameters for this task. This is referred to as experiment $11$ in Table~\ref{tab:parameters}.
 
 For comparison; we have implemented Footes method of segmentation \citep{foote2003media}. Foote correlated a Gaussian tapered checkerboard kernel of a fixed width $\beta$ down the diagonal of S to produce a novelty function. The multiplicative Gaussian kernel has a width and standard deviation of $\beta$.  Any peaks found to be above a threshold $\iota$ are counted as novelty peaks. The kernel can be constructed with the Kronecker tensor product.
 
 To improve upon Foote's method; we introduced a radius parameter $\hat R$ which adds the constraint that no two peaks are allowed to be within a radius $\hat R$ of each other. The peaks are found in the (time) order of the dataset. A genetic search as described in Section~\ref{sec:findingbestcostmatrix} was executed to find parameters that perform robustly for this task. The parameters found were $\beta=120, \iota=0.3, \hat R=50$. We will henceforth refer to this algorithm as the \textit{enhanced} Foote novelty peak approach.
 
-We also compared to a naive method of guessing how many tracks were in a show, by diving the show length by the overall average track size.
+We also compared to a naive method of guessing how many tracks were in a show, diving the show length by the overall average track size.
 
-See Figure~\ref{fig:track_shift} for an comparison of these three methods of track estimation. Our method estimates the correct number of tracks $45.7$\% of the time, the novelty peak finding approach $44.5$\% of the time and the naive approach $11.5$\% of cases. There is not a significant different in performance between the enhanced version of Foote's approach and ours. An interesting feature of Foote's enhanced algorithm is that it almost never overestimates the number of tracks. It seems likely that some combination of the methods would yield improved results. 
+See Figure~\ref{fig:track_shift} for an comparison of these three methods of track estimation. Our method estimates the correct number of tracks $45.7$\% of the time, the novelty peak finding approach $44.5$\% of the time and the naive approach in $11.5$\% of cases. There is not a significant different in performance between the enhanced version of Foote's approach and ours. An interesting feature of Foote's enhanced algorithm is that it almost never overestimates the number of tracks. It seems likely that some combination of the methods would yield improved results. 
 
 
 \begin{figure}
@@ -1020,11 +1021,11 @@ R=\frac{|TP|}{|A|}
 
 \subsubsection{Results}
 
-See Figure~\ref{fig:fscores_breakdown} for a break down of $F_1$ scores for each data set and Figure~\ref{fig:fscores_best} for the overall $F_1$ scores for the entire corpus, for all time thresholds. Note that guessing refers to placing tracks every $377$ seconds until no more can be placed. What is clear is that adding the radius enhancement to Foote's method significantly improves its performance and it slightly out performs our algorithm when we estimate the number of tracks apart from on the \texttt{lindmik} dataset. 
+See Figure~\ref{fig:fscores_breakdown} for a break down of $F_1$ scores for each data set and Figure~\ref{fig:fscores_best} for the overall $F_1$ scores for the entire corpus, for all time thresholds. Note that guessing refers to placing tracks every $377$ seconds until no more can be placed. What is clear is that adding the radius enhancement to Foote's method significantly improves its performance and it slightly out-performs our algorithm when we estimate the number of tracks apart from on the \texttt{lindmik} dataset. 
 
 Plotz \citep{plotz2006automatic} achieved a true positive rate of 81\% within $10$ second boundaries from ground truth for a similar task. Considering the standard deviation of human disagreement on annotations for dance music can be over $9$ seconds (see Section~\ref{human_acc}), this seems unobtainable with the corpus we have. Our overall true positive average is 63\% at the $10$ seconds threshold. For \texttt{tatw} we achieve 72.2\% which may be more like the corpora Plotz worked with.
 
-When the number of tracks is known a priori, we significantly out perform Foote's method. And there is no obvious way to modify Foote's method to select the correct number of tracks even if it is known a priori. 
+When the number of tracks is known a priori, we significantly out-perform Foote's method. And there is no obvious way to modify Foote's method to select the correct number of tracks even if it is known a priori. 
 
 It should be noted that our method of track estimation may be not be optimal. We only trained the evolutionary algorithm on $6$ shows on the \textit{GitHub training set} and estimated them all correctly. This meant the parameters found could possibly have been better. Increasing the size of the training set would address this issue. 
 
@@ -1038,7 +1039,7 @@ We are able to operate in the scenario when the number of tracks is not known a 
 
 Further work includes the plan to write an on-line version of the algorithm in the future which will operate on a sliding lagged window of audio where the number of tracks could be estimated and the algorithm executed on the window. We would also like to implement a regularised version of Radu's time dependent agglomerative (hierarchical) clustering algorithm \citep{radu} to see if it is suitable for this task. 
 
-One of the apparently unique properties of our method is that is it does not directly consider inter-segment dissimilarity. The costs are computed only from intra-segment similarity and there is only an implied notion if any of the dissimilarity between segments. Therefore, an interesting direction would be reformulating the algorithm to consider transitional \textit{switching} and \textit{sticking} costs through a state graph where the number of switches was fixed in advance. This would be a somewhat similar direction to \citep{goodwin2003audio,goodwin2004dynamic} apart from fixing the number of segments a priori if they were known would possibly improve the accuracy of the annotations as we have demonstrated here.
+One of the apparently unique properties of the algorithm presented is that is it does not directly consider inter-segment dissimilarity. The costs are computed only from intra-segment similarity. Therefore; there is only an implied notion of dissimilarity between segments. An interesting direction would be reformulating the algorithm to consider transitional \textit{switching} and \textit{sticking} costs through a state graph where the number of switches was fixed a priori. This would be a somewhat similar direction to \citep{goodwin2003audio,goodwin2004dynamic} apart from the likelihood that fixing the number of segments a priori if they were known would possibly improve the accuracy of the annotations as we have reported here.
 
 \begin{table*}[h]
 	\centering
@@ -1090,7 +1091,7 @@ We would like to thank Mikael Lindgren and Denis Goncharov from cuenation\footno
 
 \section{Materials}\label{sec:materials}
 
-All the code presented in this paper with the training set is available on GitHub \footnote{\url{github.com/ecsplendid/DanceMusicSegmentation}}. The corpus ($\approx150$GB) we received from Denis Goncharov and Mikael Lindgren will be made available on request (it is in a cloud storage account).
+All the code presented in this paper with the training set is available on GitHub\footnote{\url{github.com/ecsplendid/DanceMusicSegmentation}}. The corpus ($\approx150$GB) we received from Denis Goncharov and Mikael Lindgren will be made available on request (it is in a cloud storage account).
 
 
 \bibliographystyle{ieeetr}
