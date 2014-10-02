@@ -181,7 +181,7 @@ for i=1:2:W-1
     end
 end
 
-SC = normalize_byincentivebias(SC, incentivebalance);
+SC = normalize_costmatrix(SC);
 SC(:,1:show.w-1 )=inf;
 SC = SC .* config.use_costsymmetry;
 

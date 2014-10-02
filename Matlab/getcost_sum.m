@@ -27,7 +27,6 @@ CC = getcosines_contigstatic( show, config );
 CE = getcosines_contigevolution ( show, config );
 
 CA = CC + C + CE;
-
 SC = get_summationfast( CA, W );
 SC = SC ./ repmat( (1:W).^config.costsum_normalization, size(SC,1), 1 );
 SC = normalize_costmatrix( SC );

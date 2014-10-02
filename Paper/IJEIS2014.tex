@@ -341,21 +341,21 @@ comparator to a more naive method of placement.
 %it will be normalized at the end; it is easier to explain recursion without normalization
 
 	\begin{dmath*}
-	\tilde C(f,t, \Omega) =	\sum_{i,j=f}^{t} \hat S_{ij}(\Omega)
+	C(f,t, \Omega, \omega) =	\sum_{i,j=f}^{t} \frac{ \hat S_{ij}(\Omega) }{ ( t - f + 1)^\omega }
 	\end{dmath*}
 where
 	\begin{dmath*}
 		\hat S_{ij}(\Omega)=	{ \left\{
 			\begin{array}{ll}
-				\Omega S_{ij},  & \text{~if~}S_{ij} > 0   \\
-				 \left( 1-\Omega \right) S_{ij}, & \mbox{~otherwise~}\\
+				\Omega {S}_{ij},  & \text{~if~}{S}_{ij} > 0   \\
+				 \left( 1-\Omega \right) {S}_{ij}, & \mbox{~otherwise~}\\
 			\end{array}
 			\right.} 
 	\end{dmath*} 
-for all $i,j \in S$. The \textit{incentive bias} parameter $\Omega$ controls the balance of
+for all $i,j \in {S}$. The quantity $\hat S$ is a modification of $S$ incorporating the \textit{incentive bias} parameter $\Omega$ which controls the balance of
 positive and negative values. Direct computation using the definition
 takes $O(TW^3)$ time. We can improve this to
-$O(TW)$ by using the following recursion (assume that $f+1 \le t-1$, and note that the incentive bias parameter $\Omega$ has been temporarily removed for clarity):
+$O(TW)$ by using the following recursion for the unnormalized quantity $\tilde C$ (assume that $f+1 \le t-1$, and note that the incentive bias parameter $\Omega$ has been temporarily removed for clarity):
 	\begin{dmath*}
 		\tilde C(f,t) = \tilde C(f+1,t) + \tilde C(f,t-1) - \tilde C(f+1,t-1) + \hat S_{ft} + \hat S_{tf}.
 	\end{dmath*} 
@@ -407,6 +407,14 @@ illustration:
 %C(f,t) \leftarrow \hat N_\Omega \left( \frac{ C(f,t) }{ t-f+1 } \right)
 %\] for all $t,f \in \tilde C$.
 	
+	It is useful to scale cost matrices onto the interval $[0,1]$. Let normalization function
+	
+		\begin{dmath*}
+			\hat N(x) + 1 = 2\frac{ x - \min_{ft}C(f,t) }{ \max_{ft} C(f,t) - \min_{ft} C(f,t)}.
+		\end{dmath*}
+	
+	We proceed by applying this normalization; Let $C~\leftarrow~\hat N(C)$.
+	
 	See Figures~\ref{fig:cmsumib1} and \ref{fig:cmsumib2} for a image visualization of the summation cost matrix with different incentive biases.
 	
 	\paragraph{Symmetry}	
@@ -423,7 +431,7 @@ For each such diagonal in one triangle/half of $S$ we want to compare
 each element against its mirror counterpart. For an ordered set
 $\Lambda$ we define its cost as
 \begin{dmath*}
-\bar C(f,t,\Omega)(\Lambda)=\sum_{i=1}^{|\Lambda|}\delta(\Lambda_i,\Lambda_{|\Lambda|-i+1},\Omega)
+\bar C(f,t,\bar \Omega)(\Lambda, \bar \omega)=\sum_{i=1}^{|\Lambda|} \frac{ \delta(\Lambda_i,\Lambda_{|\Lambda|-i+1},\bar \Omega)}{i^{\bar \omega}}
 \end{dmath*}
 where
 \begin{dmath*}
@@ -438,11 +446,14 @@ i.e., `symmetric' pairs that have the same sign make positive
 contributions and pairs that have a different sign contribute $0$ to
 the cost. We define the cost matrix as
 \begin{dmath*}
-\tilde C(f,t,\Omega) = \sum_{d=1}^{t-f+1}\bar C(\Lambda(f,t,d,\Omega))
+\bar C(f,t,\bar \Omega, \bar \omega) = \sum_{d=1}^{t-f+1}\bar C(\Lambda(f,t,d,\bar \Omega), \bar \omega)
 \end{dmath*}
+
+Finally, let $\bar C~\leftarrow~\hat N(\bar C)$.
+
 Clearly, one can reuse the cost for shorter intervals to calculate the
-cost of longer ones, namely, $\tilde C_{f+1,t-1}$ can be used to
-calculate $\tilde C_{ft}$ this saving computation time.
+cost of longer ones, namely, $\bar C_{f+1,t-1}$ can be used to
+calculate $\bar C_{ft}$ this saving computation time. We currently have an implementation on \textit{GitHub} (see Section~\ref{sec:materials}) with a time complexity of $O(TW^2)$
 
 		\begin{center}
 			\begin{tikzpicture}
@@ -467,13 +478,11 @@ calculate $\tilde C_{ft}$ this saving computation time.
 			\node[color=black] at (0,-2.2) { \begin{sideways}$\Lambda(f,t,d=1)$\end{sideways} };
 			\node[color=black] at (1,-2.2) { \begin{sideways}$\Lambda(f,t,d=2)$\end{sideways} };
 				
-			
-			
 			\node[color=black] at (5.2,2.8) { $ 
 				\left\{ \begin{array}{ll}
 				                   &  \\
 				                   &  \\
-				\delta(p,q,\Omega) &  \\
+				\frac{\delta(p,q,\Omega)}{ d^{\bar \omega} } &  \\
 				                   &  \\
 				                   &
 			\end{array} \right. $  };
@@ -481,10 +490,8 @@ calculate $\tilde C_{ft}$ this saving computation time.
 			\draw[<->, >=latex', shorten >=2pt, shorten <=2pt, bend left=45, thick, dashed] 
 			(0.5,0.5) to node[auto, swap] {}(2.5,2.5); 
 			
-			
 			\draw[<->, >=latex', shorten >=2pt, shorten <=2pt, bend left=45, thick, dashed] 
 			(1.5,0.5) to node[auto, swap] {}(2.5,1.5); 
-			
 			
 			\draw[color=gray!60,->, >=latex', shorten >=2pt, shorten <=2pt, bend left=0, thick, dashed] (-1,-1) to node[auto, swap] {}(4,4); 
 			
@@ -501,77 +508,22 @@ calculate $\tilde C_{ft}$ this saving computation time.
 	
 \paragraph{Static Contiguity}
 
-Horizontal contiguous traces in $S$ indicate that the track is
+Horizontal contiguous traces in $\hat S$ indicate that the track is
 self-similar (negative values) or self-dissimilar (positive values)
 due to repetition. If a given tile is the same as a set of contiguous
 tiles following it, then there is some static contiguous region in the
 show. The word \textit{static} denotes that the music is not evolving in
 respect of time (which would instead create a diagonal trace in $S$).
 
-
-\[
-\tilde C(f,t, \Omega) =  \sum_{i,j=f}^{t} {S}_{ij}
-\]
-
-
-Let $\Gamma(f,t,h)$ be the horizontal segment in the matrix $S$
-showing the similarity of tile $f+h-1$ to `future' tiles $f+h,
-f+h+1,\ldots, t$. We represent is as an ordered set
-\begin{dmath*}
-\Gamma(f,t,h) =  \langle S_{f+h-1,f+h-1}, S_{f+h-1,f+h}, S_{f+h-1,f+h+1},\ldots,\\
-S_{f+h-1,t}\rangle.
-\end{dmath*} 
-We define the cost of an ordered set $\Gamma=\langle
-\Gamma_1,\Gamma_2,\ldots,\Gamma_{|\Gamma|}\rangle$ as
-$$
-\bar C(\Gamma,\Omega)=\sum_{i=\rho}^{|\Gamma|}\hat C(\Gamma^i,\Omega),
-$$ 
-where $\rho$ is a parameter indicating the minimum number of
-contiguous tiles required, $\Gamma^i=\langle
-\Gamma_1,\Gamma_2,\ldots,\Gamma_i\rangle$ and
-\begin{dmath*}
-\hat C(\Gamma^i,\Omega)=\\ \left\{
-\begin{array}{ll}
-\frac{1}{i}\sum_{j=1}^i\tilde{f}(\Gamma_j,\Omega),&
- \text{~if the numbers~} \\
-& ~\sign{G_1},\ldots,\sign{G_i}\\
-& \text{~are the same},\\
-0, & \text{~otherwise},
-\end{array}
-\right.
-\end{dmath*}
-where
-\begin{dmath*}
-\tilde{f}(v,\Omega) = \left\{ 
-	\begin{array}{lr}
-		\Omega v, & \text{~if~} \sign v=1 \\
-		(1-\Omega) v, & \mbox{~otherwise.}    \\
-	\end{array}
-	\right.
-\end{dmath*}
-The cost of an interval is defined as
-\begin{dmath*}
-\tilde C(f,t,\Omega) = \sum_{h=1}^{t-f}\bar C(f,t,\Omega)\enspace.
-\end{dmath*}
+Let $\tilde s_{ij} = \mathrm{sign}(S_{ij} )$ capture the original signs of dissimilarities in $S_{ij}$ and  $P_{ij} \leftarrow \mathrm{diff}( \hat S_{ij}( \overleftarrow{\Omega} ), \tilde p)$ denote the $\tilde p$ th order differences over $\hat S_{ij}$. $P_{ij}$ is zero-padded with $\tilde p$ columns from $j=$ so that its size remains unchanged. 
 
 
 
-%	We will also create a past contiguity cost matrix where we replace $\Gamma( f,t,h )$ with a version 
 
-%\begin{align*}
-%\begin{array}{ll}
-%\hat{\Gamma}( f,t,h ) &= S(~\hat{i}(f, t, h), f + h - 1~),\\
-%\end{array}
-%\end{align*}
-%where
-%\begin{dmath*}
-%	\hat{i}(~f, t, h~) =\\ \{~ t - h - 1, t - h, \ldots, f+h-1 ) ~\}
-%\end{dmath*}
 
-%	which traces past self-similarity from the end of the track being fitted.
 
-Again it is possible to reuse values $\tilde C(f,t,\Omega)$ from
-shorter intervals to save calculation time for longer intervals.
+
+
 
 	
 	\paragraph{Evolutionary Contiguity}
@@ -595,41 +547,9 @@ shorter intervals to save calculation time for longer intervals.
 	G( \varpi, N )_{tw} = e^{ - \frac{1}{2} \frac{\varpi n}{ \frac{1}{2} W}^2  }
 	\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularising the others and for use on its own for comparison against a `naive' competitor. Increasing values of $\varpi$ will tighten up the Gaussian. Note that we used values of $\varpi \in \{1,2,\ldots,5\}$
 	
-	\paragraph{Normalization}
 
-All cost matrices are normalized in the following manner. First we
-divide $\tilde C(f,t,\Omega)$ by the track length,
-$$
-\tilde C(f,t,\Omega)\leftarrow \frac{\tilde C(f,t,\Omega)}{t-f+1}.
-$$ 
 
-Then we scale and shift $C$ according to the value of $\Omega$. If
-$\Omega=0$, we want the resulting values to fill the interval $[0,1]$,
-if $\Omega=0.5$ we want the resulting values to fill the interval $[-1,1]$,
-and if $\Omega=1$ we want the resulting values to fill the interval $[-1,0]$.
-For intermediate values of $\Omega$ we want a linear combination.
 
-This is achieved by applying the normalization function to each element:
-	\begin{dmath*}
-		\hat N(x,\Omega) = \frac{ x - \min_{ft}C(f,t,\Omega) }{ \max_{ft} C(f,t,\Omega) - \min_{ft} C(f,t,\Omega)} \hat h_\Omega -s_\Omega,
-	\end{dmath*}
-where $\hat h_w$ = $2-2|0.5-\Omega|$ and
-	\begin{dmath*}
-		s_\Omega= { \left\{
-			\begin{array}{ll}
-				1-2(0.5-\Omega) & \mbox{~if~}\Omega < 0.5,   \\
-				1 & \mbox{~otherwise~}.  \\
-			\end{array}
-			\right.}
-\end{dmath*}
-We let
-\begin{dmath*}
-C(f,t,\Omega)=N(\tilde C(f,t,\Omega),\Omega)
-\end{dmath*}
-for all $f$ and $t$.
-
-	
-%	Note that to save space we will use the following notation $\hat N(C, \Omega)=\hat N_\Omega(C)$.
 	
 	
 	\paragraph{Mixing Cost Functions}
@@ -795,7 +715,7 @@ and for $m\ge2$
 	\bigskip
 
 	\includegraphics[width=0.5\textwidth]{images/posterior3}
-	\caption{A visualization of $log(P(j,s))$ ($\eta=10$) for one of the shows in the test set using... TODO.}
+	\caption{A visualization of $log(P(j,s))$ ($\eta=10$) for two of the shows in the training set.}
 	\label{fig:posterior3}
 \end{figure} 
 
@@ -886,16 +806,17 @@ We used the GitHub training set to find robust algorithm parameters using a stoc
 
 We considered two objective functions; minimizing the mean absolute track error and secondly the median absolute track error (see Section~\ref{eval_crit}).
 
-For each of these objective functions we devised $5$ conditional experiments involving a selection of cost matrices described in Section~\ref{costmatrix_sec}; sum and Gaussian, symmetry and Gaussian, contiguity and Gaussian, evolution and Gaussian, and all cost matrices allowed. When cost matrices were not allowed to participate in an experiment, their contribution variable was fixed at $0$. Therefore; there are $10$ experiments defined. Robust parameters were found for each experiment using the genetic algorithm as described and the parameters found are listed in Table~\ref{tab:parameters}. An experiment number has been assigned to each configuration.
+For each of these objective functions we devised $5$ conditional experiments involving a selection of cost matrices described in Section~\ref{sec:cost-matrices}; sum and Gaussian, symmetry and Gaussian, contiguity and Gaussian, evolution and Gaussian, and all cost matrices allowed. When cost matrices were not allowed to participate in an experiment, their contribution variable was fixed at $0$. Therefore; there are $10$ experiments defined. Robust parameters were found for each experiment using the genetic algorithm as described and the parameters found are listed in Table~\ref{tab:parameters}. An experiment number has been assigned to each configuration.
 
 \subsubsection{Results}\label{sec:results}
 
-		Please see Tables~\ref{tab:mean-results} and~\ref{tab:median-results} for the results and Figure~\ref{fig:shifthistogram} for a histogram comparing track errors for experiments $1,2,3,\ldots,5$.
+Please see Tables~\ref{tab:mean-results} and~\ref{tab:median-results} for the results and Figure~\ref{fig:shifthistogram} for a histogram comparing track errors for experiments $1,2,3,\ldots,5$.
 
-		We notice that the contig, evolution and symmetry cost matrices fail to perform well on their own. As reported in our last paper \cite{scarfe2013long}, the sum cost matrix performs robustly independently. When we consider the best combination of all cost matrices as defined by the results of the genetic algorithm (experiments $1$, $6$); the overall mean performance is improved substantially which means there are fewer catastrophic misplacements. 
+We notice that the \textit{contig-static}, \textit{evolution} and \textit{symmetry} cost matrices fail to perform well on their own. It was not really our intention to design these cost matrices to work well on their own but rather to augment the summation matrix. The Gaussian cost matrix then adds regularization. As reported in our last paper \cite{scarfe2013long}, the sum cost matrix performs robustly independently. When we consider the best combination of all cost matrices as defined by the results of the genetic algorithm (experiments $1$, $6$); the overall mean performance is improved substantially which means there are fewer catastrophic misplacements. 
 
-		\texttt{TATW} has the best overall performance (median 5 seconds on experiment $6$) and this likely indicates it has, on average a lower transitional complexity between adjacent tracks. 
+\texttt{TATW} has the best overall performance (median 5 seconds on experiment $6$) and this likely indicates it has, on average a lower transitional complexity between adjacent tracks. 
 
+We can conclude from these results that taking the best mixture of cost matrices significantly improves the robustness (mean-absolute of track errors) and spread (standard deviation of track errors) of the results. 
 
 	\begin{figure}
 		\centering
@@ -904,7 +825,7 @@ For each of these objective functions we devised $5$ conditional experiments inv
 		\label{fig:shifthistogram}
 	\end{figure} 
 
-On our previous work we were effectively using a disincentive-only summation matrix, and found that normalizing costs on the square root of track length produced the best result. Something similar is happening here as the genetic algorithm has selected values less than $1$ on the sum normalization (experiments $4$,$9$) which would encourage placement of longer tracks. Note that we no longer discard any shows from evaluation which makes this result stronger. 
+On our previous work we were effectively using a disincentive-only summation matrix, and found that normalizing costs on the square root of track length produced the best result. Something similar is happening here as the genetic algorithm has selected values less than $1$ on the sum normalization (experiments $4$,$9$) which would encourage placement of longer tracks. Note that we no longer discard any shows from evaluation which makes this result stronger.
 
 \begin{table*}[t]
 	\centering
@@ -1074,9 +995,9 @@ Plotz \citep{plotz2006automatic} achieved a true positive rate of 81\% within $1
 
 We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. It would be excellent if \textit{SoundCloud}\footnote{\url{http://www.soundcloud.com}} for example started to do something similar. \textit{SoundCloud} is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to reliably segment the shows, and they could display an interactive segmentation in the music player. 
 
-The new cost matrices in combination improve robustness significantly. The new cost matrices improve on many drawbacks of our previous work. Most importantly they are partly immunised against dissimilar regions within tracks. 
+The new cost matrices in combination improve robustness significantly over a summation cost matrix alone. They are also partly immunised against dissimilar regions within tracks which was a weakness on our previous paper \citep{scarfe2013long}. One problem that we are aware of is the rare instances when there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements.
 
-A weakness that we are aware of is the rare instances when there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements. 
+We are able to operate in the scenario when the number of tracks is not known a priori and perform comparably with our \textit{enhanced} version of Foote's \citep{foote2003media} method for both segmentation and estimation of how many tracks exist in a recording. On the \texttt{lindmik} dataset, we out-perform the enhanced Foote method. Our method comes into its own however in the scenario when the number of tracks is known a priori. We significantly out perform Foote's method for this as there is no reasonable to adapt Foote's method to find a fixed number of tracks in an optimal configuration. 
 
 We are planning to write an on-line version of the algorithm in the future which will operate on a sliding lagged window of audio where the number of tracks could be estimated and the algorithm executed on the window.
 
