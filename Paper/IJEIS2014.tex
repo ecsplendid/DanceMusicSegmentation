@@ -1,7 +1,7 @@
 \documentclass[twocolumn]{article}
 
 \usepackage{mathtools}
-\usepackage{amsmath,amsfonts}
+\usepackage{amsmath,amsfonts,amssymb}
 \usepackage{lscape}
 \usepackage{bm}
 \usepackage{breqn}
@@ -140,7 +140,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	Clustering algorithms do exist that find a fixed number of segments but we have the added constraint that these segments need to be homogeneous, contiguous and time-dependent. Radu \citep{radu} demonstrated a time-dependent modification of agglomerative (hierarchical) clustering for segmentation of music. A constraint was added such that during the algorithm clusters could only be merged if they were adjacent in time. Radu preprocessed the feature vectors to increase the homogeneity by averaging them over a sliding window of fixed size. Radu used a fixed number of clusters found as a stopping condition. The approach is model-free but by Radu's own admission lacks any form of regularization, possibly producing clusters that vary in size significantly. Radu modelled the segmentation as a binary classification problem (later also used by Badawy et al \citep{elaudio}) subject to threshold time horizons allowing standard performance metrics such as precision, recall and $F_1$ score to be used. 
 	
-	Stochastic model-based approaches to segmentation also have been devised. Levy et al use hidden Markov models in their approach to music segmentation in \citep{levy2008structural}, building on their previous work \citep{levy2006new, levy2006extraction}. They HMM is based upon a generative Gaussian mixture model where each segment has a set of states, each generating a Gaussian distribution of feature vectors. A musical audio file can then be regarded as having an underlying sequence of states that generates the observed feature sequence. The HMM can then be trained with a priori knowledge. 
+	Stochastic model-based approaches to segmentation also have been devised. Levy et al use hidden Markov models in their approach to music segmentation in \citep{levy2008structural}, building on their previous work \citep{levy2006new, levy2006extraction}. Their HMM is based upon a generative Gaussian mixture model where each segment has a set of states, each generating a Gaussian distribution of feature vectors. A musical audio file can then be regarded as having an underlying sequence of states that generates the observed feature sequence. The HMM can then be trained with a priori knowledge. 
 	
 	Plotz et al also used a an HMM for segmenting DJ mixed music streams, further developing the concept of generic acoustic generators first described in \citep{batlle2002automatic}. Unfortunately Plotz only evaluated his method against a small corpus of unknown origin ($222$ minutes with $65$ song changes, compared to our $640$ hours with $6757$ song changes) and did not elaborate on the ground truth annotation methodology. 
 	
@@ -220,7 +220,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	\subsection{Preprocessing}\label{proprocessing} % Fourier/xcorr
 	
-	The corpus had some outliers that may have slightly distorted the analysis of our method. Many of the ``tracks'' in the ground truth annotations for our corpus were in fact not tracks at all but rather introductions or voice-overs. Almost all of these outlier tracks were short in length. To ameliorate the situation we removed any tracks that were shorter than $180$ seconds (which are clearly not normal according to Figure~\ref{fig:tracklengths}). We also removed any end tracks that were shorter than $240$ seconds as very often the end tracks on a radio show contain strange elements (for example voice-overs, interviews, show-related `jingles'). This required some manipulation of the cue-sheets and audio files. The undesired segments of the audio files were chopped out, and the cue-sheets were re-flowed so that the time indices point to the correct location in the file. 
+	The corpus had some outliers that may have slightly distorted the analysis of our method. Many of the tracks in the ground truth annotations for our corpus were actually introductions or voice-overs. Almost all of these outlier tracks were short in length. To ameliorate the situation we simply removed any tracks that were shorter than $180$ seconds (which are clearly not normal according to Figure~\ref{fig:tracklengths}). We also removed any end tracks that were shorter than $240$ seconds as very often the end tracks on a radio show contain peculiar elements (for example voice-overs, interviews, show-related `\textit{jingles}'). This required some manipulation of the cue-sheets and audio files. The undesirable segments of the audio files were chopped out, and the cue-sheets were re-flowed so that the time indices point to the correct location in the file. 
 	
 	The algorithm still performs similarly when removing just these indices and leaving the audio intact underneath, so it would not significantly affect any real-world implementation. 
 	
@@ -334,24 +334,24 @@ comparator to a more naive method of placement.
 	
 	On the whole, a significant number of tile pairs within one track are similar to each other. Pairs of tiles that do not belong to the same track are expected to be dissimilar, most of the time. However, tracks have contiguous regions within them that are dissimilar to each other. Transitions between songs may appear as a self-similar region but usually also similar to each adjacent track to varying degrees.  
 	
-	\paragraph{Summation}
+	\paragraph{Summation}\label{sec:summation}
 	
 	The most obvious strategy of all is to sum up all relevant tiles in $S$ for each candidate track from tile $f$ through tile $t$. We define $C(f,t)$, the cost of a candidate track from tile $f$ through tile $t$, to be the sum of the similarities between all pairs of tiles inside it
 %it will be normalized at the end; it is easier to explain recursion without normalization
 
 	\begin{dmath*}
-	C(f,t, \Omega, \omega) =	\sum_{i,j=f}^{t} \frac{ \hat S_{ij}(\Omega) }{ ( t - f + 1)^\omega }
+	C(f,t, \omega, \bar S) =	\sum_{i,j=f}^{t} \frac{ \bar S }{ ( t - f + 1)^\omega }
 	\end{dmath*}
 where
 	\begin{dmath*}
-		\hat S_{ij}(\Omega)=	{ \left\{
+		\bar S \gets \hat S_{ij}(\Omega)=	{ \left\{
 			\begin{array}{ll}
-				\Omega {S}_{ij},  & \text{~if~}{S}_{ij} > 0   \\
+				 \Omega {S}_{ij},  & \text{~if~}{S}_{ij} > 0   \\
 				 \left( 1-\Omega \right) {S}_{ij}, & \mbox{~otherwise~}\\
 			\end{array}
 			\right.} 
 	\end{dmath*} 
-for all $i,j \in {S}$. The quantity $\hat S$ is a modification of $S$ incorporating the \textit{incentive bias} parameter $\Omega$ which controls the balance of
+for all $i,j \in {S}$. On this cost matrix, $\bar S$ and $\Omega {S}_{ij}$ are the same. Later we will use this summation function for modified $\bar S$. The quantity $\hat S$ is a modification of $S$ incorporating the \textit{incentive bias} parameter $\Omega$ which controls the balance of
 positive and negative values. Direct computation using the definition
 takes $O(TW^3)$ time. We can improve this to
 $O(TW)$ by using the following recursion for the unnormalized quantity $\tilde C$ (assume that $f+1 \le t-1$, and note that the incentive bias parameter $\Omega$ has been temporarily removed for clarity):
@@ -505,7 +505,7 @@ calculate $\bar C_{ft}$ this saving computation time. We currently have an imple
 	
 %	Finally, the symmetry change matrix is defined where $\hat \delta$ is the same as the \textit{symmetry summation}, the width normalization is removed and the inner sum of the definition becomes the first order differences. For the sake of brevity we have omitted the dynamic programming formulations which run in $O(TW^2)$ time but they have been implemented in code and are available on-line (see Section~\ref{sec:materials}). This is also the case for all the following cost matrices.
 	
-\paragraph{Static Contiguity}
+\paragraph{Static Contiguity}\label{sec:static-contiguity}
 
 Horizontal contiguous traces in $\hat S$ indicate that the track is
 self-similar (negative values) or self-dissimilar (positive values)
@@ -514,42 +514,68 @@ tiles following it, then there is some static contiguous region in the
 show. The word \textit{static} denotes that the music is not evolving in
 respect of time (which would instead create a diagonal trace in $S$).
 
-Let $\tilde s_{ij} = \mathrm{sign}(S_{ij} )$ capture the original signs of dissimilarities in $S_{ij}$ and  $P_{ij} \leftarrow \mathrm{diff}( \hat S_{ij}( \overleftarrow{\Omega} ), \tilde p)$ denote the $\tilde p$ th order differences over $\hat S_{ij}$. $P_{ij}$ is zero-padded with $\tilde p$ columns from $j=$ so that its size remains unchanged. 
+We used the approach of modifying $S_{ij}$ in place (See Algorithm \ref{algo:contig}) so that we can use the fast summation algorithm described in Section \ref{sec:summation}. The algorithm takes the nth order differences (note that $\mathrm{diff}(x,2) = \mathrm{diff}(\mathrm{diff}(x))$ ) in two dimensions of $S_{ij}$, past and future. For simplicity our version of the diff function will return a matrix of equal size, zero-padded at the beginning. A brief introduction to the notation; $P(P>0)=5$ means to set all elements in $P_{ij}$ to $5$, and $\mathrm{diag}( \dot S, d ) \gets 5$ means set all elements in the $d$th diagonal of $\dot S_{ij}$ to 5.
+
+Note that this algorithm introduces new parameters: $\dot p$ for the past nth order differences, $\dot f$ the future nth order differences, $\overleftarrow{\Omega}$ the past differences incentive bias, $\overrightarrow{\Omega} $ the future differences incentive bias. $\bar p$, how much contribution the past differences make, and $\bar f$ the future differences contribution. $\bar n$ is the normalization coefficient for this cost matrix. 
 
 
 
+\begin{algorithm}
+	\DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
+	$\dot s = \mathrm{sign}(S_{ij})$ \\
+	$P_{ij} \gets \mathrm{diff}( \hat S( \overleftarrow{\Omega} )^\intercal, \dot p )^\intercal$ \\
+	$P_{ij} \gets \hat N( P )$ \\
+	$ P(P < 0) \gets 1-|P(P < 0)|$ \\
+	$ P(P > 0) \gets 1-|P(P > 0)|$ \\
+	$ P_{ij} \gets  \bar p P_{ij}$, for all $i,j \in P$ \\
 
+	$F_{ij} \gets \mathrm{diff}( \hat S( \overrightarrow{\Omega} ), \dot f )$ \\
+	$F_{ij} \gets \hat N( P )$ \\
+	$ F(F < 0) \gets 1-|F(F < 0)|$ \\
+	$ F(F > 0) \gets 1-|F(F > 0)|$ \\
+	$ F_{ij} \gets  \bar f F_{ij}$, for all $i,j \in F$ \\
+	$\dot S \gets \dot s|P+F|$ \\
+	$\dot S \gets \hat N(\dot S)$ \\
+	
+	$\mathrm{diag}( \dot S, d ) \gets \mathrm{diag}( \dot S, d ) d^{\bar n}$ for all $d \in \{1,2,\ldots,W\}$ \\
+	$\dot S \gets \hat N(\dot S)$ \\
 
-
-
-
+	\Return{$\dot S$}\;
+	\caption{Construct \textit{contig-static} dissimilarity matrix by modifying $S_{ij}$ in-place.}
+	\label{algo:contig}
+\end{algorithm}
+	
+	
+$\dot S$ is then transformed into a cost matrix $\vec{C}(f,t,\bar n,\dot s,\dot p,\dot f) = C(f,t, \omega, \dot S)$ using the summation function described in Section~\ref{sec:summation}.
 
 	
-	\paragraph{Evolutionary Contiguity}
+\paragraph{Evolutionary Contiguity}
 
-% rewrite this along the lines of what I said before.
-	
-	Any diagonal traces in $S$ that are parallel to the main diagonal are partial copies of the track in the future which evolve in respect of time. Evolutionary Contiguity is a cost matrix which compares all adjacent pairs on the diagonals in $\hat t$, using the comparator $\delta( p,q, \Omega )$ from the standard symmetry cost function and multiplies those values by the time horizon. All the values are summed and normalized by the track width squared. 
-	
-	Let the evolutionary cost matrix
-	\begin{dmath*} C(f, t, \Omega) =  
-		\hat N_\Omega\left(\frac{
-		\sum_{d=1}^{t-f+1} 
-		\sum_{i=2}^{|\Lambda( f,t,d )|}  \delta( \kappa_{i}, \kappa_{i-1}, \Omega ) \cdot d
-	}{(t-f+1)^2}\right)
-	\end{dmath*}  where  $\kappa_i=\Lambda( f,t,i )$. As before $\tilde C$ is normalized by track width and incentive bias.
+Any diagonal traces in $S$ that are parallel to the main diagonal are partial copies of the track in the future which evolve in respect of time. Evolutionary contiguity is a diagonal version of the static contiguity cost matrix described in Section~\ref{sec:static-contiguity}.
 
-%This formula does not make sense to me: what is raised to power 2??
+
+\begin{algorithm}
+	\DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
+
+	
+	\For{$d \gets 1$ \textbf{to} $W$} {
+	
+	$d \gets \mathrm{diag}( d )$ \\
+	$s = \mathrm{sign}(d) $
+	
+	
+	}
+	
+	\Return{$\dot S$}\;
+	\caption{Construct \textit{contig-evolution} dissimilarity matrix by modifying $S_{ij}$ in-place.}
+	\label{algo:contig}
+\end{algorithm}
+
 
 	\paragraph{Gaussian}
 	Let \[
 	G( \varpi, N )_{tw} = e^{ - \frac{1}{2} \frac{\varpi n}{ \frac{1}{2} W}^2  }
-	\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularising the others and for use on its own for comparison against a `naive' competitor. Increasing values of $\varpi$ will tighten up the Gaussian. Note that we used values of $\varpi \in \{1,2,\ldots,5\}$
-	
-
-
-
-	
+	\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularizing the others. It could also be used on its own for comparison against a `naive' cost matrix. Increasing values of $\varpi$ will tighten up the Gaussian. Note that we used values of $\varpi \in \{1,2,\ldots,5\}$
 	
 	\paragraph{Mixing Cost Functions}
 	
@@ -572,7 +598,7 @@ Let $\tilde s_{ij} = \mathrm{sign}(S_{ij} )$ capture the original signs of dissi
 		
 	\paragraph{Solution Shift}
 	
-	We devised another parameter which is to shift the estimated solution in time by $\varXi$ seconds $\in \{-1,-2,\ldots,5\}$.
+	We will also allow the estimated solution to be shifted in time by parameter $\varXi$ seconds $\in \{-5,-4,\ldots,5\}$.
 	
 	\section{Computing Best Segmentation}\label{best_cost}
 	
@@ -757,7 +783,7 @@ Track time uncertainty is estimated by normalizing the value of the next most si
 Let 
 \begin{align*}
 \tilde I( j ) = 1-\frac{ \mathrm{Peaks}( P(j, 1,\ldots,T ) )_2 } { \mathrm{Peaks}( P(j, 1,\ldots,T ))_1 }
-\end{align*} where $Peaks(s_i)$ is a peak finding algorithm that returns the peaks in descending order of magnitude (we used the \texttt{findpeaks} function in MatLab).
+\end{align*} where $Peaks(s_i)$ is a peak finding algorithm that returns the peaks in descending order of magnitude (we used the \texttt{findpeaks}\footnote{\url{http://www.mathworks.co.uk/help/signal/ref/findpeaks.html}} function in MATLAB).
 
 So this measure estimates how certain we are that the time estimated (for example $455$ seconds) is correct.
 
@@ -950,7 +976,7 @@ The main goal of our research is providing the best possible time dependent cont
 
 We propose the following method of adapting our framework to estimate the number of contiguous segments in a data stream. For every possible candidate number of tracks $\dag$, compute the cost of fitting $\dag$ tracks using the algorithm described in Section~\ref{best_cost} and normalize it by $\dag$ and take the solution $n$ on the saddle point where the normalized quantity achieves the minimum (see Figure~\ref{fig:github_trackestimation} for an illustration). We ran the same genetic algorithm as described in Section~\ref{sec:findingbestcostmatrix} to find the best set of parameters for this task. This is referred to as experiment $11$ in Table~\ref{tab:parameters}.
 
-For comparison; we have implemented Footes method of segmentation \citep{foote2003media}. Foote correlated a Gaussian tapered checkerboard kernel of a fixed width $\beta$ down the diagonal of S to produce a novelty function. Any peaks found to be above a threshold $\iota$ are counted as novelty peaks. The kernel can be constructed with the Kronecker tensor product.
+For comparison; we have implemented Footes method of segmentation \citep{foote2003media}. Foote correlated a Gaussian tapered checkerboard kernel of a fixed width $\beta$ down the diagonal of S to produce a novelty function. The multiplicative Gaussian kernel has a width and standard deviation of $\beta$.  Any peaks found to be above a threshold $\iota$ are counted as novelty peaks. The kernel can be constructed with the Kronecker tensor product.
 
 To improve upon Foote's method; we introduced a radius parameter $\hat R$ which adds the constraint that no two peaks are allowed to be within a radius $\hat R$ of each other. The peaks are found in the (time) order of the dataset. A genetic search as described in Section~\ref{sec:findingbestcostmatrix} was executed to find parameters that perform robustly for this task. The parameters found were $\beta=120, \iota=0.3, \hat R=50$. We will henceforth refer to this algorithm as the \textit{enhanced} Foote novelty peak approach.
 
@@ -992,13 +1018,15 @@ P = \frac{|TP|}{|P|}
 R=\frac{|TP|}{|A|}
 \] subject to threshold time horizon $\tilde t$. Note $|P|$ denotes the number of predicted tracks tracks and $|A|$ the number of actual tracks in a given show.
 
+\subsubsection{Results}
+
 See Figure~\ref{fig:fscores_breakdown} for a break down of $F_1$ scores for each data set and Figure~\ref{fig:fscores_best} for the overall $F_1$ scores for the entire corpus, for all time thresholds. Note that guessing refers to placing tracks every $377$ seconds until no more can be placed. What is clear is that adding the radius enhancement to Foote's method significantly improves its performance and it slightly out performs our algorithm when we estimate the number of tracks apart from on the \texttt{lindmik} dataset. 
+
+Plotz \citep{plotz2006automatic} achieved a true positive rate of 81\% within $10$ second boundaries from ground truth for a similar task. Considering the standard deviation of human disagreement on annotations for dance music can be over $9$ seconds (see Section~\ref{human_acc}), this seems unobtainable with the corpus we have. Our overall true positive average is 63\% at the $10$ seconds threshold. For \texttt{tatw} we achieve 72.2\% which may be more like the corpora Plotz worked with.
 
 When the number of tracks is known a priori, we significantly out perform Foote's method. And there is no obvious way to modify Foote's method to select the correct number of tracks even if it is known a priori. 
 
-\subsubsection{Results}
-
-Plotz \citep{plotz2006automatic} achieved a true positive rate of 81\% within $10$ second boundaries from ground truth for a similar task. Considering the standard deviation of human disagreement on annotations for dance music can be over $9$ seconds (see Section~\ref{human_acc}), this seems unobtainable with the corpus we have. Our overall true positive average is 63\% at the $10$ seconds threshold. For \texttt{tatw} we achieve 72.2\% which may be more like the corpora Plotz worked with.
+It should be noted that our method of track estimation may be not be optimal. We only trained the evolutionary algorithm on $6$ shows on the \textit{GitHub training set} and estimated them all correctly. This meant the parameters found could possibly have been better. Increasing the size of the training set would address this issue. 
 
 \section{Conclusion}\label{conclusions}
 
