@@ -175,6 +175,8 @@ L = V(end,end);
 
 
 % new uncertainty calculation (of correct track INDEX)
+% all we are doing is taking the biggest peaks (on the vertical trace)
+% and looking at how similar they are, smaller divided by bigger
 
 relative_uncertainty = nan(M,1);
 
@@ -182,19 +184,10 @@ for m=1:M
     
     track_probs = PB(:, best_begin(m) );
     
-    % which is the highest probability track
-    [mprob in] = max( track_probs );
+    l = sort(track_probs,'descend');
     
-    % now for all the other ones, calculate their relative probability
-    others = 1:M;
-    others = others(others~=in);
-    
-    relative_uncertainty(m) = max( track_probs( others ) ./ mprob );
+    relative_uncertainty(m) = l(2)/l(1);
 end
-
-% scale so that more uncertainty gets penalized
-uncertainty_factor = 2;
-relative_uncertainty = relative_uncertainty .^ uncertainty_factor;
 
 confidence = 1 - relative_uncertainty;
 
@@ -205,9 +198,6 @@ if( config.draw_confs == 1)
     xlabel('Track Number');
     ylabel('Confidence Level');
 end
-
-
-plot(PB(:,:)');
 
 results.mean_indexplacementconfidence = mean(confidence);
 results.worst_indexplacementconfidence = min(confidence);
@@ -243,6 +233,9 @@ end
 
 results.track_placementconfidenceavg = mean(track_placementconf);
 results.track_placementconfidence = resample_matrix(track_placementconf', output_width);
+
+
+plot(track_placementconf)
 
 %% how close is our posterior probability distribution?
 
