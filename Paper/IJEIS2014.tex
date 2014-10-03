@@ -75,7 +75,7 @@
 		
 We consider the problem of annotating song changes in DJ-mixed dance music recordings (pod-casts, radio shows, live events). It is an extremely laborious process to perform this task manually. We present an algorithm to reconstruct segment boundaries as close as possible to what a human domain expert would create in respect of the same task given a fixed number of boundaries. The algorithm is optimized for the scenario when the number of tracks is known a priori although is also capable of estimating the number of tracks and is evaluated in both circumstances. As the number of segments is known in advance we do not have to rely on local points-of-change heuristics prevalent in common segmentation algorithms. 
 
-The goal of DJ-mixing is to render track boundaries effectively invisible from human perception. Segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of general self-similarity and also specific notions such as; symmetry, contiguity and evolution in respect of time. The segmentation configuration is parametrized and an evolutionary algorithm is executed on a small test set to find optimal parameters for the tasks of segmentation. 
+The goal of DJ-mixing is to render track boundaries effectively invisible from human perception. Segmentation is performed on a self-similarity matrix which is derived from normalized cosines of various cost matrices which have themselves been derived from a time-series of Fourier based spectral features. The cost matrices introduced in this paper introduce notions of general self-similarity and also specific notions such as; symmetry, contiguity and evolution in respect of time. The segmentation configuration is parametrized and an evolutionary algorithm is executed on a small test set to find optimal parameters for the task of segmentation. 
 
 Our work is quantitatively assessed on a large corpus ($640$ hours) of radio show recordings which have been hand-labelled by a domain expert. The method presented could be used on other segmentation tasks and other domains. 
 		\smallskip
@@ -91,7 +91,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	Electronic Dance Music tracks are usually mixed by a disc jockey (DJ). For this reason EDM music streams are unique compared to other genres of music. Mixing is the \textit{modus operandi} in electronic music. We first transform the audio file into a time series of features discretized into adjacent tiles and transform them into a domain where most pairs from the same track would be distinguishable by their cosine. 
 	
-	\textit{Contiguous-segmentation} differs from the standard clustering problem in that the clusters arrive sequentially and are contiguous (\texttt{AAABBBCCCDDD}, not \texttt{AAABBBCCCBBB}). This may also be known as \textit{time-dependent} clustering and is related to \textit{homogeneous} clustering. For brevity we will use the term \textit{segmentation} from now on to describe this configuration. The intuition behind the word homogeneous is that we desire segments that have intra-segment similarity and inter-segment dissimilarity to the maximum extent possible. We essentially make the assumption that the data will be homogeneous at least on the macro scale.
+	\textit{Contiguous-segmentation} differs from the standard clustering problem in that the clusters arrive sequentially and are contiguous (\texttt{AAABBBCCCDDD}, not \texttt{AAABBBCCCBBB}). This may also be known as \textit{time-dependent} clustering and is related to \textit{homogeneous} clustering. For brevity we will use the term \textit{segmentation} from now on to describe this configuration. The intuition behind the word homogeneous is that we desire segments that have intra-segment similarity and inter-segment dissimilarity to the maximum extent possible. 
 	
 	Music and mixes of music have the property that they are made up of recursively repeating self-similar regions within segments. Our method does not strictly require any training or tenuous heuristics to perform well. The distinguishing feature of our problem domain is that the number of segments is known a priori but the segmentation boundaries are not known, or ambiguous and subjective. However, computing the best solution is desirable.
 	
@@ -107,7 +107,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	\subsection{Literature Review}
 	
-	Audio segmentation in the literature colloquially is often implemented in the context of structural analysis. Music structure denotes the organization of a composition by its melody, harmony, timbre and rhythm. Repetitions, transformations and evolutions of music structure also contribute to its identity and it is this semantic information that structural analysis algorithms aim to extract from music. An example structure for a song might be \texttt{ABCABA}. Speaker diarization is another example of structural analysis.
+	Audio segmentation in the literature is often implemented colloquially in the context of structural analysis. Music structure denotes the organization of a composition by its melody, harmony, timbre and rhythm. Repetitions, transformations and evolutions of music structure also contribute to its identity and it is this semantic information that structural analysis algorithms aim to extract from music. An example structure for a song might be \texttt{ABCABA}. Speaker diarization is another example of structural analysis.
 	
 	Segmentation in the context of structural analysis has been thus far been concerned with creating a novelty function to find points-of-change using distance-based metrics, rather than trying to find a fixed number of segments in the most optimal way. Heuristics with hard decision boundaries have been used to find the best change points, for example Tzanetakis \cite{tzanetakis1999framework} used first-order derivatives of a time series of audio features. 
 	
@@ -150,11 +150,11 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	\section{Corpus}\label{dataset}
 	
-	We have been supplied with several broadcasts from three popular radio shows. See Table~\ref{tab:corpus} for a description. The show genres are a mix of progressive trance, Uplifting Trance and Tech-Trance. 
+	We have been supplied with several broadcasts from three popular radio shows. See Table~\ref{tab:corpus} for a description. The show genres are a mix of so called `progressive trance', `uplifting trance' and `tech-trance'. 
 	
-	There are no silent gaps in the recordings. The shows come in $44100$ samples per second, $16$ bit stereo MP3 files sampled at $192$Kbs. We re-sampled these to $4000$Hz $16$ bit mono (left+right channel) WAV files to allow us to process them faster. We have used the \textit{Sound eXchange}\footnote{\url{http://sox.sourceforge.net}} program to do this. These shows are all $2$ hours long. The overall average track length is $5$ and a half minutes (slightly less for Magic Island (see Figure~\ref{fig:tracklengths})) and normally distributed.  There is a guest mix on the second half of each show. The guest mix DJs show off their skills with technically convoluted mixing, so it is fair to say that the boundary complexity increases during the guest mix and is at least not constant throughout the shows.
+	There are no silent gaps in the recordings. The shows come in $44100$ samples per second, $16$ bit stereo MP3 files sampled at $192$Kbs. We re-sampled these to $4000$Hz $16$ bit mono (left+right channel) WAV files to allow us to process them faster. We have used the \textit{Sound eXchange}\footnote{\url{http://sox.sourceforge.net}} program to do this. These shows are all $2$ hours long. The overall average track length is $5$ and a half minutes (slightly less for Magic Island, see Figure~\ref{fig:tracklengths}) and normally distributed.
 	
-	An additional dataset of $36$ radio shows have been mixed by and annotated by Mikael Lindgren (the so called \texttt{lindmik} dataset). These shows are extremely useful because the DJ is the same person who created the ground truth time indices which should in theory reduce the amount of human confusion present in the annotation. Also there is less noise, for example voice-overs, guest mixes, radio show sounds, introductions etc. These shows also vary significantly in length from $1$ hour to nearly $5$ hours. There are $339$ shows in total.
+	An additional dataset of $36$ radio shows have been mixed by and annotated by Mikael Lindgren (the so called \texttt{lindmik} dataset). These shows are extremely useful because the DJ is the same person who created the ground truth time indices which should in theory reduce the amount of human confusion present in his annotations. Also there is less noise, for example voice-overs, guest mixes, radio show sounds, introductions etc. These shows also vary significantly in length from $1$ hour to nearly $5$ hours. There are $339$ shows in total.
 	
 	We believe this corpus is the largest of its kind used in the literature going on the comparative table of segmentation corpora listed by Peiszer et al in their literature review of audio segmentation \cite{peiszer2008automatic}. More recently Badawy et al \citep{elaudio} used a corpus of $61$ hours. The corpus we are using is longer than $640$ hours in length. 
 	
@@ -192,7 +192,7 @@ Our work is quantitatively assessed on a large corpus ($640$ hours) of radio sho
 	
 	There is already a large community of people interested in getting time annotations for DJ sets. \textit{CueNation}\footnote{\url{http://www.cuenation.com}} is an example of this. CueNation is a website allowing people to submit \textit{cue-sheets} for popular DJ mixes and radio shows. A cue-sheet is a text file containing time annotation meta-data (indices) for a media file.
 	
-	The three main radio shows in the corpus were hand captured by Denis Goncharov; a domain expert and one of the principal contributors to \textit{CueNation}. One of the significant problems with this task is that there is a small but apparent random confusion variable associated with the human captured indices in general (see Section~\ref{human_acc} for details) where 5\% of tracks get placed on a different bar. On some tracks, it is unclear where to place the optimal index on the macro scale and when analysing our results, we have noticed what we assume to be obvious human errors. Regrettably, there is no clear way of quantifying this. Many of the cue-sheet authors themselves reject the idea of automating the task, citing the poor precision of any such result (they often place indices on the exact MP3 frame). However this sentiment seems misplaced given that they frequently make mistakes or that it is a matter of opinion where to place the track and some consistent method may be preferential. A potential outcome of our method could be an assistance mechanism to help them with initial placements. Our results demonstrate that it is indeed possible to automate this task and that while there is some uncertainty attached to the optimal placement, it is still very predictable. Indeed on the majority of track indices the uncertainty is ostensibly small. 
+	The three main radio shows in the corpus were hand captured by Denis Goncharov; a domain expert and one of the principal contributors to \textit{CueNation}. One of the significant problems with this task is that there is a small but apparent amount of \textit{confusion} associated with the human captured indices (see Section~\ref{human_acc} for details) where 5\% of tracks get placed on a different bar. On some tracks, it is unclear where to place the optimal index on the macro scale and when analysing our results, we have noticed what we assume to be obvious human errors. Many of the cue-sheet authors themselves reject the idea of automating the task, citing the poor precision of any such result (they often place indices on the exact MP3 frame). However this sentiment seems misplaced given that they frequently make mistakes or that it is a matter of opinion where to place the track and some consistent method may be preferential. A potential outcome of our method could be an assistance mechanism to help with initial placements. Our results demonstrate that it is indeed possible to automate this task and that while there is some uncertainty attached to the optimal placement, it is still predictable. Indeed on the majority of track indices the uncertainty is ostensibly small. 
 	
 	Denis Goncharov provided us with the following description of how he captures the indices. To quote from a personal email exchange with Denis:
 	
@@ -323,14 +323,17 @@ matrices as some of them depend on the sign of the value in $S$.
 	
 We proceed to constructing a cost matrix $C(f,t)$ that describes the
 cost of placing a track starting at $f$ and finishing at $t$ (and
-having length $t-f+1$). After analysing the data set, we have created
-$7$ cost matrices that exploit observed phenomena in $S$. We also
-provide an additional cost matrix which is just a Gaussian random
+having length $t-f+1$). After making some observations in $S_{ij}$, we have created
+cost matrices that exploit observed phenomena. We caveat this by saying we believe this phenomena is not
+unique to dance music and is prevalent in nature.  
+
+We also
+provide an additional cost matrix which is just a 1-dimensional Gaussian random
 function centred around the mean track length for all times which can
-be used to regularise the other $7$ matrices or used on its own as a
-comparator to a more naive method of placement.
+be used to regularize the other matrices or used on its own as a
+comparator to a more \textit{na\"{\i}ve} method of placement.
 	
-	The cost matrices described in this section exploit themes such as contiguity, symmetry, evolution and change as well as simple summation of $S$ as was presented in our last paper \citep{scarfe2013long}. In our previous work $S$ was on the interval $[0,1]$ and the summation method could only consider disincentives. The new cost matrices have a parameter to shift the consideration of incentive versus disincentive and values on the interval $[-1,1]$.
+	The cost matrices described in this section exploit themes such as contiguity, symmetry and evolution as well as simple summation of $S$ as reported in \citep{scarfe2013long}. In \citep{scarfe2013long}, $S$ was on the interval $[0,1]$ and the summation method could only consider disincentives. The new cost matrices have a parameter to shift the consideration of incentive versus disincentive and values on the interval $[-1,1]$.
 	
 	On the whole, a significant number of tile pairs within one track are similar to each other. Pairs of tiles that do not belong to the same track are expected to be dissimilar, most of the time. However, tracks have contiguous regions within them that are dissimilar to each other. Transitions between songs may appear as a self-similar region but usually also similar to each adjacent track to varying degrees.  
 	
@@ -552,7 +555,7 @@ $\dot S$ is then transformed into a cost matrix $\vec{C}(f,t,\bar n,\dot s,\dot 
 
 \paragraph{Evolutionary Contiguity}
 
-Any diagonal traces in $S$ that are parallel to the main diagonal are partial copies of the track in the future which evolve in respect of time. Evolutionary contiguity is a diagonal version of the static contiguity cost matrix described in Section~\ref{sec:static-contiguity}.
+Any diagonal traces in $S$ that are parallel to the main diagonal are partial copies of the track in the future which evolve in respect of time (self-similar tiles or groups of tiles that are dissimilar to the previous or following tiles). Evolutionary contiguity is a diagonal version of the static contiguity cost matrix described in Section~\ref{sec:static-contiguity}.
 
 \begin{algorithm}
 	\DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
@@ -583,7 +586,7 @@ $\b{S}$ is then transformed into a cost matrix $\vec{C}(f,t,\bar n,\dot s,\dot p
 	\paragraph{Gaussian}
 	Let \[
 	G( \varpi, N )_{tw} = e^{ - \frac{1}{2} \frac{\varpi n}{ \frac{1}{2} W}^2  }
-	\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularizing the others. It could also be used on its own for comparison against a `naive' cost matrix. Increasing values of $\varpi$ will tighten up the Gaussian. Note that we used values of $\varpi \in \{1,2,\ldots,5\}$
+	\] for all $n=1,2,\ldots,W$ denote the Gaussian matrix cost function of $N\times W$. $G( \varpi, N )$ is time-independent and every row is the same. We will use this cost function for regularizing the others. It could also be used on its own for comparison against a `na\"{\i}ve' cost matrix. Increasing values of $\varpi$ will tighten up the Gaussian. Note that we used values of $\varpi \in \{1,2,\ldots,5\}$
 	
 	\paragraph{Mixing Cost Functions}
 	
@@ -741,16 +744,7 @@ and for $m\ge2$
 	\sum_{t_2} e^{- \eta C(f, t_2-f)} \tail^{t_2}_{m-1}\\
 \end{align*}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\textwidth]{images/posterior2}
 
-	\bigskip
-
-	\includegraphics[width=0.5\textwidth]{images/posterior3}
-	\caption{A visualization of $log(P(j,s))$ ($\eta=10$) for two of the shows in the training set. Ostensibly; uncertainty pertaining to the correct time and index (i.e. track number $2,3,4$) placement increases towards the middle of the shows.}
-	\label{fig:posterior3}
-\end{figure} 
 
 See Figure~\ref{fig:posterior3} for an example of the posterior for a radio show. 
 
@@ -772,9 +766,11 @@ P(j,s,f) ~=~ \frac{\head^{s-1}_{j-1} \cdot e^{-\eta C(s, f-s+1)} \cdot \tail^{f+
 \]
 
 
+
+
 \subsection{Confidence Measures}
 
-We can use the posterior marginal of song boundaries to give estimates of confidence on reconstructed indices where there are ambiguous options. The key scenarios where the algorithm is likely to make an error of judgement due to uncertainty are; getting the time wrong, the order wrong (for example, predicting the correct time in the wrong track index).
+We can use the posterior marginal of song boundaries to give estimates of confidence on reconstructed indices where there are ambiguous options. The key scenarios where the algorithm is likely to make an error of judgement due to uncertainty are; getting the time wrong or the order of tracks wrong (for example, predicting the correct time in the wrong track index).
 
 Note that the posterior marginal of song boundaries $P(j,s)$ contains values all in the interval $[0,1]$. The sum of all times for a fixed track index (every row) in $P(j,s)$ is $1$.
 
@@ -792,7 +788,16 @@ Let the track index confidence measure
 \Psi(\bar m)= 1- \frac{ \left(\tilde \zeta_{\bar m}\right) _2 }{ \left(\tilde \zeta_{\bar m}\right)_1 }
 \] where $\tilde \zeta_{i}$ corresponds to $\zeta_{i}$ placed into in descending order of value. Note that $\Psi \in [0,1]$. The index confidence measure is a function of the ratio between the two largest values in $P(j,s)$ for all $j=1,2,\ldots,m$ and at the optimal time $s$ as estimated by the main algorithm. 
 
-
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.5\textwidth]{images/posterior2}
+		
+		\bigskip
+		
+		\includegraphics[width=0.5\textwidth]{images/posterior3}
+		\caption{A visualization of $log(P(j,s))$ ($\eta=10$) for two of the shows in the training set. Ostensibly; uncertainty pertaining to the correct time and index (i.e. track number $2,3,4$) placement increases towards the middle of the shows.}
+		\label{fig:posterior3}
+	\end{figure} 
 
 
 \subsubsection{Time}
@@ -880,7 +885,7 @@ We can conclude from these results that taking the best mixture of cost matrices
 		\label{fig:shifthistogram}
 	\end{figure} 
 
-On \citep{scarfe2013long} we were effectively using a disincentive-only summation matrix, and found that normalizing costs on the square root of track length produced the best result. Something similar is happening here as the genetic algorithm has selected values less than $1$ on the sum normalization (experiments $4$,$9$) which would encourage placement of longer tracks. As opposed to \citep{scarfe2013long}, we no longer discard any shows from evaluation.
+On \citep{scarfe2013long} we were effectively using a disincentive-only summation matrix, and found that normalizing costs on the square root of track length produced the best result. Something similar is happening here as the genetic algorithm has selected values less than $1$ on the sum normalization (experiments $4$,$9$) which would encourage placement of longer tracks. As opposed to \citep{scarfe2013long}, we no longer discard any shows from evaluation. To save time on the experiments we set the smallest tile size to be $3$, and this was the value returned for both mixtures (mean-optimized and median-optimized). Therefore it is possible that the results would improve further if we ran the experiment down to a tile size of $1$ second.
 
 \begin{table*}[t]
 	\centering
@@ -945,7 +950,7 @@ On \citep{scarfe2013long} we were effectively using a disincentive-only summatio
 		
 	\end{center}
 	
-	\caption{Comparison of the $F_1$ scores against time thresholds on the $4$ data sets. On the \texttt{lindmik} dataset where the number of tracks is highly unpredictable, our method combined with track estimation beats Foote's novelty method at higher thresholds.}
+	\caption{Comparison of the $F_1$ scores against time thresholds on the $4$ data sets. On the \texttt{lindmik} dataset where the number of tracks is highly unpredictable, our method combined with track estimation beats Foote's \textit{enhanced} novelty method at higher thresholds.}
 	\label{fig:fscores_breakdown}
 		
 \end{figure*}
@@ -964,7 +969,7 @@ On \citep{scarfe2013long} we were effectively using a disincentive-only summatio
 
 \subsubsection{Confidence Interval Analysis}
 
-See Figure~\ref{fig:confidence_intervals} for illustrations of the time index confidence $\xi(\bar m)$, index placement confidence $\Psi(\bar m)$ and track error residuals averaged and shown as a function of progression through the shows. See Section~\ref{sec:confidence-intervals} for definitions. Because the number of tracks varies greatly, the confidence measures for all shows have been re-sampled into the set of indices $1,2,\ldots,15$. Thus it is possible to get an indication of aggregate confidence measures in relation to the progress of the show. 
+See Figure~\ref{fig:confidence_intervals} for illustrations of the time index confidence $\xi(\bar m)$, index placement confidence $\Psi(\bar m)$ and track error residuals averaged and shown as a function of progression through the shows. See Section~\ref{sec:confidence-intervals} for definitions. Because the number of tracks varies greatly, the confidence measures for all shows have been re-sampled into the set of indices $1,2,\ldots,15$ for the number of tracks. Thus it is possible to get an indication of aggregate confidence measures in relation to the progress of the show. 
 
 We can conclude from these illustrations that the likelihood of placing the correct index statistically declines towards the middle of the shows. Perhaps this means that the summation matrix would have performed increasingly poorly as show lengths got longer. But mixing the cost matrices together in the optimal way (as dictated by the results of the evolutionary algorithm) apparently removes this tendency to a large extent. 
 
@@ -992,18 +997,18 @@ Mixing the cost matrices had little effect on the time placement of indices.
 % GENETIC ALGORITHM DESCRIPTION
 \subsection{Number Of Tracks Not Known A Priori}\label{sec:trackcount}
 
-The main goal of our research is providing the best possible time dependent contiguous segmentation given a fixed number of tracks $m$, rather than estimating $m$. This problem has not been addressed before to our knowledge; namely that the number of segments is known a priori but segmentation itself is not. However, the number of tracks could be estimated in a naive sense because the variable of track lengths is Gaussian (see Figure~\ref{fig:tracklengths}). 
+The main goal of our research is providing the best possible time dependent contiguous segmentation given a fixed number of tracks $m$, rather than estimating $m$. This problem has not been addressed before to our knowledge; namely that the number of segments is known a priori but segmentation itself is not. However, the number of tracks could be estimated in a na\"{\i}ve sense because the variable of track lengths is Gaussian (see Figure~\ref{fig:tracklengths}). 
 
 
 We propose the following method of adapting our framework to estimate the number of contiguous segments in a data stream. For every possible candidate number of tracks $\vartriangle$, compute the cost of fitting $\vartriangle$ tracks using the algorithm described in Section~\ref{best_cost} and normalize it by $\vartriangle$ and take the solution $n$ on the saddle point where the normalized quantity achieves the minimum (see Figure~\ref{fig:github_trackestimation} for an illustration). We ran the same genetic algorithm as described in Section~\ref{sec:findingbestcostmatrix} to find the best set of parameters for this task. This is referred to as experiment $11$ in Table~\ref{tab:parameters}.
 
 For comparison; we have implemented Footes method of segmentation \citep{foote2003media}. Foote correlated a Gaussian tapered checkerboard kernel of a fixed width $\beta$ down the diagonal of S to produce a novelty function. The multiplicative Gaussian kernel has a width and standard deviation of $\beta$.  Any peaks found to be above a threshold $\iota$ are counted as novelty peaks. The kernel can be constructed with the Kronecker tensor product.
 
-To improve upon Foote's method; we introduced a radius parameter $\hat R$ which adds the constraint that no two peaks are allowed to be within a radius $\hat R$ of each other. The peaks are found in the (time) order of the dataset. A genetic search as described in Section~\ref{sec:findingbestcostmatrix} was executed to find parameters that perform robustly for this task. The parameters found were $\beta=120, \iota=0.3, \hat R=50$. We will henceforth refer to this algorithm as the \textit{enhanced} Foote novelty peak approach.
+To improve upon Foote's method; we introduced a radius parameter $\hat R$ which adds the constraint that no two peaks are allowed to be within a radius $\hat R$ of each other. This seemed like an obvious piece of domain knowledge which we added to the algorithm in the interests of fairness. The peaks are found in the (time) order of the dataset. A genetic search as described in Section~\ref{sec:findingbestcostmatrix} was executed to find parameters that perform robustly for this task. The parameters found were $\beta=120, \iota=0.3, \hat R=50$. We will henceforth refer to this algorithm as the \textit{enhanced} Foote novelty peak approach.
 
-We also compared to a naive method of guessing how many tracks were in a show, diving the show length by the overall average track size.
+We also compared to a na\"{\i}ve method of guessing how many tracks were in a show, diving the show length by the overall average track size.
 
-See Figure~\ref{fig:track_shift} for an comparison of these three methods of track estimation. Our method estimates the correct number of tracks $45.7$\% of the time, the novelty peak finding approach $44.5$\% of the time and the naive approach in $11.5$\% of cases. There is not a significant different in performance between the enhanced version of Foote's approach and ours. An interesting feature of Foote's enhanced algorithm is that it almost never overestimates the number of tracks. It seems likely that some combination of the methods would yield improved results. 
+See Figure~\ref{fig:track_shift} for an comparison of these three methods of track estimation. Our method estimates the correct number of tracks $45.7$\% of the time, the novelty peak finding approach $44.5$\% of the time and the na\"{\i}ve approach in $11.5$\% of cases. There is not a significant difference in performance between the enhanced version of Foote's approach and ours. An interesting feature of Foote's enhanced algorithm is that it almost never overestimates the number of tracks. It seems likely that some combination of the methods would yield improved results. 
 
 
 \begin{figure}
@@ -1016,11 +1021,11 @@ See Figure~\ref{fig:track_shift} for an comparison of these three methods of tra
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\textwidth]{images/trackshift}
-	\caption{Track estimation error on our method as described in Section \ref{sec:trackcount}, Foote's novelty function and Naive guessing. }
+	\caption{Track estimation error on our method as described in Section \ref{sec:trackcount}, Foote's novelty function and na\"{\i}ve guessing. }
 	\label{fig:track_shift}
 \end{figure}
 
-\subsubsection{Comparison of Methods}
+\subsubsection{Comparison of Methods For Segmentation}
 
 It is useful to compare our algorithm for reconstructing track boundaries with Foote's novelty peak finding method in a general sense. The drawback of Foote's method is that it is problematic to find a fixed number of novelty peaks. It is clearly adaptable to find a \textit{maximum} number of peaks but this does not help because it already has the interesting feature that it apparently rarely overestimates the number of tracks, it almost always underestimates.
 
@@ -1041,7 +1046,7 @@ R=\frac{|TP|}{|A|}
 
 \subsubsection{Results}
 
-See Figure~\ref{fig:fscores_breakdown} for a break down of $F_1$ scores for each data set and Figure~\ref{fig:fscores_best} for the overall $F_1$ scores for the entire corpus, for all time thresholds. Note that guessing refers to placing tracks every $377$ seconds until no more can be placed. What is clear is that adding the radius enhancement to Foote's method significantly improves its performance and it slightly out-performs our algorithm when we estimate the number of tracks apart from on the \texttt{lindmik} dataset. 
+See Figure~\ref{fig:fscores_breakdown} for a break down of $F_1$ scores for each data set and Figure~\ref{fig:fscores_best} for the overall $F_1$ scores for the entire corpus, for all time thresholds. Note that guessing refers to placing tracks every $\dot q$ seconds until no more can be placed, where $\dot q$ is the average track length. What is clear is that adding the radius enhancement to Foote's method significantly improves its performance and it slightly out-performs our algorithm when we estimate the number of tracks apart from on the \texttt{lindmik} dataset. 
 
 Plotz \citep{plotz2006automatic} achieved a true positive rate of 81\% within $10$ second boundaries from ground truth for a similar task. Considering the standard deviation of human disagreement on annotations for dance music can be over $9$ seconds (see Section~\ref{human_acc}), this seems unobtainable with the corpus we have. Our overall true positive average is 63\% at the $10$ seconds threshold. For \texttt{tatw} we achieve 72.2\% which may be more like the corpora Plotz worked with.
 
@@ -1051,15 +1056,15 @@ It should be noted that our method of track estimation may be not be optimal. We
 
 \section{Conclusion}\label{conclusions}
 
-We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. The algorithm segments a $2$ hour long show with all the cost matrices enabled in less than $2$ seconds on the authors computer, implemented in MATLAB (including loading the \texttt{wave} file from the hard drive). Note that this does not include the conversion time to \texttt{wave} from \texttt{mp3}.
+We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. The algorithm segments a $2$ hour long show with all the cost matrices enabled in less than $2$ seconds on the authors computer with a tile size of $3$, implemented in MATLAB (including loading the \texttt{wave} file from the hard drive). Note that this does not include the conversion time to \texttt{wave} from \texttt{mp3}. MATLAB includes features to perform executions on multiple cores and the GPU which we have used for running the genetic algorithm parameter search. 
 
 It would be excellent if \textit{SoundCloud}\footnote{\url{http://www.soundcloud.com}} for example started to do something similar. \textit{SoundCloud} is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to reliably segment the shows, and they could display an interactive segmentation in the music player with the track names annotated. 
 
 It is important to note that the cost matrices and high level algorithm are not encoded with any domain specific knowledge pertaining to dance music. They are looking for abstract and obvious patterns of self-similarity, which would be present in nature. We would expect this algorithm to perform well on any segmentation task of similar description (for example, video) with a different set of features to build the similarity matrix from. 
 
-The new cost matrices in combination improve robustness significantly over a summation cost matrix alone. They are also partly immunised against dissimilar regions within tracks which was a weakness in \citep{scarfe2013long}. One problem that we are aware of is the rare instances when there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements.
+The new cost matrices in combination improve robustness significantly over a summation cost matrix alone. Rather than improving the time accuracy; they eliminate many circumstances in which tracks get placed in erroneous order. They are also partly immunised against dissimilar regions within tracks which was a weakness in \citep{scarfe2013long}. One problem that we are aware of is the rare instances when there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements. Preprocessing $S_{ij}$ using heuristics to remove these \textit{pariah} segments is potential solution.
 
-We are able to operate in the scenario when the number of tracks is not known a priori and perform comparably with our \textit{enhanced} version of Foote's \citep{foote2003media} method for both segmentation and estimation of how many tracks exist in a recording. When Foote's method was implemented by its literal description it performed quite poorly. On the \texttt{lindmik} dataset, we out-perform the enhanced Foote method when estimating the number of tracks. Our method comes into its own however in the scenario when the number of tracks is known a priori. We significantly out perform Foote's method for this and there is no constructive way to adapt Foote's method to find a fixed number of tracks. 
+We are able to operate in the scenario when the number of tracks is not known a priori and perform comparably with our \textit{enhanced} version of Foote's \citep{foote2003media} method for both segmentation and estimation of how many tracks exist in a recording. When Foote's method was implemented by its literal description it performed quite poorly. On the \texttt{lindmik} dataset, we out-perform the enhanced Foote method when estimating the number of tracks. Our method comes into its own however in the scenario when the number of tracks is known a priori. We significantly out perform Foote's method for this and there is no constructive way to adapt Foote's method to find a fixed number of tracks. In this task it is essential to avoid getting the order of tracks wrong, so any potential advantage should be capitalised on. 
 
 Further work includes the plan to write an on-line version of the algorithm in the future which will operate on a sliding lagged window of audio where the number of tracks could be estimated and the algorithm executed on the window. We would also like to implement a regularised version of Radu's time dependent agglomerative (hierarchical) clustering algorithm \citep{radu} to see if it is suitable for this task. 
 
