@@ -421,7 +421,7 @@ illustration:
 	
 	We proceed by applying this normalization; Let $C~\leftarrow~\hat N(C)$.
 	
-	See Figures~\ref{fig:cmsumib1} and \ref{fig:cmsumib2} for a image visualization of the summation cost matrix with different incentive biases.
+	See Figures~\ref{fig:cmsumib1} and \ref{fig:cmsumib2} for an image visualization of the summation cost matrix with different incentive biases.
 	
 	\paragraph{Symmetry}	
 	
@@ -530,11 +530,11 @@ Note that this algorithm introduces new parameters: $\dot p$ for the past nth or
 \begin{algorithm}
 	\DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
 	$\dot s_{ij} = \mathrm{sign}(S_{ij})$ \\
-	$P_{ij} \gets \mathrm{diff}( \hat S( \overleftarrow{\Omega} )^\intercal, \dot p )^\intercal$; (zero-padded at the start by $\dot p$ so the size of $F$ remains unchanged) \\
+	$P_{ij} \gets \mathrm{diff}( \hat S( \overleftarrow{\Omega} )^\intercal, \dot p )^\intercal$; ($\dot p$th order differences, zero-padded at the start by $\dot p$ so the size of $F$ remains unchanged) \\
 	$P_{ij} \gets N( P )$ \\
 	$ P_{ij} \gets  \bar p P_{ij}$, for all $i,j \in P$ \\
 
-	$F_{ij} \gets \mathrm{diff}( \hat S( \overrightarrow{\Omega} ), \dot f )$; (zero-padded at the start by $\dot f$ so the size of $F$ remains unchanged) \\
+	$F_{ij} \gets \mathrm{diff}( \hat S( \overrightarrow{\Omega} ), \dot f )$; ($\dot f$th order differences, zero-padded at the start by $\dot f$ so the size of $F$ remains unchanged) \\
 	$F_{ij} \gets N( P )$ \\
 	$ F_{ij} \gets  \bar f F_{ij}$, for all $i,j \in F$ \\
 	$\dot S \gets \dot s|P+F|$ \\
@@ -548,32 +548,37 @@ Note that this algorithm introduces new parameters: $\dot p$ for the past nth or
 	\label{algo:contig}
 \end{algorithm}
 	
-	
 $\dot S$ is then transformed into a cost matrix $\vec{C}(f,t,\bar n,\dot s,\dot p,\dot f) = C(f,t, \omega, \dot S)$ using the summation function described in Section~\ref{sec:summation}.
 
-	
 \paragraph{Evolutionary Contiguity}
 
 Any diagonal traces in $S$ that are parallel to the main diagonal are partial copies of the track in the future which evolve in respect of time. Evolutionary contiguity is a diagonal version of the static contiguity cost matrix described in Section~\ref{sec:static-contiguity}.
 
-
 \begin{algorithm}
 	\DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
 
+	$\b{S}_{ij} \gets \hat S_{ij}( \dot \Omega )$
 	
 	\For{$d \gets 1$ \textbf{to} $W$} {
 	
-	$d \gets \mathrm{diag}( S_{ij}, d )$; ($d$ is the diagonal of $\hat S_{ij}$)\\
-	$s = \mathrm{sign}(d)$; take a recording of the signs 
+	$g \gets \mathrm{diag}( \b{S}_{ij}, d )$; ($d$ is the diagonal of $\b{S}_{ij}$)\\
+	$s_i = \mathrm{sign}(g)$; take a recording of the signs 
 	
-	
+		$g \gets \mathrm{diff}( d, \dot e )$; ($\dot e$th order differences, zero-padded at the start by $\dot e$ so the size of $g$ remains unchanged) \\
+		$g_i = g_id^{\dot n}$, for all $i \in g$; apply normalization \\
+		$g_i = s_ig_i$, for all $i \in g$; place the original signs back \\
+		$\mathrm{diag}( \b{S}_{ij}, d ) = g_i$; place diagonal back into $\b{S}_{ij}$ at $d$
 	}
 	
-	\Return{$\dot S$}\;
+	$\b{S}_{ij} = \hat N(\b{S}_{ij})$; normalize 
+	$\b{S}_{ij} =\bar e \b{S}_{ij}$; scale by its contribution $\bar e$
+	
+	\Return{$\b{S}$}\;
 	\caption{Construct \textit{contig-evolution} dissimilarity matrix by modifying $S_{ij}$ in-place.}
 	\label{algo:contig}
 \end{algorithm}
 
+$\b{S}$ is then transformed into a cost matrix $\vec{C}(f,t,\bar n,\dot s,\dot p,\dot f) = C(f,t, \omega, \b{S})$ using the summation function described in Section~\ref{sec:summation}.
 
 	\paragraph{Gaussian}
 	Let \[
@@ -1077,25 +1082,25 @@ One of the interesting properties of the algorithm presented here is that is it 
 		\texttt{Solution Shift (S) }        & $-3,\ldots,5$     & $ \varXi $ & -1    & 5    & -3   & -2   & 2    & -4   & -2   & -2   & -2   & -1   & 5    &  \\
 		\texttt{Cosine Normalization }      & $[0.4,1.4]$       & $\hat c$   & 1.17  & 0.77 & 0.92 & 1.19 & 1.36 & 0.88 & 0.71 & 0.73 & 1.15 & 1.14 & 0.98 &  \\ \midrule
 		\texttt{Sum Contribution  }         & $[0,1]$           &            & 0.99  &      &      & 0.81 &      & 0.77 &      &      & 0.63 &      & 0.55 &  \\
-		\texttt{Sum Normalization }         & $[0,1]$           &            & 1.36  &      &      & 0.73 &      & 1.11 &      &      & 0.47 &      & 0.71 &  \\
-		\texttt{Sum Incentive      }        & $[0,1]$           &            & 0.68  &      &      & 0.52 &      & 0.23 &      &      & 0.30 &      & 0.05 &  \\ \midrule
+		\texttt{Sum Normalization }         & $[0,1]$           &    $\Omega$        & 1.36  &      &      & 0.73 &      & 1.11 &      &      & 0.47 &      & 0.71 &  \\
+		\texttt{Sum Incentive      }        & $[0,1]$           &     $\omega$       & 0.68  &      &      & 0.52 &      & 0.23 &      &      & 0.30 &      & 0.05 &  \\ \midrule
 		\texttt{Gaussian Contribution  }    & $[0,1]$           &            & 0.52  & 0.08 & 0.69 & 0.17 & 0.29 & 0.63 & 0.11 & 0.51 & 0.08 & 0.02 & 0.15 &  \\
 		\texttt{Gaussian Incentive}         & $[0,1]$           &            & 0.85  & 0.82 & 0.43 & 0.47 & 0.56 & 0.10 & 0.14 & 0.40 & 0.85 & 0.54 & 0.53 &  \\
 		\texttt{Gaussian Width  }           & $1,\ldots,4$      & $\varpi$   & 1     & 1    & 1    & 4    & 1    & 1    & 2    & 1    & 1    & 2    & 4    &  \\ \midrule
-		\texttt{Evolution Contribution}     & $[0,1]$           &            & 0.05  &      & 0.63 &      &      & 0.49 &      & 0.35 &      &      & 0.48 &  \\
-		\texttt{Evolution Incentive}        & $[0,1]$           &            & 0.53  &      & 0.60 &      &      & 0.15 &      & 0.66 &      &      & 0.71 &  \\
-		\texttt{Evolution Normalization}    & $[0.1,3]$         &            & 1.30  &      & 0.08 &      &      & 1.10 &      & 0.06 &      &      & 1.79 &  \\
-		\texttt{Evolution Diff. Order}      & $1,\ldots,50$     &            & 45    &      & 1    &      &      & 7    &      & 40   &      &      & 16   &  \\ \midrule
-		\texttt{Contig Past Contribution}   & $[0,1]$           &            & 0.50  & 0.10 &      &      &      & 0.62 & 0.69 &      &      &      & 0.27 &  \\
-		\texttt{Contig Past Diff. Order}    & $1,\ldots,50$     &            & 13    & 44   &      &      &      & 41   & 46   &      &      &      & 30   &  \\
-		\texttt{Contig Past Incentive}      & $[0,1]$           &            & 0.50  & 0.24 &      &      &      & 0.95 & 0.53 &      &      &      & 0.98 &  \\
-		\texttt{Contig Normalization}       & $[0.1,3]$         &            & 0.74  & 0.26 &      &      &      & 1.60 & 0.33 &      &      &      & 1.91 &  \\
-		\texttt{Contig Future Contribution} & $[0,1]$           &            & 0.59  & 0.81 &      &      &      & 0.54 & 0.27 &      &      &      & 0.95 &  \\
-		\texttt{Contig Future Diff. Order}  & $1,\ldots,50$     &            & 35    & 3    &      &      &      & 30   & 21   &      &      &      & 45   &  \\
-		\texttt{Contig Future Incentive}    & $[0,1]$           &            & 0.08  & 0.24 &      &      &      & 0.60 & 0.89 &      &      &      & 0.96 &  \\ \midrule
+		\texttt{Evolution Contribution}     & $[0,1]$           &     $\bar e$       & 0.05  &      & 0.63 &      &      & 0.49 &      & 0.35 &      &      & 0.48 &  \\
+		\texttt{Evolution Incentive}        & $[0,1]$           &    $\dot \Omega$        & 0.53  &      & 0.60 &      &      & 0.15 &      & 0.66 &      &      & 0.71 &  \\
+		\texttt{Evolution Normalization}    & $[0.1,3]$         &    $\dot n$        & 1.30  &      & 0.08 &      &      & 1.10 &      & 0.06 &      &      & 1.79 &  \\
+		\texttt{Evolution Diff. Order}      & $1,\ldots,50$     &    $\dot e$        & 45    &      & 1    &      &      & 7    &      & 40   &      &      & 16   &  \\ \midrule
+		\texttt{Contig Past Contribution}   & $[0,1]$           &     $\bar p$       & 0.50  & 0.10 &      &      &      & 0.62 & 0.69 &      &      &      & 0.27 &  \\
+		\texttt{Contig Past Diff. Order}    & $1,\ldots,50$     &    $\dot p$        & 13    & 44   &      &      &      & 41   & 46   &      &      &      & 30   &  \\
+		\texttt{Contig Past Incentive}      & $[0,1]$           &    $\overleftarrow{\Omega}$        & 0.50  & 0.24 &      &      &      & 0.95 & 0.53 &      &      &      & 0.98 &  \\
+		\texttt{Contig Normalization}       & $[0.1,3]$         &     $\bar n$       & 0.74  & 0.26 &      &      &      & 1.60 & 0.33 &      &      &      & 1.91 &  \\
+		\texttt{Contig Future Contribution} & $[0,1]$           &    $\bar f$        & 0.59  & 0.81 &      &      &      & 0.54 & 0.27 &      &      &      & 0.95 &  \\
+		\texttt{Contig Future Diff. Order}  & $1,\ldots,50$     &   $\dot f$         & 35    & 3    &      &      &      & 30   & 21   &      &      &      & 45   &  \\
+		\texttt{Contig Future Incentive}    & $[0,1]$           &   $\overrightarrow{\Omega}$         & 0.08  & 0.24 &      &      &      & 0.60 & 0.89 &      &      &      & 0.96 &  \\ \midrule
 		\texttt{Symmetry Contribution}      & $[0,1]$           &            & 0.18  &      &      &      & 0.66 & 0.11 &      &      &      & 0.98 & 0.19 &  \\
-		\texttt{Symmetry Incentive}         & $[0,1]$           &            & 0.16  &      &      &      & 0.78 & 0.24 &      &      &      & 0.45 & 0.26 &  \\
-		\texttt{Symmetry Normalization}     & $[0.1,3]$         &            & 0.73  &      &      &      & 0.77 & 0.72 &      &      &      & 0.55 & 1.09 &  \\ \bottomrule
+		\texttt{Symmetry Incentive}         & $[0,1]$           &    $\bar \Omega$        & 0.16  &      &      &      & 0.78 & 0.24 &      &      &      & 0.45 & 0.26 &  \\
+		\texttt{Symmetry Normalization}     & $[0.1,3]$         &  $\bar \omega$         & 0.73  &      &      &      & 0.77 & 0.72 &      &      &      & 0.55 & 1.09 &  \\ \bottomrule
 		                                    &                   &
 	\end{tabular}
 }
