@@ -409,8 +409,15 @@ illustration:
 	It is useful to scale cost matrices onto the interval $[0,1]$. Let normalization function
 	
 		\begin{dmath*}
-			\hat N(x) + 1 = 2\frac{ x - \min_{ft}C(f,t) }{ \max_{ft} C(f,t) - \min_{ft} C(f,t)}.
+			N(x) = \frac{ x - \min_{ft}x(f,t) }{ \max_{ft} x(f,t) - \min_{ft} x(f,t)}
 		\end{dmath*}
+	
+	and 
+	
+	\begin{dmath*}
+	\hat N(x) = (2N(x))-1
+	\end{dmath*}
+	
 	
 	We proceed by applying this normalization; Let $C~\leftarrow~\hat N(C)$.
 	
@@ -514,7 +521,7 @@ tiles following it, then there is some static contiguous region in the
 show. The word \textit{static} denotes that the music is not evolving in
 respect of time (which would instead create a diagonal trace in $S$).
 
-We used the approach of modifying $S_{ij}$ in place (See Algorithm \ref{algo:contig}) so that we can use the fast summation algorithm described in Section \ref{sec:summation}. The algorithm takes the nth order differences (note that $\mathrm{diff}(x,2) = \mathrm{diff}(\mathrm{diff}(x))$ ) in two dimensions of $S_{ij}$, past and future. For simplicity our version of the diff function will return a matrix of equal size, zero-padded at the beginning. A brief introduction to the notation; $P(P>0)=5$ means to set all elements in $P_{ij}$ to $5$, and $\mathrm{diag}( \dot S, d ) \gets 5$ means set all elements in the $d$th diagonal of $\dot S_{ij}$ to 5.
+We used the approach of modifying $S_{ij}$ in place (See Algorithm \ref{algo:contig}) so that we can use the fast summation algorithm described in Section \ref{sec:summation}. The algorithm takes the nth order differences (note that $\mathrm{diff}(x,2) = \mathrm{diff}(\mathrm{diff}(x))$ ) in two dimensions of $S_{ij}$, past and future. For simplicity our version of the diff function will return a matrix of equal size, zero-padded at the beginning.
 
 Note that this algorithm introduces new parameters: $\dot p$ for the past nth order differences, $\dot f$ the future nth order differences, $\overleftarrow{\Omega}$ the past differences incentive bias, $\overrightarrow{\Omega} $ the future differences incentive bias. $\bar p$, how much contribution the past differences make, and $\bar f$ the future differences contribution. $\bar n$ is the normalization coefficient for this cost matrix. 
 
@@ -523,21 +530,17 @@ Note that this algorithm introduces new parameters: $\dot p$ for the past nth or
 \begin{algorithm}
 	\DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
 	$\dot s_{ij} = \mathrm{sign}(S_{ij})$ \\
-	$P_{ij} \gets \mathrm{diff}( \hat S( \overleftarrow{\Omega} )^\intercal, \dot p )^\intercal$ \\
-	$P_{ij} \gets \hat N( P )$ \\
-	$ P(P < 0) \gets 1-|P(P < 0)|$ \\
-	$ P(P > 0) \gets 1-|P(P > 0)|$ \\
+	$P_{ij} \gets \mathrm{diff}( \hat S( \overleftarrow{\Omega} )^\intercal, \dot p )^\intercal$; (zero-padded at the start by $\dot p$ so the size of $F$ remains unchanged) \\
+	$P_{ij} \gets N( P )$ \\
 	$ P_{ij} \gets  \bar p P_{ij}$, for all $i,j \in P$ \\
 
-	$F_{ij} \gets \mathrm{diff}( \hat S( \overrightarrow{\Omega} ), \dot f )$ \\
-	$F_{ij} \gets \hat N( P )$ \\
-	$ F(F < 0) \gets 1-|F(F < 0)|$ \\
-	$ F(F > 0) \gets 1-|F(F > 0)|$ \\
+	$F_{ij} \gets \mathrm{diff}( \hat S( \overrightarrow{\Omega} ), \dot f )$; (zero-padded at the start by $\dot f$ so the size of $F$ remains unchanged) \\
+	$F_{ij} \gets N( P )$ \\
 	$ F_{ij} \gets  \bar f F_{ij}$, for all $i,j \in F$ \\
 	$\dot S \gets \dot s|P+F|$ \\
 	$\dot S \gets \hat N(\dot S)$ \\
 	
-	$\mathrm{diag}( \dot S, d ) \gets \mathrm{diag}( \dot S, d ) d^{\bar n}$ for all $d \in \{1,2,\ldots,W\}$ \\
+	$\mathrm{diag}( \dot S, d ) \gets \mathrm{diag}( \dot S, d ) d^{\bar n}$ for all $d \in \{1,2,\ldots,W\}$; (multiply all elements in diagonals $d$ of $\dot S$ by $d^{\bar n}$) \\
 	$\dot S \gets \hat N(\dot S)$ \\
 
 	\Return{$\dot S$}\;
@@ -554,15 +557,14 @@ $\dot S$ is then transformed into a cost matrix $\vec{C}(f,t,\bar n,\dot s,\dot 
 Any diagonal traces in $S$ that are parallel to the main diagonal are partial copies of the track in the future which evolve in respect of time. Evolutionary contiguity is a diagonal version of the static contiguity cost matrix described in Section~\ref{sec:static-contiguity}.
 
 
-
 \begin{algorithm}
 	\DontPrintSemicolon % Some LaTeX compilers require you to use \dontprintsemicolon instead
 
 	
 	\For{$d \gets 1$ \textbf{to} $W$} {
 	
-	$d \gets \mathrm{diag}( d )$ \\
-	$s = \mathrm{sign}(d) $
+	$d \gets \mathrm{diag}( S_{ij}, d )$; ($d$ is the diagonal of $\hat S_{ij}$)\\
+	$s = \mathrm{sign}(d)$; take a recording of the signs 
 	
 	
 	}
@@ -1044,11 +1046,15 @@ It should be noted that our method of track estimation may be not be optimal. We
 
 \section{Conclusion}\label{conclusions}
 
-We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. It would be excellent if \textit{SoundCloud}\footnote{\url{http://www.soundcloud.com}} for example started to do something similar. \textit{SoundCloud} is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to reliably segment the shows, and they could display an interactive segmentation in the music player. 
+We believe our algorithm would be useful for segmenting DJ-mixed audio streams in batch mode. The algorithm segments a $2$ hour long show with all the cost matrices enabled in less than $2$ seconds on the authors computer, implemented in MATLAB (including loading the \texttt{wave} file from the hard drive). Note that this does not include the conversion time to \texttt{wave} from \texttt{mp3}.
+
+It would be excellent if \textit{SoundCloud}\footnote{\url{http://www.soundcloud.com}} for example started to do something similar. \textit{SoundCloud} is an on-line music service with many electronic dance music radio shows with the track listing in text. This method would allow them to reliably segment the shows, and they could display an interactive segmentation in the music player with the track names annotated. 
+
+It is important to note that the cost matrices and high level algorithm are not encoded with any domain specific knowledge pertaining to dance music. They are looking for abstract and obvious patterns of self-similarity, which would be present in nature. We would expect this algorithm to perform well on any segmentation task of similar description (for example, video) with a different set of features to build the similarity matrix from. 
 
 The new cost matrices in combination improve robustness significantly over a summation cost matrix alone. They are also partly immunised against dissimilar regions within tracks which was a weakness in \citep{scarfe2013long}. One problem that we are aware of is the rare instances when there are head or tail segments to a track that seem independent from the rest of the track. When these are small they usually get absorbed without any problems but they can cause misplacements.
 
-We are able to operate in the scenario when the number of tracks is not known a priori and perform comparably with our \textit{enhanced} version of Foote's \citep{foote2003media} method for both segmentation and estimation of how many tracks exist in a recording. On the \texttt{lindmik} dataset, we out-perform the enhanced Foote method. Our method comes into its own however in the scenario when the number of tracks is known a priori. We significantly out perform Foote's method for this and there is no constructive way to adapt Foote's method to find a fixed number of tracks. 
+We are able to operate in the scenario when the number of tracks is not known a priori and perform comparably with our \textit{enhanced} version of Foote's \citep{foote2003media} method for both segmentation and estimation of how many tracks exist in a recording. When Foote's method was implemented by its literal description it performed quite poorly. On the \texttt{lindmik} dataset, we out-perform the enhanced Foote method when estimating the number of tracks. Our method comes into its own however in the scenario when the number of tracks is known a priori. We significantly out perform Foote's method for this and there is no constructive way to adapt Foote's method to find a fixed number of tracks. 
 
 Further work includes the plan to write an on-line version of the algorithm in the future which will operate on a sliding lagged window of audio where the number of tracks could be estimated and the algorithm executed on the window. We would also like to implement a regularised version of Radu's time dependent agglomerative (hierarchical) clustering algorithm \citep{radu} to see if it is suitable for this task. 
 

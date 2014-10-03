@@ -12,18 +12,19 @@
 \BOOKMARK [1][-]{section.6}{Confidence Intervals}{}% 12
 \BOOKMARK [2][-]{subsection.6.1}{Posterior Marginal of Song Boundary}{section.6}% 13
 \BOOKMARK [2][-]{subsection.6.2}{Posterior Marginal of Song Position}{section.6}% 14
-\BOOKMARK [2][-]{subsection.6.3}{Track Index Confidence}{section.6}% 15
-\BOOKMARK [2][-]{subsection.6.4}{Track Time Confidence}{section.6}% 16
-\BOOKMARK [1][-]{section.7}{Experiments}{}% 17
-\BOOKMARK [2][-]{subsection.7.1}{Training Set}{section.7}% 18
-\BOOKMARK [2][-]{subsection.7.2}{Number Of Tracks Known A Priori}{section.7}% 19
-\BOOKMARK [3][-]{subsubsection.7.2.1}{Evaluation}{subsection.7.2}% 20
-\BOOKMARK [3][-]{subsubsection.7.2.2}{Finding The Best Parameters}{subsection.7.2}% 21
-\BOOKMARK [3][-]{subsubsection.7.2.3}{Results}{subsection.7.2}% 22
-\BOOKMARK [3][-]{subsubsection.7.2.4}{Confidence Interval Analysis}{subsection.7.2}% 23
-\BOOKMARK [2][-]{subsection.7.3}{Number Of Tracks Not Known A Priori}{section.7}% 24
-\BOOKMARK [3][-]{subsubsection.7.3.1}{Comparison of Methods}{subsection.7.3}% 25
-\BOOKMARK [3][-]{subsubsection.7.3.2}{Results}{subsection.7.3}% 26
-\BOOKMARK [1][-]{section.8}{Conclusion}{}% 27
-\BOOKMARK [1][-]{section.9}{Acknowledgements}{}% 28
-\BOOKMARK [1][-]{section.10}{Materials}{}% 29
+\BOOKMARK [2][-]{subsection.6.3}{Confidence Measures}{section.6}% 15
+\BOOKMARK [3][-]{subsubsection.6.3.1}{Index \(Order\)}{subsection.6.3}% 16
+\BOOKMARK [3][-]{subsubsection.6.3.2}{Time}{subsection.6.3}% 17
+\BOOKMARK [1][-]{section.7}{Experiments}{}% 18
+\BOOKMARK [2][-]{subsection.7.1}{Training Set}{section.7}% 19
+\BOOKMARK [2][-]{subsection.7.2}{Number Of Tracks Known A Priori}{section.7}% 20
+\BOOKMARK [3][-]{subsubsection.7.2.1}{Evaluation}{subsection.7.2}% 21
+\BOOKMARK [3][-]{subsubsection.7.2.2}{Finding The Best Parameters}{subsection.7.2}% 22
+\BOOKMARK [3][-]{subsubsection.7.2.3}{Results}{subsection.7.2}% 23
+\BOOKMARK [3][-]{subsubsection.7.2.4}{Confidence Interval Analysis}{subsection.7.2}% 24
+\BOOKMARK [2][-]{subsection.7.3}{Number Of Tracks Not Known A Priori}{section.7}% 25
+\BOOKMARK [3][-]{subsubsection.7.3.1}{Comparison of Methods}{subsection.7.3}% 26
+\BOOKMARK [3][-]{subsubsection.7.3.2}{Results}{subsection.7.3}% 27
+\BOOKMARK [1][-]{section.8}{Conclusion}{}% 28
+\BOOKMARK [1][-]{section.9}{Acknowledgements}{}% 29
+\BOOKMARK [1][-]{section.10}{Materials}{}% 30
