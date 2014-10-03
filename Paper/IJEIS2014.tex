@@ -741,7 +741,7 @@ and for $m\ge2$
 	\bigskip
 
 	\includegraphics[width=0.5\textwidth]{images/posterior3}
-	\caption{A visualization of $log(P(j,s))$ ($\eta=10$) for two of the shows in the training set.}
+	\caption{A visualization of $log(P(j,s))$ ($\eta=10$) for two of the shows in the training set. Ostensibly; uncertainty pertaining to the correct time and index (i.e. track number $2,3,4$) placement increases towards the middle of the shows.}
 	\label{fig:posterior3}
 \end{figure} 
 
@@ -765,28 +765,41 @@ P(j,s,f) ~=~ \frac{\head^{s-1}_{j-1} \cdot e^{-\eta C(s, f-s+1)} \cdot \tail^{f+
 \]
 
 
-\subsection{Track Index Confidence}
+\subsection{Confidence Measures}
 
-We can use the posterior marginal of song boundary to give estimates of confidence on track index placement and time accuracy. To be clear; the \textit{index placement} for an estimated track time might be $4$ to indicate that this track should come $4$th in the sequence of tracks.
+We can use the posterior marginal of song boundaries to give estimates of confidence on reconstructed indices where there are ambiguous options. The key scenarios where the algorithm is likely to make an error of judgement due to uncertainty are; getting the time wrong, the order wrong (for example, predicting the correct time in the wrong track index).
 
-To estimate the uncertainty of correct track alignment, we select the next highest probability of other track placements at the same time of the optimal placement from $P(j,s)$ and normalize them by the probability of the optimal placement.
+Note that the posterior marginal of song boundaries $P(j,s)$ contains values all in the interval $[0,1]$. The sum of all times for a fixed track index (every row) in $P(j,s)$ is $1$.
 
-Let track index confidence
-\begin{align*}
-I( j ) = 1-\frac{ P( \{1,\ldots,M\} \setminus j, \mathrm{SortInd}( P(j, 1,\ldots,T)_1)^2 }{ \max( P(j, 1,\ldots,T)_2) }
-\end{align*}
+\subsubsection{Index (Order)}
 
-where $\mathrm{SortInd}(l)$ will return the original indices corresponding to the sorted list of $l$. 
+To estimate the uncertainty of correct track alignment, we select the probability of all boundary placements for all track indices at the predicted best time. 
 
-\subsection{Track Time Confidence}
-
-Track time uncertainty is estimated by normalizing the value of the next most significant peak in $P(j,\forall s)$ by the probability of actual track placement (which is the most significant peak). 
 Let 
-\begin{align*}
-\tilde I( j ) = 1-\frac{ \mathrm{Peaks}( P(j, 1,\ldots,T ) )_2 } { \mathrm{Peaks}( P(j, 1,\ldots,T ))_1 }
-\end{align*} where $Peaks(s_i)$ is a peak finding algorithm that returns the peaks in descending order of magnitude (we used the \texttt{findpeaks}\footnote{\url{http://www.mathworks.co.uk/help/signal/ref/findpeaks.html}} function in MATLAB).
+\[
+\zeta_{ i} = P\left( j, \Pi\left(\best^T_m,j\right)  \right)
+\] for all $j=1,2,\ldots,m$ where $\Pi(\best,i)$ will return the best time placement for index $i$ in the optimal segmentation $\best$.
 
-So this measure estimates how certain we are that the time estimated (for example $455$ seconds) is correct.
+Let the track index confidence measure 
+\[
+\Psi(\bar m)= 1- \frac{ \left(\tilde \zeta_{\bar m}\right) _2 }{ \left(\tilde \zeta_{\bar m}\right)_1 }
+\] where $\tilde \zeta_{i}$ corresponds to $\zeta_{i}$ placed into in descending order of value. Note that $\Psi \in [0,1]$. The index confidence measure is a function of the ratio between the two largest values in $P(j,s)$ for all $j=1,2,\ldots,m$ and at the optimal time $s$ as estimated by the main algorithm. 
+
+
+
+
+\subsubsection{Time}
+
+The track time confidence is estimated by the ratio of the two highest peaks in $P(j,s)$ for all $s=1,2,\ldots,T$, for all $j=1,2,\ldots,m$.
+
+Let 
+\[
+\xi(\bar m)= 1 - \frac{ \tilde \gamma\left( \bar m \right)  _2 }{ \tilde \gamma\left( \bar m \right)   _1 }
+\] where \[
+\gamma(j) = P(j,t)
+\] for all $t \in 1,2,\ldots,T$ and $\tilde \gamma(j)$ are the peaks found in $\gamma(j)$ sorted in descending order. Note that $\xi \in [0,1]$
+
+
 
 \section{Experiments}\label{sec:experiments}
 
@@ -944,7 +957,7 @@ On \citep{scarfe2013long} we were effectively using a disincentive-only summatio
 
 \subsubsection{Confidence Interval Analysis}
 
-See Figure~\ref{fig:confidence_intervals} for illustrations of the time index confidence, index placement confidence and track error residuals averaged and shown as a function of progression through the shows. See Section~\ref{sec:confidence-intervals} for definitions. 
+See Figure~\ref{fig:confidence_intervals} for illustrations of the time index confidence $\xi(\bar m)$, index placement confidence $\Psi(\bar m)$ and track error residuals averaged and shown as a function of progression through the shows. See Section~\ref{sec:confidence-intervals} for definitions. Because the number of tracks varies greatly, the confidence measures for all shows have been re-sampled into the set of indices $1,2,\ldots,15$. Thus it is possible to get an indication of aggregate confidence measures in relation to the progress of the show. 
 
 We can conclude from these illustrations that the likelihood of placing the correct index statistically declines towards the middle of the shows. Perhaps this means that the summation matrix would have performed increasingly poorly as show lengths got longer. But mixing the cost matrices together in the optimal way (as dictated by the results of the evolutionary algorithm) apparently removes this tendency to a large extent. 
 
@@ -1039,7 +1052,7 @@ We are able to operate in the scenario when the number of tracks is not known a 
 
 Further work includes the plan to write an on-line version of the algorithm in the future which will operate on a sliding lagged window of audio where the number of tracks could be estimated and the algorithm executed on the window. We would also like to implement a regularised version of Radu's time dependent agglomerative (hierarchical) clustering algorithm \citep{radu} to see if it is suitable for this task. 
 
-One of the apparently unique properties of the algorithm presented is that is it does not directly consider inter-segment dissimilarity. The costs are computed only from intra-segment similarity. Therefore; there is only an implied notion of dissimilarity between segments. An interesting direction would be reformulating the algorithm to consider transitional \textit{switching} and \textit{sticking} costs through a state graph where the number of switches was fixed a priori. This would be a somewhat similar direction to \citep{goodwin2003audio,goodwin2004dynamic} apart from the likelihood that fixing the number of segments a priori if they were known would possibly improve the accuracy of the annotations as we have reported here.
+One of the interesting properties of the algorithm presented here is that is it does not directly consider inter-segment dissimilarity. The costs are computed only from intra-segment similarity. Therefore; there is only an implied notion of dissimilarity between segments. An interesting direction would be reformulating the algorithm to consider transitional \textit{switching} and \textit{sticking} costs through a state graph where the number of switches was fixed a priori. This would be a somewhat similar direction to \citep{goodwin2003audio,goodwin2004dynamic} apart from the likelihood that fixing the number of segments a priori if they were known would likely improve the accuracy of the annotations as we have reported for this configuration.
 
 \begin{table*}[h]
 	\centering

@@ -9,7 +9,7 @@ SC = show.CostMatrix;
 
 eta = config.eta;
 
-%% to calculate TL and H we need a slightly different cost matrix
+% to calculate TL and H we need a slightly different cost matrix
 
 HT_SC = SC;
 
@@ -19,7 +19,7 @@ HT_SC = SC;
 
 HT_SC = exp(-eta * SC );
 
-%%
+%
 % cost of one track across all times
 
 H = zeros( M, T );
@@ -43,7 +43,7 @@ end
 %imagesc(log(H))
 %title('head');
 
-%%
+%
 
 TL = zeros( M, T ); % cost of best tail partition
 TL( 1, (T-W+1):T) = HT_SC(sub2ind([T,W], T-W+1:T,W:-1:1));
@@ -74,7 +74,7 @@ end
 % these should be identical (perhaps up to numerical errors)
 %assert(all(abs(H(:,T) - TL(:,1)) <= 1e-6 * H(:,T)));
 
-%% calculate the posterior for boundary
+% calculate the posterior for boundary
 
 PB = nan(M, T); % distribution of M track starting positions
 
@@ -101,7 +101,7 @@ if ~config.memory_efficient
     results.posterior = PB;
 end
 
-%% calculate the posterior for song position (hard to visualize probably wont for paper)
+% calculate the posterior for song position (hard to visualize probably wont for paper)
 
 % PP = nan( M, T, T );
 % 
@@ -126,7 +126,7 @@ end
 %imagesc( log( squeeze( PP( 5,:,: ) ) ))
 %colorbar
 
-%% plot the song cost matrix
+% plot the song cost matrix
 
 %figure(1)
 
@@ -135,7 +135,7 @@ end
 %axis xy;
 %colorbar;
 
-%% Finding the best track placement for comparison (unchanged from the first paper)
+% Finding the best track placement for comparison (unchanged from the first paper)
 
 [T W] = size(SC);
 
@@ -174,7 +174,7 @@ best_begin = [1 best_end(1:end-1)+1];
 L = V(end,end);
 
 
-%% new uncertainty calculation (of correct track INDEX)
+% new uncertainty calculation (of correct track INDEX)
 
 relative_uncertainty = nan(M,1);
 
@@ -196,7 +196,6 @@ end
 uncertainty_factor = 2;
 relative_uncertainty = relative_uncertainty .^ uncertainty_factor;
 
-
 confidence = 1 - relative_uncertainty;
 
 if( config.draw_confs == 1) 
@@ -206,6 +205,9 @@ if( config.draw_confs == 1)
     xlabel('Track Number');
     ylabel('Confidence Level');
 end
+
+
+plot(PB(:,:)');
 
 results.mean_indexplacementconfidence = mean(confidence);
 results.worst_indexplacementconfidence = min(confidence);

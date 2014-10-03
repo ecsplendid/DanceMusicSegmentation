@@ -18,7 +18,7 @@ c.highPassFilter = 109; %Hz
 
 % figure drawing parameters
 c.drawSimMat = 1;
-c.compute_confs = 0;
+c.compute_confs = 1;
 c.draw_confs = 0;
 
 % learning rate for posterior
