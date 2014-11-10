@@ -41,23 +41,25 @@
 \newlabel{dataset}{{2}{4}{Corpus}{section.2}{}}
 \newlabel{tab:corpus}{{2}{5}{Corpus}{section.2}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Descriptive statistics about the corpus.}}{5}{table.1}}
+\citation{boer1974critical}
+\citation{plomp1965tonal}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Track length histogram for all shows in the corpus.}}{6}{figure.3}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Number of tracks in each show for each dataset. The \texttt  {lindmik} dataset is highly variable.}}{6}{figure.4}}
 \newlabel{fig:tracklengths}{{4}{6}{Number of tracks in each show for each dataset. The \texttt {lindmik} dataset is highly variable}{figure.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Human Accuracy}{6}{section.3}}
 \newlabel{human_acc}{{3}{6}{Human Accuracy}{section.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Data Handling}{6}{section.4}}
-\newlabel{sec:data-handling}{{4}{6}{Data Handling}{section.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Preprocessing}{6}{subsection.4.1}}
-\newlabel{proprocessing}{{4.1}{6}{Preprocessing}{subsection.4.1}{}}
 \citation{nyquist1928certain}
+\citation{frigo2004fftw}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Illustration of the `human disagreement' random variable (zoomed in at the bottom, the peak at $0$ seconds is $4708$ tracks), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section\nobreakspace  {}\ref  {dataset}. The $4$ adjacent error clusters account for roughly 5 percent of the total number of tracks. The variance around the peaks represents the BPM variance in \texttt  {asot}. }}{7}{figure.5}}
 \newlabel{fig:human_muchconfuse}{{5}{7}{Illustration of the `human disagreement' random variable (zoomed in at the bottom, the peak at $0$ seconds is $4708$ tracks), standard deviation $9.13$ seconds. Peaks are visible at intervals of $8$ bars ($14.8$ seconds) which corroborates the analysis from Denis Goncharov in Section~\ref {dataset}. The $4$ adjacent error clusters account for roughly 5 percent of the total number of tracks. The variance around the peaks represents the BPM variance in \texttt {asot}}{figure.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Data Handling}{7}{section.4}}
+\newlabel{sec:data-handling}{{4}{7}{Data Handling}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Preprocessing}{7}{subsection.4.1}}
+\newlabel{proprocessing}{{4.1}{7}{Preprocessing}{subsection.4.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Feature Extraction}{7}{subsection.4.2}}
 \newlabel{sec:feature-extraction}{{4.2}{7}{Feature Extraction}{subsection.4.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Music}{7}{subsubsection.4.2.1}}
 \newlabel{feat_ex}{{4.2.1}{7}{Music}{subsubsection.4.2.1}{}}
-\citation{frigo2004fftw}
 \citation{tzanetakis1999multifeature}
 \citation{tzanetakis1999framework}
 \citation{foote1999visualizing}
@@ -123,11 +125,11 @@
 \newlabel{tab:mean-results}{{3}{18}{These are the main results for all cost matrices with parameters optimized for the best mean absolute accuracy. The tuple $\langle a,b,c \rangle $ is used to indicate the results where $a$ is the median absolute error in seconds, $b$ the mean absolute error in seconds and $c$ the standard deviation in seconds (see Section~\ref {sec:results}). The experiment number is shown on the left}{table.3}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces These are the main results for all cost matrices with parameters optimized for the best median absolute accuracy.}}{18}{table.4}}
 \newlabel{tab:median-results}{{4}{18}{These are the main results for all cost matrices with parameters optimized for the best median absolute accuracy}{table.4}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.3.1}Comparison of Methods For Segmentation}{18}{subsubsection.7.3.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Histogram of the residuals (errors) between reconstructed and human captured time indices per experiment (top) and with best mean-optimized mixture broken down by show (bottom). Apart from obvious noise there appears to be a tendency for the algorithm to place an index slightly earlier. }}{19}{figure.11}}
 \newlabel{fig:shifthistogram}{{11}{19}{Histogram of the residuals (errors) between reconstructed and human captured time indices per experiment (top) and with best mean-optimized mixture broken down by show (bottom). Apart from obvious noise there appears to be a tendency for the algorithm to place an index slightly earlier}{figure.11}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets.}}{19}{figure.13}}
 \newlabel{fig:fscores_best}{{13}{19}{Comparison between our algorithm and the Foote novelty peak finding approach on all of the datasets}{figure.13}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.3.1}Comparison of Methods For Segmentation}{19}{subsubsection.7.3.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Confidence intervals and error residuals averaged over show progression.}}{20}{figure.14}}
 \newlabel{fig:confidence_intervals}{{14}{20}{Confidence intervals and error residuals averaged over show progression}{figure.14}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Number of tracks estimated correctly a show in the GitHub training set after a genetics algorithm was executed to select a robust set of algorithm parameters.}}{20}{figure.15}}
@@ -144,33 +146,35 @@
 \citation{goodwin2003audio,goodwin2004dynamic}
 \bibstyle{ieeetr}
 \bibdata{bib/references,bib/refs}
-\bibcite{radu}{{1}{}{{}}{{}}}
-\bibcite{Matejka:2013:SIO:2470654.2466149}{{2}{}{{}}{{}}}
-\bibcite{tzanetakis1999framework}{{3}{}{{}}{{}}}
+\bibcite{Matejka:2013:SIO:2470654.2466149}{{1}{}{{}}{{}}}
 \@writefile{toc}{\contentsline {section}{\numberline {9}Acknowledgements}{22}{section.9}}
 \newlabel{sec:acknowledgements}{{9}{22}{Acknowledgements}{section.9}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {10}Materials}{22}{section.10}}
 \newlabel{sec:materials}{{10}{22}{Materials}{section.10}{}}
-\bibcite{eckmann1987recurrence}{{4}{}{{}}{{}}}
-\bibcite{cooper2002automatic}{{5}{}{{}}{{}}}
-\bibcite{foote1999visualizing}{{6}{}{{}}{{}}}
-\bibcite{foote1997similarity}{{7}{}{{}}{{}}}
-\bibcite{foote2000automatic}{{8}{}{{}}{{}}}
-\bibcite{foote2003media}{{9}{}{{}}{{}}}
-\bibcite{foote2001visualizing}{{10}{}{{}}{{}}}
-\bibcite{goodwin2004dynamic}{{11}{}{{}}{{}}}
-\bibcite{goodwin2003audio}{{12}{}{{}}{{}}}
+\bibcite{tzanetakis1999framework}{{2}{}{{}}{{}}}
+\bibcite{eckmann1987recurrence}{{3}{}{{}}{{}}}
+\bibcite{cooper2002automatic}{{4}{}{{}}{{}}}
+\bibcite{foote1999visualizing}{{5}{}{{}}{{}}}
+\bibcite{foote1997similarity}{{6}{}{{}}{{}}}
+\bibcite{foote2000automatic}{{7}{}{{}}{{}}}
+\bibcite{foote2003media}{{8}{}{{}}{{}}}
+\bibcite{foote2001visualizing}{{9}{}{{}}{{}}}
+\bibcite{goodwin2004dynamic}{{10}{}{{}}{{}}}
+\bibcite{goodwin2003audio}{{11}{}{{}}{{}}}
+\bibcite{radu}{{12}{}{{}}{{}}}
 \bibcite{elaudio}{{13}{}{{}}{{}}}
 \bibcite{levy2008structural}{{14}{}{{}}{{}}}
 \bibcite{levy2006new}{{15}{}{{}}{{}}}
 \bibcite{levy2006extraction}{{16}{}{{}}{{}}}
 \bibcite{batlle2002automatic}{{17}{}{{}}{{}}}
 \bibcite{peiszer2008automatic}{{18}{}{{}}{{}}}
-\bibcite{nyquist1928certain}{{19}{}{{}}{{}}}
-\bibcite{frigo2004fftw}{{20}{}{{}}{{}}}
-\bibcite{tzanetakis1999multifeature}{{21}{}{{}}{{}}}
-\bibcite{scarfe2013long}{{22}{}{{}}{{}}}
-\bibcite{plotz2006automatic}{{23}{}{{}}{{}}}
+\bibcite{boer1974critical}{{19}{}{{}}{{}}}
+\bibcite{plomp1965tonal}{{20}{}{{}}{{}}}
+\bibcite{nyquist1928certain}{{21}{}{{}}{{}}}
+\bibcite{frigo2004fftw}{{22}{}{{}}{{}}}
+\bibcite{tzanetakis1999multifeature}{{23}{}{{}}{{}}}
+\bibcite{scarfe2013long}{{24}{}{{}}{{}}}
+\bibcite{plotz2006automatic}{{25}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces An illustration of the similarity matrix $S$ (cosines) with the actual indices drawn on with black crosses, and our reconstructed annotations indicated with the dotted white lines. Note that to save time on the computation we do not calculate the entire matrix which is why there are some empty regions on the corners.}}{25}{figure.7}}
 \newlabel{fig:simmatrix}{{7}{25}{An illustration of the similarity matrix $S$ (cosines) with the actual indices drawn on with black crosses, and our reconstructed annotations indicated with the dotted white lines. Note that to save time on the computation we do not calculate the entire matrix which is why there are some empty regions on the corners}{figure.7}{}}

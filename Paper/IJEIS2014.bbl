@@ -1,9 +1,5 @@
 \begin{thebibliography}{10}
 
-\bibitem{radu}
-R.~Curticapean, ``Clustering-based audio segmentation with applications to
-  music structure analysis,''
-
 \bibitem{Matejka:2013:SIO:2470654.2466149}
 J.~Matejka, T.~Grossman, and G.~Fitzmaurice, ``Swifter: Improved online video
   scrubbing,'' in {\em Proceedings of the SIGCHI Conference on Human Factors in
@@ -59,6 +55,10 @@ M.~M. Goodwin and J.~Laroche, ``Audio segmentation by feature-space clustering
   Applications of Signal Processing to Audio and Acoustics, 2003 IEEE Workshop
   on.}, pp.~131--134, IEEE, 2003.
 
+\bibitem{radu}
+R.~Curticapean, ``Clustering-based audio segmentation with applications to
+  music structure analysis,''
+
 \bibitem{elaudio}
 D.~El~Badawy, P.~Marmaroli, and H.~Lissek, ``Audio novelty-based segmentation
   of music concerts,''
@@ -86,6 +86,16 @@ E.~Batlle, J.~Masip, and E.~Guaus, ``Automatic song identification in noisy
 E.~Peiszer, T.~Lidy, and A.~Rauber, ``Automatic audio segmentation: Segment
   boundary and structure detection in popular music,'' {\em Proc. of LSAS},
   2008.
+
+\bibitem{boer1974critical}
+E.~d. Boer and J.~Bouwmeester, ``Critical bands and sensorineural hearing
+  loss,'' {\em International Journal of Audiology}, vol.~13, no.~3,
+  pp.~236--259, 1974.
+
+\bibitem{plomp1965tonal}
+R.~Plomp and W.~J. Levelt, ``Tonal consonance and critical bandwidth,'' {\em
+  The journal of the Acoustical Society of America}, vol.~38, no.~4,
+  pp.~548--560, 1965.
 
 \bibitem{nyquist1928certain}
 H.~Nyquist, ``Certain topics in telegraph transmission theory,'' {\em American
